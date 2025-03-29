@@ -1,5 +1,7 @@
+import { Box } from '@chakra-ui/react';
+
 const SignUp = () => {
-  return <div>page</div>;
+  return <Box></Box>;
 };
 
 export default SignUp;

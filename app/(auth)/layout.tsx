@@ -13,7 +13,7 @@ const AuthLayout = ({ children }: Props) => {
         <aside className="basis-[40%] flex-1">
           <Aside />
         </aside>
-        <div className="basis-[60%]">{children}</div>
+        <div className="basis-[60%] ">{children}</div>
       </Box>
     </main>
   );

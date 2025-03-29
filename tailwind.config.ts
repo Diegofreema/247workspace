@@ -13,6 +13,7 @@ const config: Config = {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
         purple: colors.purple,
+        divider: colors.divider,
       },
       fontFamily: {
         public_sans: ['var(--font-public-sans)'],
