@@ -1,4 +1,10 @@
-import { Field, Group, IconButton, Input } from '@chakra-ui/react';
+import {
+  Field,
+  Group,
+  IconButton,
+  Input,
+  ListCollection,
+} from '@chakra-ui/react';
 import {
   FieldErrors,
   FieldValues,
@@ -8,6 +14,7 @@ import {
 
 import { colors } from '@/constants';
 import { IconEye, IconEyeOff } from '@tabler/icons-react';
+import { CustomSelect } from './custom-select';
 type FormInputProps<TFormValues extends FieldValues> = {
   errors: FieldErrors<TFormValues>;
   register: UseFormRegister<TFormValues>;
@@ -19,6 +26,12 @@ type FormInputProps<TFormValues extends FieldValues> = {
   password?: boolean;
   disabled?: boolean;
   required?: boolean;
+  helperText?: string;
+  select?: boolean;
+  data?: ListCollection<{
+    label: string;
+    value: string;
+  }>;
 };
 
 export const FormInput = <TFormValues extends FieldValues>({
@@ -32,6 +45,9 @@ export const FormInput = <TFormValues extends FieldValues>({
   togglePassword,
   disabled,
   required,
+  helperText,
+  select,
+  data,
 }: FormInputProps<TFormValues>) => {
   const hide = type === 'password';
 
@@ -40,37 +56,46 @@ export const FormInput = <TFormValues extends FieldValues>({
       <Field.Label color={colors.black}>
         {label} <Field.RequiredIndicator />
       </Field.Label>
-      <Group
-        attached
-        w="full"
-        maxW="100%"
-        borderWidth={1}
-        borderStyle={'solid'}
-        borderColor={colors.grey}
-        borderRadius={5}
-      >
-        <Input
-          flex="1"
-          {...register(name)}
-          borderColor="transparent"
+      {select && data ? (
+        <CustomSelect
+          data={data}
           placeholder={placeholder}
-          type={type}
-          disabled={disabled}
-          p={3}
-          color={colors.black}
-          css={{ '--error-color': 'red' }}
+          register={register}
+          name={name}
         />
-        {password && (
-          <IconButton onClick={togglePassword}>
-            {hide ? (
-              <IconEye color={colors.black} />
-            ) : (
-              <IconEyeOff color={colors.black} />
-            )}
-          </IconButton>
-        )}
-      </Group>
-
+      ) : (
+        <Group
+          attached
+          w="full"
+          maxW="100%"
+          borderWidth={1}
+          borderStyle={'solid'}
+          borderColor={colors.grey}
+          borderRadius={5}
+        >
+          <Input
+            flex="1"
+            {...register(name)}
+            borderColor="transparent"
+            placeholder={placeholder}
+            type={type}
+            disabled={disabled}
+            p={3}
+            color={colors.black}
+            css={{ '--error-color': 'red' }}
+          />
+          {password && (
+            <IconButton onClick={togglePassword}>
+              {hide ? (
+                <IconEye color={colors.black} />
+              ) : (
+                <IconEyeOff color={colors.black} />
+              )}
+            </IconButton>
+          )}
+        </Group>
+      )}
+      {helperText && <Field.HelperText>{helperText}</Field.HelperText>}
       <Field.ErrorText>{errors[name]?.message as string}</Field.ErrorText>
     </Field.Root>
   );

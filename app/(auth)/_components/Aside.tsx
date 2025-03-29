@@ -2,7 +2,7 @@ import { FlexBox } from '@/components/custom/flex-box';
 import { Title } from '@/components/custom/title';
 import { Logo } from '@/components/ui/logo';
 import { colors } from '@/constants';
-import { Stack, Text } from '@chakra-ui/react';
+import { Image, Stack, Text } from '@chakra-ui/react';
 
 export const Aside = () => {
   return (
@@ -16,6 +16,14 @@ export const Aside = () => {
     >
       <Logo />
       <Stack mt={20} gap={5}>
+        <Image
+          alt="image"
+          src="/smart.png"
+          objectFit={'contain'}
+          width={300}
+          height={400}
+          alignSelf={'center'}
+        />
         <Title fontSize={'48px'} lineHeight={1.3}>
           Organize and manager your task with ease
         </Title>

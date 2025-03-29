@@ -1,19 +1,21 @@
 'use client';
 
-import { SignInValidator } from '@/utils/validators';
 import { Stack } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IconBrandGithub, IconBrandGoogle } from '@tabler/icons-react';
 import { Link } from 'next-view-transitions';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+
 import { FormInput } from './form-input';
 import { FormSeparator } from './form-separator';
 import { Button } from '../custom/custom-button';
-import { colors } from '@/constants';
-import { IconBrandGithub, IconBrandGoogle } from '@tabler/icons-react';
 import { CustomText } from '../custom/title';
 import { FlexBox } from '../custom/flex-box';
+
+import { colors } from '@/constants';
+import { SignInValidator } from '@/utils/validators';
 
 export const SignInForm = () => {
   const [type, setType] = useState<'password' | 'text'>('password');
@@ -90,7 +92,7 @@ export const SignInForm = () => {
           <CustomText className="text-black">
             Don&apos;t have an Account?
           </CustomText>
-          <Link href="/sign-up" className="font-bold text-purple self-end">
+          <Link href="/sign-up" className="font-medium text-purple self-end">
             Sign up
           </Link>
         </FlexBox>
