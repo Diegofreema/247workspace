@@ -16,8 +16,10 @@ import { FormSeparator } from './form-separator';
 import { colors } from '@/constants';
 import { SignInValidator } from '@/utils/validators';
 import { SocialLogin } from '../buttons/social-login';
+import { useLogin } from '../features/auth/api/use-login';
 
 export const SignInForm = () => {
+  const { mutate } = useLogin();
   const [type, setType] = useState<'password' | 'text'>('password');
   const togglePassword = () =>
     setType((prev) => (prev === 'password' ? 'text' : 'password'));
@@ -34,6 +36,7 @@ export const SignInForm = () => {
   });
   const onSubmit = async (values: z.infer<typeof SignInValidator>) => {
     console.log(values);
+    mutate({ json: values });
   };
   return (
     <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
@@ -61,7 +64,7 @@ export const SignInForm = () => {
         />
         <Link
           href="/forgot-password"
-          className="font-bold text-purple self-end"
+          className="font-bold text-purple self-end text-[14px] sm:text-[16px]"
         >
           Forgot password
         </Link>
@@ -74,7 +77,10 @@ export const SignInForm = () => {
           <CustomText className="text-black">
             Don&apos;t have an Account?
           </CustomText>
-          <Link href="/sign-up" className="font-medium text-purple self-end">
+          <Link
+            href="/sign-up"
+            className="font-medium text-purple self-end text-[14px] sm:text-[16px]"
+          >
             Sign up
           </Link>
         </FlexBox>

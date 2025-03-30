@@ -112,7 +112,10 @@ export const SignUpForm = () => {
           <CustomText className="text-black">
             Already have an Account?
           </CustomText>
-          <Link href="/sign-in" className="font-medium text-purple self-end">
+          <Link
+            href="/sign-in"
+            className="font-medium text-purple self-end text-[14px] sm:text-[16px]"
+          >
             Sign in
           </Link>
         </FlexBox>

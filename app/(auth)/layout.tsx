@@ -10,10 +10,10 @@ const AuthLayout = ({ children }: Props) => {
   return (
     <main className="min-h-screen bg-white">
       <Box className="mx-auto max-w-[95%] py-4 flex min-h-screen">
-        <aside className="basis-[40%] flex-1">
+        <aside className="md:basis-[40%] hidden md:block flex-1">
           <Aside />
         </aside>
-        <div className="basis-[60%] ">{children}</div>
+        <div className="md:basis-[60%] basis-[100%] ">{children}</div>
       </Box>
     </main>
   );

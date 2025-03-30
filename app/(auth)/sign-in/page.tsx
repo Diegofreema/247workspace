@@ -1,5 +1,5 @@
 import { FlexBox } from '@/components/custom/flex-box';
-import { SignInForm } from '@/components/form/SignInForm';
+import { SignInForm } from '@/components/form/sign-in-form';
 import { InstructionHeading } from '@/components/ui/instruction-heading';
 import { Suspense } from 'react';
 
@@ -7,7 +7,7 @@ const SignIn = () => {
   return (
     <FlexBox
       mx="auto"
-      width={'60%'}
+      width={{ base: '95%', md: '60%' }}
       flexDirection={'column'}
       justifyContent={'center'}
       h={'100%'}

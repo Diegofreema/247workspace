@@ -18,7 +18,11 @@ export const Title = ({ fontSize = '28px', as = 'h1', ...props }: Props) => {
 };
 export const CustomText = ({ ...props }: Props) => {
   return (
-    <Text className="font-sans" {...props}>
+    <Text
+      className="font-sans"
+      fontSize={{ base: '14px', md: '16px' }}
+      {...props}
+    >
       {props.children}
     </Text>
   );
