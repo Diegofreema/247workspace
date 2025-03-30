@@ -8,7 +8,7 @@ const SignUp = () => {
   return (
     <FlexBox
       mx="auto"
-      width={'60%'}
+      width={{ base: '95%', md: '60%' }}
       flexDirection={'column'}
       justifyContent={'center'}
       h={'100%'}

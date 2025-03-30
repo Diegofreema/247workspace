@@ -15,8 +15,10 @@ import { FormSeparator } from './form-separator';
 import { colors } from '@/constants';
 import { SignUpValidator } from '@/utils/validators';
 import { SocialLogin } from '../buttons/social-login';
+import { useRegister } from '../features/auth/api/use-register';
 
 export const SignUpForm = () => {
+  const { mutate } = useRegister();
   const [type, setType] = useState<'password' | 'text'>('password');
   const [type2, setType2] = useState<'password' | 'text'>('password');
   const togglePassword = () =>
@@ -27,9 +29,7 @@ export const SignUpForm = () => {
     handleSubmit,
     formState: { isSubmitting, errors },
     register,
-    watch,
   } = useForm<z.infer<typeof SignUpValidator>>({
-    resolver: zodResolver(SignUpValidator),
     defaultValues: {
       email: '',
       password: '',
@@ -37,15 +37,18 @@ export const SignUpForm = () => {
       fullName: '',
       role: '',
     },
+    resolver: zodResolver(SignUpValidator),
   });
-  const { role } = watch();
-  console.log(role);
+
+  console.log(errors);
 
   const onSubmit = async (values: z.infer<typeof SignUpValidator>) => {
     console.log(values);
+
+    mutate({ json: values });
   };
   return (
-    <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
+    <div className="w-full">
       <Stack gap="4" align="flex-start" minW="100%">
         <FormInput
           label="Full name"
@@ -103,7 +106,12 @@ export const SignUpForm = () => {
           required
         />
 
-        <Button bg={colors.purple} type="submit" disabled={isSubmitting}>
+        <Button
+          bg={colors.purple}
+          type="submit"
+          disabled={isSubmitting}
+          onClick={handleSubmit(onSubmit)}
+        >
           Sign Up
         </Button>
         <FormSeparator />
@@ -120,7 +128,7 @@ export const SignUpForm = () => {
           </Link>
         </FlexBox>
       </Stack>
-    </form>
+    </div>
   );
 };
 

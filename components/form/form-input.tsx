@@ -52,7 +52,7 @@ export const FormInput = <TFormValues extends FieldValues>({
   const hide = type === 'password';
 
   return (
-    <Field.Root invalid={!!errors.email} width="100%" required={required}>
+    <Field.Root invalid={!!errors[name]} width="100%" required={required}>
       <Field.Label color={colors.black}>
         {label} <Field.RequiredIndicator />
       </Field.Label>
