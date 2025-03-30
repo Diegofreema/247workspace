@@ -1,18 +1,20 @@
 'use client';
-import { SignUpValidator } from '@/utils/validators';
+import { createListCollection, Stack } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'next-view-transitions';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { CustomText } from '../custom/title';
-import { FlexBox } from '../custom/flex-box';
+
 import { Button } from '../custom/custom-button';
-import { IconBrandGithub, IconBrandGoogle } from '@tabler/icons-react';
-import { FormSeparator } from './form-separator';
-import { colors } from '@/constants';
+import { FlexBox } from '../custom/flex-box';
+import { CustomText } from '../custom/title';
 import { FormInput } from './form-input';
-import { useState } from 'react';
-import { createListCollection, Stack } from '@chakra-ui/react';
+import { FormSeparator } from './form-separator';
+
+import { colors } from '@/constants';
+import { SignUpValidator } from '@/utils/validators';
+import { SocialLogin } from '../buttons/social-login';
 
 export const SignUpForm = () => {
   const [type, setType] = useState<'password' | 'text'>('password');
@@ -31,7 +33,6 @@ export const SignUpForm = () => {
     defaultValues: {
       email: '',
       password: '',
-
       confirmPassword: '',
       fullName: '',
       role: '',
@@ -44,7 +45,7 @@ export const SignUpForm = () => {
     console.log(values);
   };
   return (
-    <div className="w-full">
+    <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
       <Stack gap="4" align="flex-start" minW="100%">
         <FormInput
           label="Full name"
@@ -102,29 +103,11 @@ export const SignUpForm = () => {
           required
         />
 
-        <Button bg={colors.purple} onClick={handleSubmit(onSubmit)}>
+        <Button bg={colors.purple} type="submit" disabled={isSubmitting}>
           Sign Up
         </Button>
         <FormSeparator />
-        <Button
-          variant={'outline'}
-          border={'1px solid #ccc'}
-          color="black"
-          disabled={isSubmitting}
-          loading={isSubmitting}
-        >
-          <IconBrandGoogle /> Google
-        </Button>
-        <Button
-          variant={'outline'}
-          color="black"
-          border={'1px solid #ccc'}
-          disabled={isSubmitting}
-          loading={isSubmitting}
-          type="submit"
-        >
-          <IconBrandGithub /> Github
-        </Button>
+        <SocialLogin isSubmitting={isSubmitting} />
         <FlexBox justifyContent={'center'} width="100%" gap={1} mt={10}>
           <CustomText className="text-black">
             Already have an Account?
@@ -134,7 +117,7 @@ export const SignUpForm = () => {
           </Link>
         </FlexBox>
       </Stack>
-    </div>
+    </form>
   );
 };
 
