@@ -6,8 +6,8 @@ import { Link } from 'next-view-transitions';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-
-import { Button } from '../custom/custom-button';
+import { Button } from '@chakra-ui/react';
+import {} from '../custom/custom-button';
 import { FlexBox } from '../custom/flex-box';
 import { CustomText } from '../custom/title';
 import { FormInput } from './form-input';
@@ -17,9 +17,10 @@ import { colors } from '@/constants';
 import { SignInValidator } from '@/utils/validators';
 import { SocialLogin } from '../buttons/social-login';
 import { useLogin } from '../features/auth/api/use-login';
+import { toaster } from '../ui/toaster';
 
 export const SignInForm = () => {
-  const { mutate } = useLogin();
+  const { mutateAsync } = useLogin();
   const [type, setType] = useState<'password' | 'text'>('password');
   const togglePassword = () =>
     setType((prev) => (prev === 'password' ? 'text' : 'password'));
@@ -35,8 +36,20 @@ export const SignInForm = () => {
     },
   });
   const onSubmit = async (values: z.infer<typeof SignInValidator>) => {
-    console.log(values);
-    mutate({ json: values });
+    const response = await mutateAsync({ json: values });
+    if (!response.success) {
+      toaster.create({
+        title: 'Error',
+        description: response.errorMessage,
+        type: 'error',
+      });
+      return;
+    }
+    toaster.create({
+      title: 'Success',
+      description: 'Welcome back',
+      type: 'success',
+    });
   };
   return (
     <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
@@ -68,7 +81,13 @@ export const SignInForm = () => {
         >
           Forgot password
         </Link>
-        <Button bg={colors.purple} type="submit">
+        <Button
+          bg={colors.purple}
+          type="submit"
+          disabled={isSubmitting}
+          loading={isSubmitting}
+          width="100%"
+        >
           Sign in
         </Button>
         <FormSeparator />

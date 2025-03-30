@@ -1,12 +1,11 @@
 'use client';
-import { createListCollection, Stack } from '@chakra-ui/react';
+import { Stack, Button } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'next-view-transitions';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button } from '../custom/custom-button';
 import { FlexBox } from '../custom/flex-box';
 import { CustomText } from '../custom/title';
 import { FormInput } from './form-input';
@@ -20,11 +19,10 @@ import { useRegister } from '../features/auth/api/use-register';
 export const SignUpForm = () => {
   const { mutate } = useRegister();
   const [type, setType] = useState<'password' | 'text'>('password');
-  const [type2, setType2] = useState<'password' | 'text'>('password');
+
   const togglePassword = () =>
     setType((prev) => (prev === 'password' ? 'text' : 'password'));
-  const togglePassword2 = () =>
-    setType2((prev) => (prev === 'password' ? 'text' : 'password'));
+
   const {
     handleSubmit,
     formState: { isSubmitting, errors },
@@ -33,18 +31,13 @@ export const SignUpForm = () => {
     defaultValues: {
       email: '',
       password: '',
-      confirmPassword: '',
+
       fullName: '',
-      role: '',
     },
     resolver: zodResolver(SignUpValidator),
   });
 
-  console.log(errors);
-
   const onSubmit = async (values: z.infer<typeof SignUpValidator>) => {
-    console.log(values);
-
     mutate({ json: values });
   };
   return (
@@ -69,7 +62,7 @@ export const SignUpForm = () => {
           required
         />
 
-        <FormInput
+        {/* <FormInput
           label="Role"
           placeholder="Select a role"
           register={register}
@@ -79,7 +72,7 @@ export const SignUpForm = () => {
           select
           data={data}
           required
-        />
+        /> */}
 
         <FormInput
           label="Password"
@@ -93,24 +86,14 @@ export const SignUpForm = () => {
           disabled={isSubmitting}
           required
         />
-        <FormInput
-          label="Confirm password"
-          placeholder="********"
-          register={register}
-          errors={errors}
-          name="confirmPassword"
-          password
-          type={type2}
-          togglePassword={togglePassword2}
-          disabled={isSubmitting}
-          required
-        />
 
         <Button
           bg={colors.purple}
           type="submit"
           disabled={isSubmitting}
+          loading={isSubmitting}
           onClick={handleSubmit(onSubmit)}
+          width="100%"
         >
           Sign Up
         </Button>
@@ -132,13 +115,13 @@ export const SignUpForm = () => {
   );
 };
 
-const data = createListCollection({
-  items: [
-    { label: 'Project manager', value: 'project manager' },
-    { label: 'Developer', value: 'developer' },
-    { label: 'UI/UX Designer', value: 'ui/ux designer' },
-    { label: 'Customer Support', value: 'customer support' },
-    { label: 'UI/UX Designer', value: 'ui/ux designer' },
-    { label: 'Others', value: 'others' },
-  ],
-});
+// const data = createListCollection({
+//   items: [
+//     { label: 'Project manager', value: 'project manager' },
+//     { label: 'Developer', value: 'developer' },
+//     { label: 'UI/UX Designer', value: 'ui/ux designer' },
+//     { label: 'Customer Support', value: 'customer support' },
+//     { label: 'UI/UX Designer', value: 'ui/ux designer' },
+//     { label: 'Others', value: 'others' },
+//   ],
+// });
