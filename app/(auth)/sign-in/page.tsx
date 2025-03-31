@@ -7,7 +7,6 @@ import { Suspense } from 'react';
 
 const SignIn = async () => {
   const user = await getLoggedInUser();
-  console.log({ user });
 
   if (user) redirect('/');
   return (

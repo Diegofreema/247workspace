@@ -14,6 +14,7 @@ const config: Config = {
         foreground: 'var(--foreground)',
         purple: colors.purple,
         divider: colors.divider,
+        iconGrey: colors.iconGrey,
       },
       fontFamily: {
         public_sans: ['var(--font-public-sans)'],
