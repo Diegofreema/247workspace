@@ -15,9 +15,10 @@ import { colors } from '@/constants';
 import { SignUpValidator } from '@/utils/validators';
 import { SocialLogin } from '../buttons/social-login';
 import { useRegister } from '../features/auth/api/use-register';
+import { toaster } from '../ui/toaster';
 
 export const SignUpForm = () => {
-  const { mutate } = useRegister();
+  const { mutateAsync } = useRegister();
   const [type, setType] = useState<'password' | 'text'>('password');
 
   const togglePassword = () =>
@@ -38,7 +39,20 @@ export const SignUpForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof SignUpValidator>) => {
-    mutate({ json: values });
+    const response = await mutateAsync({ json: values });
+    if (!response.success) {
+      toaster.create({
+        title: 'Error',
+        description: response.errorMessage,
+        type: 'error',
+      });
+      return;
+    }
+    toaster.create({
+      title: 'Success',
+      description: 'Account created successfully',
+      type: 'success',
+    });
   };
   return (
     <div className="w-full">
