@@ -28,6 +28,7 @@ export const SignUpForm = () => {
     handleSubmit,
     formState: { isSubmitting, errors },
     register,
+    reset,
   } = useForm<z.infer<typeof SignUpValidator>>({
     defaultValues: {
       email: '',
@@ -48,6 +49,7 @@ export const SignUpForm = () => {
       });
       return;
     }
+    reset();
     toaster.create({
       title: 'Success',
       description: 'Account created successfully',

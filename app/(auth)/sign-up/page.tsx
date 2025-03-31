@@ -3,8 +3,13 @@ import { Suspense } from 'react';
 import { FlexBox } from '@/components/custom/flex-box';
 import { SignUpForm } from '@/components/form/sign-up-form';
 import { InstructionHeading } from '@/components/ui/instruction-heading';
+import { getLoggedInUser } from '@/components/features/auth/actions';
+import { redirect } from 'next/navigation';
 
-const SignUp = () => {
+const SignUp = async () => {
+  const user = await getLoggedInUser();
+
+  if (user) redirect('/');
   return (
     <FlexBox
       mx="auto"

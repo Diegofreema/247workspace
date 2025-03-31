@@ -13,7 +13,6 @@ export const SocialLogin = ({ isSubmitting }: Props) => {
         border={'1px solid #ccc'}
         color="black"
         disabled={isSubmitting}
-        loading={isSubmitting}
       >
         <Image
           alt="google image"
@@ -29,7 +28,6 @@ export const SocialLogin = ({ isSubmitting }: Props) => {
         color="black"
         border={'1px solid #ccc'}
         disabled={isSubmitting}
-        loading={isSubmitting}
         type="submit"
       >
         <Image

@@ -1,9 +1,15 @@
 import { FlexBox } from '@/components/custom/flex-box';
+import { getLoggedInUser } from '@/components/features/auth/actions';
 import { SignInForm } from '@/components/form/sign-in-form';
 import { InstructionHeading } from '@/components/ui/instruction-heading';
+import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
-const SignIn = () => {
+const SignIn = async () => {
+  const user = await getLoggedInUser();
+  console.log({ user });
+
+  if (user) redirect('/');
   return (
     <FlexBox
       mx="auto"

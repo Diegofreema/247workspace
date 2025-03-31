@@ -28,6 +28,7 @@ export const SignInForm = () => {
     handleSubmit,
     formState: { isSubmitting, errors },
     register,
+    reset,
   } = useForm<z.infer<typeof SignInValidator>>({
     resolver: zodResolver(SignInValidator),
     defaultValues: {
@@ -45,6 +46,8 @@ export const SignInForm = () => {
       });
       return;
     }
+    reset();
+
     toaster.create({
       title: 'Success',
       description: 'Welcome back',
