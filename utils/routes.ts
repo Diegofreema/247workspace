@@ -1,45 +1,32 @@
-import {
-  IconBriefcase2,
-  IconBriefcase2Filled,
-  IconFile,
-  IconFileFilled,
-  IconLayout2,
-  IconLayout2Filled,
-  IconSortAscending2,
-  IconSortAscending2Filled,
-  IconUsers,
-  IconUsersGroup,
-} from '@tabler/icons-react';
-
 export const routes = [
   {
     label: 'Home',
     path: '/',
-    icon: IconLayout2,
-    activeIcon: IconLayout2Filled,
+    icon: 'IconLayout2',
   },
   {
     label: 'Tasks',
     path: '/tasks',
-    icon: IconSortAscending2,
-    activeIcon: IconSortAscending2Filled,
+    icon: 'IconSortAscending2',
   },
   {
     label: 'Team',
     path: '/team',
-    icon: IconUsers,
-    activeIcon: IconUsersGroup,
+    icon: 'IconUsers',
   },
   {
     label: 'Documents',
     path: '/documents',
-    icon: IconFile,
-    activeIcon: IconFileFilled,
+    icon: 'IconFolders',
   },
   {
     label: 'Projects',
     path: '/projects',
-    icon: IconBriefcase2,
-    activeIcon: IconBriefcase2Filled,
+    icon: 'IconBriefcase2',
+  },
+  {
+    label: 'Settings',
+    path: '/settings',
+    icon: 'IconSettings',
   },
 ];

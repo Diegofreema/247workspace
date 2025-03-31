@@ -6,14 +6,7 @@ export const Button = ({ ...props }: Props) => {
   console.log(props.loading);
 
   return (
-    <ChakraButton
-      width={'100%'}
-      disabled
-      loading
-      borderRadius={5}
-      size={'lg'}
-      {...props}
-    >
+    <ChakraButton width={'100%'} borderRadius={5} size={'lg'} {...props}>
       {props.children}
     </ChakraButton>
   );
