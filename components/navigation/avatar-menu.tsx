@@ -16,7 +16,7 @@ export const AvatarMenu = ({ name, email }: Props) => {
 
   return (
     <Menu.Root>
-      <Menu.Trigger asChild>
+      <Menu.Trigger asChild mr={2}>
         <Button
           variant="outline"
           size="md"

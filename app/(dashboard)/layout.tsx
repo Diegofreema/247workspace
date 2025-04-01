@@ -1,4 +1,5 @@
 import { DashboardSidebar } from '@/components/navigation/dashboard-sidebar';
+import { MobileSidebar } from '@/components/navigation/mobile-sidebar';
 import { NavigationHeader } from '@/components/navigation/navigation-header';
 import { Box } from '@chakra-ui/react';
 
@@ -14,19 +15,21 @@ const AuthLayout = ({ children }: Props) => {
         left={0}
         top={0}
         bottom={0}
-        width={{ base: 0, md: 50, lg: 300 }}
+        width={{ base: 0, md: 200, lg: 300 }}
         bg="white"
         transition="all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1)"
         transitionDuration=".2s, .2s, .35s"
         transitionProperty="top, bottom, width"
         transitionTimingFunction="linear, linear, ease"
+        hideBelow={'md'}
       >
         <DashboardSidebar />
       </Box>
+      <MobileSidebar />
       <Box
         minH={'dvh'}
         width="100%"
-        ml={{ base: 0, md: 50, lg: 300 }}
+        ml={{ base: 0, md: 200, lg: 300 }}
         transition="all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1)"
         transitionDuration=".2s, .2s, .35s"
         transitionProperty="top, bottom, width"

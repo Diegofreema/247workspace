@@ -1,6 +1,12 @@
 import { colors } from '@/constants';
 import { Button } from '../custom/custom-button';
+import { ButtonProps } from '@chakra-ui/react';
 
-export const CreateProject = () => {
-  return <Button bg={colors.purple}>Create a Project</Button>;
+type Props = ButtonProps & {};
+export const CreateProject = ({ ...props }: Props) => {
+  return (
+    <Button {...props} bg={colors.purple} px={2}>
+      Create a Project
+    </Button>
+  );
 };
