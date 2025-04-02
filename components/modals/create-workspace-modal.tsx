@@ -1,0 +1,168 @@
+'use client';
+
+import { colors } from '@/constants';
+import { useCreateWorkspace } from '@/features/workspaces/api/use-create-workspace';
+import { createWorkspaceSchema } from '@/features/workspaces/schema';
+import { createWorkspaceModal$ } from '@/lib/legend/create-workspace-modal-store';
+import { CloseButton, Dialog, Portal, Stack } from '@chakra-ui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { use$ } from '@legendapp/state/react';
+import { IconPhotoCirclePlus } from '@tabler/icons-react';
+import Image from 'next/image';
+import { useRef } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { Button } from '../custom/custom-button';
+import { FormInput } from '../form/form-input';
+
+export const CreateWorkspaceModal = () => {
+  const isOpen = use$(createWorkspaceModal$.isOpen);
+  const { mutateAsync } = useCreateWorkspace();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const {
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    register,
+    reset,
+    control,
+  } = useForm<z.infer<typeof createWorkspaceSchema>>({
+    defaultValues: {
+      name: '',
+      image: '',
+    },
+    resolver: zodResolver(createWorkspaceSchema),
+  });
+
+  const onSubmit = async (data: z.infer<typeof createWorkspaceSchema>) => {
+    const finalValues = {
+      ...data,
+      image: data.image instanceof File ? data.image : '',
+    };
+    await mutateAsync({ form: finalValues });
+    reset();
+    createWorkspaceModal$.setOpen(false);
+  };
+  const onCancel = () => {
+    reset();
+    createWorkspaceModal$.setOpen(false);
+  };
+  return (
+    <Dialog.Root
+      placement="center"
+      motionPreset={'slide-in-bottom'}
+      open={isOpen}
+      onOpenChange={(e) => createWorkspaceModal$.setOpen(e.open)}
+    >
+      <Portal>
+        <Dialog.Backdrop />
+        <Dialog.Positioner>
+          <Dialog.Content bg={colors.white}>
+            <Dialog.Header>
+              <Dialog.Title color={colors.black} fontSize={30}>
+                Create a workspace
+              </Dialog.Title>
+            </Dialog.Header>
+            <Dialog.Body>
+              <Stack gap={5}>
+                <FormInput
+                  register={register}
+                  name="name"
+                  label="Workspace name"
+                  errors={errors}
+                  placeholder="My workspace"
+                  required
+                  disabled={isSubmitting}
+                />
+                <Controller
+                  name="image"
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <div className="flex flex-col gap-y">
+                      <div className="flex items-center gap-x-5">
+                        {value ? (
+                          <div className="size-[72px] relative rounded-md overflow-hidden">
+                            <Image
+                              fill
+                              alt="logo"
+                              src={
+                                value instanceof File
+                                  ? URL.createObjectURL(value)
+                                  : value
+                              }
+                              className=" object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <IconPhotoCirclePlus
+                            className="size-[72px]"
+                            color={colors.purple}
+                          />
+                        )}
+                        <div className="flex flex-col">
+                          <p className="text-sm text-black">Workspace icon</p>
+                          <p className="text-sm text-[#ccc]">
+                            JPG, PNG, JPEG, SVG, up to 1MB
+                          </p>
+                          <input
+                            ref={inputRef}
+                            type="file"
+                            className="hidden"
+                            accept=".jpg, .png, .jpeg, .svg"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                onChange(file);
+                              }
+                            }}
+                            disabled={isSubmitting}
+                          />
+                          <Button
+                            color={colors.purple}
+                            borderColor={colors.purple}
+                            borderWidth={1}
+                            variant={'solid'}
+                            size={'xs'}
+                            onClick={() => inputRef?.current?.click()}
+                            width={'fit-content'}
+                            mt={2}
+                          >
+                            Upload image
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                />
+              </Stack>
+            </Dialog.Body>
+            <Dialog.Footer>
+              <Dialog.ActionTrigger asChild>
+                <Button
+                  variant="outline"
+                  width={'fit-content'}
+                  disabled={isSubmitting}
+                  color={colors.black}
+                  onClick={onCancel}
+                >
+                  Cancel
+                </Button>
+              </Dialog.ActionTrigger>
+              <Button
+                bg={colors.purple}
+                onClick={handleSubmit(onSubmit)}
+                disabled={isSubmitting}
+                loading={isSubmitting}
+                width={'fit-content'}
+              >
+                Create
+              </Button>
+            </Dialog.Footer>
+            <Dialog.CloseTrigger asChild>
+              <CloseButton size="lg" color={colors.black} />
+            </Dialog.CloseTrigger>
+          </Dialog.Content>
+        </Dialog.Positioner>
+      </Portal>
+    </Dialog.Root>
+  );
+};

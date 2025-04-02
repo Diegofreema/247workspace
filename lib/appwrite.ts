@@ -2,7 +2,7 @@ import 'server-only';
 import { Client, Account } from 'node-appwrite';
 
 import { cookies } from 'next/headers';
-import { AUTH_COOKIE } from '@/components/features/auth/constants';
+import { AUTH_COOKIE } from '@/features/auth/constants';
 
 export async function createSessionClient() {
   const client = new Client()

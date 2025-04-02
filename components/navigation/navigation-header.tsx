@@ -4,9 +4,8 @@ import { CreateProject } from '../buttons/create-project';
 import { FlexBox } from '../custom/flex-box';
 import { ReusableSkeleton } from '../skeletons/link-skeleton';
 import { SearchInput } from './search-input';
-import { UserAvatarAction } from './user-avatar-action';
 import { SidebarBtn } from './sidebar-btn';
-import { Box } from '@chakra-ui/react';
+import { UserAvatarAction } from './user-avatar-action';
 
 export const NavigationHeader = () => {
   return (

@@ -2,7 +2,7 @@
 
 import { Button } from '@chakra-ui/react';
 import { IconLogout2 } from '@tabler/icons-react';
-import { useLogout } from '../features/auth/api/use-logout';
+import { useLogout } from '../../features/auth/api/use-logout';
 
 type Props = {
   className?: string;

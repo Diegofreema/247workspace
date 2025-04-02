@@ -14,7 +14,7 @@ import { FormSeparator } from './form-separator';
 import { colors } from '@/constants';
 import { SignUpValidator } from '@/utils/validators';
 import { SocialLogin } from '../buttons/social-login';
-import { useRegister } from '../features/auth/api/use-register';
+import { useRegister } from '../../features/auth/api/use-register';
 import { toaster } from '../ui/toaster';
 
 export const SignUpForm = () => {

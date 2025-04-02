@@ -1,4 +1,4 @@
-import { getLoggedInUser } from '@/components/features/auth/actions';
+import { getLoggedInUser } from '@/features/auth/actions';
 import { redirect } from 'next/navigation';
 
 export default async function Home() {

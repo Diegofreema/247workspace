@@ -2,11 +2,9 @@ import { Button as ChakraButton, ButtonProps } from '@chakra-ui/react';
 
 type Props = ButtonProps & {};
 
-export const Button = ({ ...props }: Props) => {
-  console.log(props.loading);
-
+export const Button = ({ width = '100%', px = 3, ...props }: Props) => {
   return (
-    <ChakraButton width={'100%'} borderRadius={5} size={'lg'} {...props}>
+    <ChakraButton width={width} px={px} borderRadius={5} size={'lg'} {...props}>
       {props.children}
     </ChakraButton>
   );

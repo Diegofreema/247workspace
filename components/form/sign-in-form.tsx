@@ -16,7 +16,7 @@ import { FormSeparator } from './form-separator';
 import { colors } from '@/constants';
 import { SignInValidator } from '@/utils/validators';
 import { SocialLogin } from '../buttons/social-login';
-import { useLogin } from '../features/auth/api/use-login';
+import { useLogin } from '../../features/auth/api/use-login';
 import { toaster } from '../ui/toaster';
 
 export const SignInForm = () => {

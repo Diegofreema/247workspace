@@ -1,3 +1,4 @@
+import { CreateWorkspaceForm } from '@/components/form/create-workspace-form';
 import { DashboardSidebar } from '@/components/navigation/dashboard-sidebar';
 import { MobileSidebar } from '@/components/navigation/mobile-sidebar';
 import { NavigationHeader } from '@/components/navigation/navigation-header';
@@ -7,9 +8,10 @@ type Props = {
   children: React.ReactNode;
 };
 
-const AuthLayout = ({ children }: Props) => {
+const DashboardLayout = ({ children }: Props) => {
   return (
     <Box className="min-h-screen bg-gray-200 flex relative">
+      <CreateWorkspaceForm />
       <Box
         position="fixed"
         left={0}
@@ -42,4 +44,4 @@ const AuthLayout = ({ children }: Props) => {
   );
 };
 
-export default AuthLayout;
+export default DashboardLayout;
