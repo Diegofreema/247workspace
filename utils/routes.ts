@@ -20,11 +20,6 @@ export const routes = [
     icon: 'IconFolders',
   },
   {
-    label: 'Projects',
-    path: '/projects',
-    icon: 'IconBriefcase2',
-  },
-  {
     label: 'Settings',
     path: '/settings',
     icon: 'IconSettings',

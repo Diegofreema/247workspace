@@ -4,10 +4,9 @@ import { colors } from '@/constants';
 import { drawerStore$ } from '@/lib/legend/drawer-store';
 import { CloseButton, Drawer, DrawerFooter, Portal } from '@chakra-ui/react';
 import { use$ } from '@legendapp/state/react';
-import { DashboardSidebar } from './dashboard-sidebar';
-import { MobileSidebarContent } from './mobile-sidebae-content';
-import { Logo } from '../ui/logo';
 import { LogoutBtn } from '../buttons/logout-button';
+import { Logo } from '../ui/logo';
+import { MobileSidebarContent } from './mobile-sidebae-content';
 export const MobileSidebar = () => {
   const isOpen = use$(drawerStore$.isOpen);
   return (

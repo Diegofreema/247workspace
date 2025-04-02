@@ -2,7 +2,7 @@
 import { colors } from '@/constants';
 import { Button } from '../custom/custom-button';
 import { ButtonProps } from '@chakra-ui/react';
-import { createWorkspaceModal$ } from '@/lib/legend/create-workspace-modal-store';
+import { createProjectModal$ } from '@/lib/legend/create-project-modal';
 
 type Props = ButtonProps & {};
 export const CreateProject = ({ ...props }: Props) => {
@@ -11,9 +11,9 @@ export const CreateProject = ({ ...props }: Props) => {
       {...props}
       bg={colors.purple}
       px={2}
-      onClick={() => createWorkspaceModal$.setOpen(true)}
+      onClick={() => createProjectModal$.setOpen(true)}
     >
-      Create a workspace
+      Create a project
     </Button>
   );
 };

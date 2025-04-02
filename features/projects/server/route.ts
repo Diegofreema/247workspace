@@ -1,14 +1,14 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 
-import { createWorkspaceSchema } from '../schema';
+import { createProjectSchema } from '../schema';
 import { sessionMiddleware } from '@/lib/session-middleware';
-import { DATABASE_ID, IMAGES_BUCKET_ID, WORKSPACES_ID } from '@/config';
+import { DATABASE_ID, IMAGES_BUCKET_ID, PROJECT_ID } from '@/config';
 import { AppwriteException, ID } from 'node-appwrite';
 
 const app = new Hono().post(
   '/',
-  zValidator('form', createWorkspaceSchema),
+  zValidator('form', createProjectSchema),
   sessionMiddleware,
   async (c) => {
     const databases = c.get('databases');
@@ -30,7 +30,7 @@ const app = new Hono().post(
     try {
       if (!user)
         return c.json({ success: false, errorMessage: 'UnAuthorized' });
-      await databases.createDocument(DATABASE_ID, WORKSPACES_ID, ID.unique(), {
+      await databases.createDocument(DATABASE_ID, PROJECT_ID, ID.unique(), {
         name,
         userId: user.$id,
         imageId: fileId,

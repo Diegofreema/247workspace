@@ -1,12 +1,12 @@
 import { observable } from '@legendapp/state';
-type CreateWorkspaceModal = {
+type CreateProjectStore = {
   isOpen: boolean;
   setOpen: (value: boolean) => void;
 };
 
-export const createWorkspaceModal$ = observable<CreateWorkspaceModal>({
+export const createProjectModal$ = observable<CreateProjectStore>({
   isOpen: false,
   setOpen: (value) => {
-    createWorkspaceModal$.isOpen.set(value);
+    createProjectModal$.isOpen.set(value);
   },
 });
