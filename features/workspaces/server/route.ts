@@ -15,7 +15,9 @@ const app = new Hono().post(
     const user = c.get('user');
     const storage = c.get('storage');
     const { name, image } = c.req.valid('form');
-    let uploadedImageUrl: string | undefined;
+    console.log({ name, image });
+
+    let fileId: string | undefined;
     if (image instanceof File) {
       const file = await storage.createFile(
         IMAGES_BUCKET_ID,
@@ -23,11 +25,7 @@ const app = new Hono().post(
         image
       );
 
-      const arrayBuffer = await storage.getFilePreview(
-        IMAGES_BUCKET_ID,
-        file.$id
-      );
-      uploadedImageUrl = `data:${file.mimeType};base64,${Buffer.from(arrayBuffer).toString('base64')}`;
+      fileId = file.$id;
     }
     try {
       if (!user)
@@ -35,7 +33,7 @@ const app = new Hono().post(
       await databases.createDocument(DATABASE_ID, WORKSPACES_ID, ID.unique(), {
         name,
         userId: user.$id,
-        image: uploadedImageUrl,
+        imageId: fileId,
       });
 
       return c.json({ success: true, errorMessage: null });

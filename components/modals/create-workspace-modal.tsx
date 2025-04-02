@@ -4,11 +4,11 @@ import { colors } from '@/constants';
 import { useCreateWorkspace } from '@/features/workspaces/api/use-create-workspace';
 import { createWorkspaceSchema } from '@/features/workspaces/schema';
 import { createWorkspaceModal$ } from '@/lib/legend/create-workspace-modal-store';
-import { CloseButton, Dialog, Portal, Stack } from '@chakra-ui/react';
+import { CloseButton, Dialog, Image, Portal, Stack } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { use$ } from '@legendapp/state/react';
 import { IconPhotoCirclePlus } from '@tabler/icons-react';
-import Image from 'next/image';
+
 import { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -80,18 +80,19 @@ export const CreateWorkspaceModal = () => {
                     <div className="flex flex-col gap-y">
                       <div className="flex items-center gap-x-5">
                         {value ? (
-                          <div className="size-[72px] relative rounded-md overflow-hidden">
-                            <Image
-                              fill
-                              alt="logo"
-                              src={
-                                value instanceof File
-                                  ? URL.createObjectURL(value)
-                                  : value
-                              }
-                              className=" object-cover"
-                            />
-                          </div>
+                          <Image
+                            objectFit={'cover'}
+                            width={'72px'}
+                            height={'72px'}
+                            borderRadius={72}
+                            alt="logo"
+                            src={
+                              value instanceof File
+                                ? URL.createObjectURL(value)
+                                : value
+                            }
+                            className=" object-cover"
+                          />
                         ) : (
                           <IconPhotoCirclePlus
                             className="size-[72px]"
