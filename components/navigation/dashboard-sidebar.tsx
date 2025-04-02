@@ -6,6 +6,7 @@ import { NavLink } from './nav-link';
 import { Suspense } from 'react';
 import { ReusableSkeleton } from '../skeletons/link-skeleton';
 import { LogoutBtn } from '../buttons/logout-button';
+import { ProjectSwitcher } from './project-switcher';
 
 export const DashboardSidebar = () => {
   return (
@@ -18,6 +19,7 @@ export const DashboardSidebar = () => {
       >
         <Logo isPurple />
         <Stack gap={7} mt={10} height={'100%'} width={'100%'}>
+          <ProjectSwitcher />
           <For each={routes}>
             {(item) => (
               <Suspense key={item.label} fallback={<ReusableSkeleton />}>
