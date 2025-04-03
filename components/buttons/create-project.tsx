@@ -11,9 +11,7 @@ type Props = ButtonProps & {
 };
 export const CreateProject = ({
   icon: Icon,
-
   bg = colors.purple,
-
   text,
   ...props
 }: Props) => {

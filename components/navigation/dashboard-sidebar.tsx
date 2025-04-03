@@ -19,7 +19,9 @@ export const DashboardSidebar = () => {
       >
         <Logo isPurple />
         <Stack gap={7} mt={10} height={'100%'} width={'100%'}>
-          <ProjectSwitcher />
+          <Suspense fallback={<ReusableSkeleton />}>
+            <ProjectSwitcher />
+          </Suspense>
           <For each={routes}>
             {(item) => (
               <Suspense key={item.label} fallback={<ReusableSkeleton />}>
