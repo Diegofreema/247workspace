@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { FlexBox } from '@/components/custom/flex-box';
 import { SignUpForm } from '@/components/form/sign-up-form';
 import { InstructionHeading } from '@/components/ui/instruction-heading';
-import { getLoggedInUser } from '@/features/auth/actions';
+import { getLoggedInUser } from '@/features/auth/queries';
 import { redirect } from 'next/navigation';
 
 const SignUp = async () => {

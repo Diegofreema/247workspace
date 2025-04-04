@@ -1,4 +1,4 @@
-import { getLoggedInUser } from '@/features/auth/actions';
+import { getLoggedInUser } from '@/features/auth/queries';
 import { redirect } from 'next/navigation';
 
 const page = async () => {

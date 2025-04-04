@@ -1,5 +1,5 @@
 import { FlexBox } from '@/components/custom/flex-box';
-import { getLoggedInUser } from '@/features/auth/actions';
+import { getLoggedInUser } from '@/features/auth/queries';
 import { SignInForm } from '@/components/form/sign-in-form';
 import { InstructionHeading } from '@/components/ui/instruction-heading';
 import { redirect } from 'next/navigation';

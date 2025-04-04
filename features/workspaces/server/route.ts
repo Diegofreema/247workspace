@@ -32,7 +32,6 @@ const app = new Hono()
       Query.orderDesc('$createdAt'),
       Query.contains('$id', workspaceIds),
     ]);
-    console.log({ data });
 
     return c.json({ data: data });
   })
@@ -62,7 +61,11 @@ const app = new Hono()
       }
       try {
         if (!user)
-          return c.json({ success: false, errorMessage: 'UnAuthorized' });
+          return c.json({
+            success: false,
+            errorMessage: 'UnAuthorized',
+            $id: null,
+          });
 
         const workspace = await databases.createDocument(
           DATABASE_ID,
@@ -80,7 +83,11 @@ const app = new Hono()
           workspaceId: workspace.$id,
           role: MemberRole.ADMIN,
         });
-        return c.json({ success: true, errorMessage: null });
+        return c.json({
+          success: true,
+          errorMessage: null,
+          $id: workspace.$id,
+        });
       } catch (error) {
         console.log(error);
 
@@ -92,7 +99,11 @@ const app = new Hono()
           if (error.type === 'storage_invalid_file_size') {
             errorMessage = 'File size is too large, max 1mb';
           }
-          return c.json({ success: false, errorMessage: errorMessage });
+          return c.json({
+            success: false,
+            errorMessage: errorMessage,
+            $id: null,
+          });
         }
         return c.json({
           success: false,

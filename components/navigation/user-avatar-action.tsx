@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { getLoggedInUser } from '../../features/auth/actions';
+import { getLoggedInUser } from '../../features/auth/queries';
 import { AvatarMenu } from './avatar-menu';
 import { SkeletonCircle } from '@chakra-ui/react';
 
