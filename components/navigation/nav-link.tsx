@@ -15,6 +15,7 @@ import { routes } from '@/utils/routes';
 
 import { FlexBox } from '../custom/flex-box';
 import { CustomText } from '../custom/title';
+import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 
 type Props = {
   item: (typeof routes)[0];
@@ -30,10 +31,10 @@ const icons = {
 };
 export const NavLink = ({ item }: Props) => {
   const pathname = usePathname();
-  const { workspaceId } = useParams();
+  const workspaceId = useWorkspaceId();
   const { icon, label, path } = item;
-  const isActive = pathname === path || pathname.includes(label.toLowerCase());
-  const route = path === '' ? `/${workspaceId}/settings` : path;
+  const isActive = pathname.includes(label.toLowerCase());
+  const route = `/workspaces/${workspaceId}/${path}`;
   const IconToRender = icons[icon as keyof typeof icons];
   const bgColor = isActive ? colors.purple : 'transparent';
   const color = isActive ? colors.white : colors.iconGrey;
