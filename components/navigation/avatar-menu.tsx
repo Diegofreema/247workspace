@@ -1,7 +1,7 @@
 'use client';
 
 import { colors } from '@/constants';
-import { Button, Menu, Portal, Separator } from '@chakra-ui/react';
+import { Button, Menu, Portal } from '@chakra-ui/react';
 import { LogoutBtn } from '../buttons/logout-button';
 import { CustomText } from '../custom/title';
 
@@ -11,7 +11,7 @@ type Props = {
 };
 export const AvatarMenu = ({ name, email }: Props) => {
   const firstLetter = name?.charAt(0)?.toUpperCase();
-  const secondLetter = name?.split(' ')[1].charAt(0)?.toUpperCase() ?? '';
+  const secondLetter = name?.split(' ')[1]?.charAt(0)?.toUpperCase() ?? '';
   const prefix = `${firstLetter}${secondLetter}`;
 
   return (

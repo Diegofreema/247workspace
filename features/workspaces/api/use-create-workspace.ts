@@ -4,14 +4,14 @@ import { InferRequestType, InferResponseType } from 'hono';
 import { toaster } from '@/components/ui/toaster';
 import { client } from '@/lib/rpc';
 
-type ResponseType = InferResponseType<(typeof client.api.projects)['$post']>;
-type RequestType = InferRequestType<(typeof client.api.projects)['$post']>;
+type ResponseType = InferResponseType<(typeof client.api.workspaces)['$post']>;
+type RequestType = InferRequestType<(typeof client.api.workspaces)['$post']>;
 
-export const useCreateProject = () => {
+export const useCreateWorkspace = () => {
   const queryClient = useQueryClient();
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ form }) => {
-      const res = await client.api.projects.$post({ form });
+      const res = await client.api.workspaces.$post({ form });
       return await res.json();
     },
     onSuccess: (data) => {
@@ -22,10 +22,10 @@ export const useCreateProject = () => {
           type: 'error',
         });
       } else {
-        queryClient.invalidateQueries({ queryKey: ['projects'] });
+        queryClient.invalidateQueries({ queryKey: ['workspaces'] });
         toaster.create({
           title: 'Success',
-          description: 'Your project has been created',
+          description: 'Your workspace has been created',
           type: 'success',
         });
       }

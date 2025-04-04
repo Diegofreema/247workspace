@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { CreateProject } from '../buttons/create-project';
+import { CreateButton } from '../buttons/create-button';
 import { FlexBox } from '../custom/flex-box';
 import { ReusableSkeleton } from '../skeletons/link-skeleton';
 import { SearchInput } from './search-input';
@@ -21,7 +21,7 @@ export const NavigationHeader = () => {
         <SidebarBtn />
         <FlexBox alignItems={'center'} gap={4} flex={1}>
           <SearchInput />
-          <CreateProject width="fit-content" text="Create a project" />
+          <CreateButton width="fit-content" text="Create a project" />
         </FlexBox>
       </Suspense>
       <UserAvatarAction />

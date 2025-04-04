@@ -1,22 +1,44 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 
-import { DATABASE_ID, IMAGES_BUCKET_ID, PROJECT_ID } from '@/config';
+import {
+  DATABASE_ID,
+  IMAGES_BUCKET_ID,
+  MEMBERS_ID,
+  WORKSPACE_ID,
+} from '@/config';
 import { sessionMiddleware } from '@/lib/session-middleware';
-import { AppwriteException, ID } from 'node-appwrite';
-import { createProjectSchema } from '../schema';
+import { AppwriteException, ID, Query } from 'node-appwrite';
+import { createWorkspaceSchema } from '../schema';
+import { MemberRole } from '@/types';
+import { generateRandomString } from '@/utils/helper';
 
 const app = new Hono()
   .get('/', sessionMiddleware, async (c) => {
     const databases = c.get('databases');
+    const user = c.get('user');
+    const members = await databases.listDocuments(DATABASE_ID, MEMBERS_ID, [
+      Query.equal('userId', user.$id),
+    ]);
 
-    const data = await databases.listDocuments(DATABASE_ID, PROJECT_ID);
+    if (members.total === 0) {
+      return c.json({ data: { documents: [] as any[], total: 0 } });
+    }
+
+    const workspaceIds = members.documents.map((member) => member.workspaceId);
+
+    const data = await databases.listDocuments(DATABASE_ID, WORKSPACE_ID, [
+      Query.orderDesc('$createdAt'),
+      Query.contains('$id', workspaceIds),
+    ]);
+    console.log({ data });
 
     return c.json({ data: data });
   })
   .post(
     '/',
-    zValidator('form', createProjectSchema),
+    zValidator('form', createWorkspaceSchema),
     sessionMiddleware,
     async (c) => {
       const databases = c.get('databases');
@@ -37,17 +59,27 @@ const app = new Hono()
           file.$id
         );
         uploadUrl = `data:image/png;base64,${Buffer.from(arrayBufferToBase64).toString('base64')}`;
-        console.log(uploadUrl);
       }
       try {
         if (!user)
           return c.json({ success: false, errorMessage: 'UnAuthorized' });
-        await databases.createDocument(DATABASE_ID, PROJECT_ID, ID.unique(), {
-          name,
-          userId: user.$id,
-          image: uploadUrl,
-        });
 
+        const workspace = await databases.createDocument(
+          DATABASE_ID,
+          WORKSPACE_ID,
+          ID.unique(),
+          {
+            name,
+            userId: user.$id,
+            imageUrl: uploadUrl,
+            inviteCode: generateRandomString(10),
+          }
+        );
+        await databases.createDocument(DATABASE_ID, MEMBERS_ID, ID.unique(), {
+          userId: user.$id,
+          workspaceId: workspace.$id,
+          role: MemberRole.ADMIN,
+        });
         return c.json({ success: true, errorMessage: null });
       } catch (error) {
         console.log(error);

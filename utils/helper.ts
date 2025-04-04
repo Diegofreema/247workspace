@@ -1,9 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function arrayBufferToBase64(buffer: any) {
-  let binary = '';
-  const bytes = new Uint8Array(buffer);
-  for (let i = 0; i < bytes.byteLength; i++) {
-    binary += String.fromCharCode(bytes[i]);
+export const generateRandomString = (length: number) => {
+  let result = '';
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
-  return `data:image/png;base64,${window.btoa(binary)}`;
-}
+  return result;
+};

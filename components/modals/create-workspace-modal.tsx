@@ -2,8 +2,8 @@
 
 import { colors } from '@/constants';
 
-import { createProjectSchema } from '@/features/projects/schema';
-import { createProjectModal$ } from '@/lib/legend/create-project-modal';
+import { createWorkspaceSchema } from '@/features/workspaces/schema';
+import { createWorkspaceModal$ } from '@/lib/legend/create-workspace-store';
 import { CloseButton, Dialog, Image, Portal, Stack } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { use$ } from '@legendapp/state/react';
@@ -14,11 +14,11 @@ import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '../custom/custom-button';
 import { FormInput } from '../form/form-input';
-import { useCreateProject } from '@/features/projects/api/use-create-project';
+import { useCreateWorkspace } from '@/features/workspaces/api/use-create-workspace';
 
-export const CreateProjectModal = () => {
-  const isOpen = use$(createProjectModal$.isOpen);
-  const { mutateAsync } = useCreateProject();
+export const CreateWorkspaceModal = () => {
+  const isOpen = use$(createWorkspaceModal$.isOpen);
+  const { mutateAsync } = useCreateWorkspace();
   const inputRef = useRef<HTMLInputElement>(null);
   const {
     handleSubmit,
@@ -26,33 +26,33 @@ export const CreateProjectModal = () => {
     register,
     reset,
     control,
-  } = useForm<z.infer<typeof createProjectSchema>>({
+  } = useForm<z.infer<typeof createWorkspaceSchema>>({
     defaultValues: {
       name: '',
       image: '',
     },
-    resolver: zodResolver(createProjectSchema),
+    resolver: zodResolver(createWorkspaceSchema),
   });
 
-  const onSubmit = async (data: z.infer<typeof createProjectSchema>) => {
+  const onSubmit = async (data: z.infer<typeof createWorkspaceSchema>) => {
     const finalValues = {
       ...data,
       image: data.image instanceof File ? data.image : '',
     };
     await mutateAsync({ form: finalValues });
     reset();
-    createProjectModal$.setOpen(false);
+    createWorkspaceModal$.setOpen(false);
   };
   const onCancel = () => {
     reset();
-    createProjectModal$.setOpen(false);
+    createWorkspaceModal$.setOpen(false);
   };
   return (
     <Dialog.Root
       placement="center"
       motionPreset={'slide-in-bottom'}
       open={isOpen}
-      onOpenChange={(e) => createProjectModal$.setOpen(e.open)}
+      onOpenChange={(e) => createWorkspaceModal$.setOpen(e.open)}
     >
       <Portal>
         <Dialog.Backdrop />
@@ -60,7 +60,7 @@ export const CreateProjectModal = () => {
           <Dialog.Content bg={colors.white}>
             <Dialog.Header>
               <Dialog.Title color={colors.black} fontSize={30}>
-                Create a project
+                Create a workspace
               </Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
@@ -101,7 +101,7 @@ export const CreateProjectModal = () => {
                           />
                         )}
                         <div className="flex flex-col">
-                          <p className="text-sm text-black">Project icon</p>
+                          <p className="text-sm text-black">Workspace icon</p>
                           <p className="text-sm text-[#ccc]">
                             JPG, PNG, JPEG, SVG, up to 1MB
                           </p>
