@@ -1,6 +1,16 @@
 'use client';
 import { colors } from '@/constants';
-import { Box, For, Stack } from '@chakra-ui/react';
+import {
+  Avatar,
+  Box,
+  createListCollection,
+  HStack,
+  Image,
+  Portal,
+  Select,
+  Stack,
+  useSelectContext,
+} from '@chakra-ui/react';
 import { IconPlus } from '@tabler/icons-react';
 import { FlexBox } from '../custom/flex-box';
 import { CustomText } from '../custom/title';
@@ -8,13 +18,31 @@ import { CustomText } from '../custom/title';
 import { useGetWorkspaces } from '@/features/workspaces/api/use-get-workspaces';
 import { ReusableSkeleton } from '../skeletons/link-skeleton';
 import { WorkspaceItem } from './workpsace-item';
+
 import { createWorkspaceModal$ } from '@/lib/legend/create-workspace-store';
-import { Tooltip } from '../ui/tooltip';
+import { useMemo } from 'react';
 import { CreateButton } from '../buttons/create-button';
+import { Tooltip } from '../ui/tooltip';
 
 export const WorkspaceSwitcher = () => {
   const { data, isPending, isError } = useGetWorkspaces();
-
+  const defaultValue = useMemo(() => {
+    return data?.documents[0]?.$id;
+  }, [data?.documents]);
+  const items = useMemo(() => {
+    return (
+      data?.documents.map((workspace) => ({
+        label: workspace.name,
+        value: workspace.$id,
+        imageUrl: workspace.imageUrl,
+      })) ?? []
+    );
+  }, [data?.documents]);
+  const workspaces = createListCollection({
+    items,
+    itemToString: (item) => item.label,
+    itemToValue: (item) => item.value,
+  });
   return (
     <Box mb={10} borderBottom={'1px solid #ccc'} pb={10}>
       <FlexBox justifyContent={'space-between'} alignItems={'center'} px={4}>
@@ -41,40 +69,85 @@ export const WorkspaceSwitcher = () => {
           </CustomText>
         )}
 
-        {isPending && (
-          <Stack gap={5}>
-            {[...Array(3)].map((_, i) => (
-              <ReusableSkeleton key={i} />
-            ))}
-          </Stack>
-        )}
+        {isPending && <ReusableSkeleton />}
 
         {!isError && !isPending && (
-          <Stack gap={5} ml={10}>
-            <For
-              each={data?.documents.slice(0, 3)}
-              fallback={
-                <CustomText
-                  color={'#ccc'}
-                  textAlign={'center'}
-                  fontWeight={'bold'}
-                >
-                  No projects yet
-                </CustomText>
-              }
-            >
-              {(item) => (
-                <WorkspaceItem
-                  key={item.$id}
-                  name={item.name}
-                  image={item.imageUrl}
-                  id={item.$id}
-                />
-              )}
-            </For>
-          </Stack>
+          <Select.Root
+            collection={workspaces}
+            size="lg"
+            defaultValue={[defaultValue]}
+            positioning={{ sameWidth: true }}
+          >
+            <Select.HiddenSelect />
+
+            <Select.Control fontWeight={'bold'}>
+              <Select.Trigger
+                border="1px solid #ccc"
+                p={1}
+                color={colors.iconGrey}
+              >
+                <SelectValue />
+              </Select.Trigger>
+              <Select.IndicatorGroup>
+                <Select.Indicator />
+              </Select.IndicatorGroup>
+            </Select.Control>
+            <Portal>
+              <Select.Positioner>
+                <Select.Content bg={'white'}>
+                  {workspaces.items.map((workspace) => (
+                    <Select.Item
+                      item={workspace}
+                      key={workspace.value}
+                      className="group hover:bg-purple transition duration-300 ease-in-out"
+                    >
+                      <WorkspaceItem
+                        name={workspace.label}
+                        id={workspace.value}
+                        image={workspace.imageUrl}
+                      />
+                      <Select.ItemIndicator
+                        className={
+                          'text-purple group-hover:text-white transition duration-300 ease-in-out'
+                        }
+                      />
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Positioner>
+            </Portal>
+          </Select.Root>
         )}
       </Stack>
     </Box>
+  );
+};
+
+const SelectValue = () => {
+  const select = useSelectContext();
+  const items = select.selectedItems as Array<{
+    label: string;
+    imageUrl: string;
+  }>;
+  const { label, imageUrl } = items[0];
+  return (
+    <Select.ValueText placeholder="No workspace selected" bg="white">
+      <HStack>
+        <Avatar.Root shape="full" size="md" colorPalette={'purple'}>
+          <Avatar.Image asChild width={30} height={30}>
+            <Image
+              src={imageUrl}
+              alt={label}
+              borderRadius={200}
+              width={38}
+              height={38}
+              objectFit={'fill'}
+            />
+          </Avatar.Image>
+          <Avatar.Fallback name={label[0].toUpperCase()} />
+        </Avatar.Root>
+        {label}
+      </HStack>
+    </Select.ValueText>
   );
 };

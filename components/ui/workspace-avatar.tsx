@@ -1,4 +1,4 @@
-import { Avatar } from '@chakra-ui/react';
+import { Avatar, Image } from '@chakra-ui/react';
 import React from 'react';
 
 type Props = {
@@ -7,18 +7,19 @@ type Props = {
 };
 
 export const WorkspaceAvatar = ({ name, image }: Props) => {
-  if (image) {
-    return (
-      <Avatar.Root colorPalette={'purple'}>
-        <Avatar.Fallback name={name[0]?.toUpperCase()} />
-        <Avatar.Image src={image} />
-      </Avatar.Root>
-    );
-  }
-
   return (
     <Avatar.Root colorPalette={'purple'}>
       <Avatar.Fallback name={name[0]?.toUpperCase()} />
+      <Avatar.Image asChild width={38} height={38}>
+        <Image
+          src={image}
+          alt={name}
+          borderRadius={200}
+          width={35}
+          height={35}
+          objectFit={'fill'}
+        />
+      </Avatar.Image>
     </Avatar.Root>
   );
 };

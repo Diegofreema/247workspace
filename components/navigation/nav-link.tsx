@@ -8,7 +8,7 @@ import {
   IconUsers,
 } from '@tabler/icons-react';
 import { Link } from 'next-view-transitions';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 
 import { colors } from '@/constants';
 import { routes } from '@/utils/routes';
@@ -30,16 +30,17 @@ const icons = {
 };
 export const NavLink = ({ item }: Props) => {
   const pathname = usePathname();
+  const { workspaceId } = useParams();
   const { icon, label, path } = item;
-  const isActive = pathname === path;
-
+  const isActive = pathname === path || pathname.includes(label.toLowerCase());
+  const route = path === '' ? `/${workspaceId}/settings` : path;
   const IconToRender = icons[icon as keyof typeof icons];
   const bgColor = isActive ? colors.purple : 'transparent';
   const color = isActive ? colors.white : colors.iconGrey;
 
   const fill = isActive ? 'white' : 'transparent';
   return (
-    <Link href={path} className="w-full">
+    <Link href={route} className="w-full">
       <FlexBox
         gap={3}
         alignItems={'center'}

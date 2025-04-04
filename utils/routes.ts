@@ -21,7 +21,7 @@ export const routes = [
   },
   {
     label: 'Settings',
-    path: '/settings',
+    path: '',
     icon: 'IconSettings',
   },
 ];
