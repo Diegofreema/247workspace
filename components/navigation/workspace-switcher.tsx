@@ -133,8 +133,8 @@ const SelectValue = () => {
   return (
     <Select.ValueText placeholder="No workspace selected" bg="white">
       <HStack>
-        <Avatar.Root shape="full" size="md" colorPalette={'purple'}>
-          <Avatar.Image asChild width={30} height={30}>
+        <Avatar.Root colorPalette={'purple'}>
+          <Avatar.Image asChild width={38} height={38}>
             <Image
               src={imageUrl}
               alt={label}
