@@ -23,8 +23,12 @@ import { createWorkspaceModal$ } from '@/lib/legend/create-workspace-store';
 import { useMemo } from 'react';
 import { CreateButton } from '../buttons/create-button';
 import { Tooltip } from '../ui/tooltip';
+import { useRouter } from 'next/navigation';
+import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 
 export const WorkspaceSwitcher = () => {
+  const router = useRouter();
+  const workspaceId = useWorkspaceId();
   const { data, isPending, isError } = useGetWorkspaces();
   const defaultValue = useMemo(() => {
     return data?.documents[0]?.$id;
@@ -43,6 +47,12 @@ export const WorkspaceSwitcher = () => {
     itemToString: (item) => item.label,
     itemToValue: (item) => item.value,
   });
+
+  const onSelect = (value: string[]) => {
+    console.log(value[0]);
+
+    router.push(`/workspaces/${value[0]}/home`);
+  };
   return (
     <Box mb={10} borderBottom={'1px solid #ccc'} pb={10}>
       <FlexBox justifyContent={'space-between'} alignItems={'center'} px={4}>
@@ -77,6 +87,8 @@ export const WorkspaceSwitcher = () => {
             size="lg"
             defaultValue={[defaultValue]}
             positioning={{ sameWidth: true }}
+            value={[workspaceId as string]}
+            onValueChange={(e) => onSelect(e.value)}
           >
             <Select.HiddenSelect />
 
@@ -129,24 +141,24 @@ const SelectValue = () => {
     label: string;
     imageUrl: string;
   }>;
-  const { label, imageUrl } = items[0];
+  const item = items[0];
   return (
     <Select.ValueText placeholder="No workspace selected" bg="white">
       <HStack>
         <Avatar.Root colorPalette={'purple'}>
           <Avatar.Image asChild width={38} height={38}>
             <Image
-              src={imageUrl}
-              alt={label}
+              src={item?.imageUrl}
+              alt={item?.label}
               borderRadius={200}
               width={38}
               height={38}
               objectFit={'fill'}
             />
           </Avatar.Image>
-          <Avatar.Fallback name={label[0].toUpperCase()} />
+          <Avatar.Fallback name={item?.label[0]?.toUpperCase()} />
         </Avatar.Root>
-        {label}
+        {item?.label}
       </HStack>
     </Select.ValueText>
   );
