@@ -34,7 +34,9 @@ export const NavLink = ({ item }: Props) => {
   const workspaceId = useWorkspaceId();
   const { icon, label, path } = item;
   const isActive = pathname.includes(label.toLowerCase());
-  const route = `/workspaces/${workspaceId}/${path}`;
+  const defaultRoute =
+    label.toLowerCase() === 'settings' ? '/workspace' : '/workspaces';
+  const route = `${defaultRoute}/${workspaceId}/${path}`;
   const IconToRender = icons[icon as keyof typeof icons];
   const bgColor = isActive ? colors.purple : 'transparent';
   const color = isActive ? colors.white : colors.iconGrey;

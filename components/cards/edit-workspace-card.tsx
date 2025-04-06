@@ -5,27 +5,33 @@ import { editWorkspaceSchema } from '@/features/workspaces/schema';
 
 import { Button, Card, Image, Stack } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { IconPhotoCirclePlus } from '@tabler/icons-react';
+import { IconArrowLeft, IconPhotoCirclePlus } from '@tabler/icons-react';
 import React, { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { FormInput } from '../form/form-input';
 import { Workspace } from '@/types';
 import { useUpdateWorkspace } from '@/features/workspaces/api/use-update-workspace';
+import { FlexBox } from '../custom/flex-box';
+import { CustomText } from '../custom/title';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   initialValue: Workspace;
+  onCancel?: () => void;
 };
 
-export const EditWorkspaceCard = ({ initialValue }: Props) => {
+export const EditWorkspaceCard = ({ initialValue, onCancel }: Props) => {
   const { mutateAsync } = useUpdateWorkspace();
-  const inputRef = useRef<HTMLInputElement>(null);
+  let inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
     register,
     reset,
     control,
+    watch,
   } = useForm<z.infer<typeof editWorkspaceSchema>>({
     defaultValues: {
       ...initialValue,
@@ -44,10 +50,24 @@ export const EditWorkspaceCard = ({ initialValue }: Props) => {
     });
     reset();
   };
+  const handleCancel = () => {
+    onCancel ? onCancel : router.back();
+  };
+  const { name, image } = watch();
+  const disable =
+    (name.trim() === initialValue.name.trim() &&
+      image === initialValue.imageUrl) ||
+    (name.trim() === initialValue.name.trim() && image === '');
   return (
     <Card.Root bg={colors.white} boxShadow={'lg'}>
       <Card.Body gap="2">
-        <Card.Title mt="2" color={colors.black}>
+        <FlexBox alignItems={'center'} gap={2}>
+          <IconArrowLeft color={colors.black} onClick={handleCancel} />
+          <CustomText fontSize={12} color={colors.black} fontWeight={'bold'}>
+            Back
+          </CustomText>
+        </FlexBox>
+        <Card.Title mt="2" color={colors.black} display={'flex'}>
           {initialValue.name}
         </Card.Title>
         <Stack gap={5}>
@@ -104,19 +124,40 @@ export const EditWorkspaceCard = ({ initialValue }: Props) => {
                       }}
                       disabled={isSubmitting}
                     />
-                    <Button
-                      color={colors.purple}
-                      borderColor={colors.purple}
-                      borderWidth={1}
-                      variant={'solid'}
-                      size={'xs'}
-                      onClick={() => inputRef?.current?.click()}
-                      width={'fit-content'}
-                      mt={2}
-                      px={2}
-                    >
-                      Upload image
-                    </Button>
+                    {value ? (
+                      <Button
+                        color={'red'}
+                        borderColor={'red'}
+                        borderWidth={1}
+                        variant={'solid'}
+                        size={'xs'}
+                        onClick={() => {
+                          onChange(null);
+                          if (inputRef.current) {
+                            inputRef.current.value = '';
+                          }
+                        }}
+                        width={'fit-content'}
+                        mt={2}
+                        px={2}
+                      >
+                        Remove image
+                      </Button>
+                    ) : (
+                      <Button
+                        color={colors.purple}
+                        borderColor={colors.purple}
+                        borderWidth={1}
+                        variant={'solid'}
+                        size={'xs'}
+                        onClick={() => inputRef?.current?.click()}
+                        width={'fit-content'}
+                        mt={2}
+                        px={2}
+                      >
+                        Upload image
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -128,12 +169,12 @@ export const EditWorkspaceCard = ({ initialValue }: Props) => {
         <Button
           bg={colors.purple}
           onClick={handleSubmit(onSubmit)}
-          disabled={isSubmitting}
+          disabled={disable || isSubmitting}
           loading={isSubmitting}
           width={'fit-content'}
           px={2}
         >
-          Create
+          Save changes
         </Button>
       </Card.Footer>
     </Card.Root>

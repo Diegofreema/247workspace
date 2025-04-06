@@ -20,12 +20,7 @@ const StandaloneLayout = ({ children }: Props) => {
         <Logo isPurple />
         <UserAvatarAction />
       </FlexBox>
-      <FlexBox
-        flexDir={'column'}
-        minH={'100Vh'}
-        justifyContent={'center'}
-        alignItems={'center'}
-      >
+      <FlexBox flexDir={'column'} minH={'100Vh'} alignItems={'center'}>
         {children}
       </FlexBox>
     </FlexBox>

@@ -21,7 +21,7 @@ export const useUpdateWorkspace = () => {
         form,
         param,
       });
-      if (res.ok) {
+      if (!res.ok) {
         throw new Error('Failed to update workspace');
       }
       return await res.json();
@@ -38,7 +38,7 @@ export const useUpdateWorkspace = () => {
         queryClient.invalidateQueries({
           queryKey: ['workspace', data?.workspace?.$id],
         });
-        router.replace(`/workspaces/${data?.workspace?.$id}/home`);
+        router.refresh();
         toaster.create({
           title: 'Success',
           description: 'Your workspace has been updated',

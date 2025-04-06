@@ -5,13 +5,14 @@ import { colors } from '@/constants';
 
 type Props = {
   isPurple?: boolean;
+  className?: string;
 };
 
-export const Logo = ({ isPurple = false }: Props) => {
+export const Logo = ({ isPurple = false, className }: Props) => {
   const imageSrc = isPurple ? '/logo.png' : '/logo.svg';
   const textColor = isPurple ? colors.purple : colors.white;
   return (
-    <FlexBox gap={3} alignItems={'center'}>
+    <FlexBox gap={3} alignItems={'center'} className={className}>
       <Image
         src={imageSrc}
         alt="logo"

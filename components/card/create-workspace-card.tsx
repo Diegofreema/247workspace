@@ -95,19 +95,38 @@ const CreateWorkspaceCard = () => {
                       }}
                       disabled={isSubmitting}
                     />
-                    <Button
-                      color={colors.purple}
-                      borderColor={colors.purple}
-                      borderWidth={1}
-                      variant={'solid'}
-                      size={'xs'}
-                      onClick={() => inputRef?.current?.click()}
-                      width={'fit-content'}
-                      mt={2}
-                      px={2}
-                    >
-                      Upload image
-                    </Button>
+                    {value ? (
+                      <Button
+                        color={'red'}
+                        borderColor={'red'}
+                        borderWidth={1}
+                        variant={'solid'}
+                        size={'xs'}
+                        onClick={() => {
+                          onChange(null);
+                          if (inputRef.current) {
+                            inputRef.current.value = '';
+                          }
+                        }}
+                        width={'fit-content'}
+                        mt={2}
+                      >
+                        Remove image
+                      </Button>
+                    ) : (
+                      <Button
+                        color={colors.purple}
+                        borderColor={colors.purple}
+                        borderWidth={1}
+                        variant={'solid'}
+                        size={'xs'}
+                        onClick={() => inputRef?.current?.click()}
+                        width={'fit-content'}
+                        mt={2}
+                      >
+                        Upload image
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>
