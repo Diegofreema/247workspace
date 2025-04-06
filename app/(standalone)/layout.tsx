@@ -1,5 +1,4 @@
 import { FlexBox } from '@/components/custom/flex-box';
-import { NavigationHeader } from '@/components/navigation/navigation-header';
 import { UserAvatarAction } from '@/components/navigation/user-avatar-action';
 import { Logo } from '@/components/ui/logo';
 import { colors } from '@/constants';
