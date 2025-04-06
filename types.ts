@@ -11,3 +11,8 @@ export type Workspace = Models.Document & {
   inviteCode: string;
   userId: string;
 };
+export type Member = Models.Document & {
+  role: MemberRole;
+  userId: string;
+  workspaceId: string;
+};

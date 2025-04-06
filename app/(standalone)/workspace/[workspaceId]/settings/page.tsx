@@ -1,3 +1,4 @@
+import { DeleteWorkspaceCard } from '@/components/cards/delete-workspace-card';
 import { EditWorkspaceCard } from '@/components/cards/edit-workspace-card';
 import { getLoggedInUser } from '@/features/auth/queries';
 import { getWorkspace } from '@/features/workspaces/queries';
@@ -16,9 +17,12 @@ const WorkspaceSettingsPage = async ({ params }: Props) => {
     return notFound();
   }
   return (
-    <div className="w-full lg:max-w-xl">
+    <div className="w-full lg:max-w-xl flex flex-col gap-y-4">
       <Suspense fallback={null}>
         <EditWorkspaceCard initialValue={initialValues} />
+      </Suspense>
+      <Suspense fallback={null}>
+        <DeleteWorkspaceCard />
       </Suspense>
     </div>
   );

@@ -16,6 +16,7 @@ import { routes } from '@/utils/routes';
 import { drawerStore$ } from '@/lib/legend/drawer-store';
 import { FlexBox } from '../custom/flex-box';
 import { CustomText } from '../custom/title';
+import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 
 type Props = {
   item: (typeof routes)[0];
@@ -32,8 +33,12 @@ const icons = {
 export const NavLinkButtons = ({ item }: Props) => {
   const pathname = usePathname();
   const router = useTransitionRouter();
+  const workspaceId = useWorkspaceId();
   const { icon, label, path } = item;
-  const isActive = pathname === path;
+  const isActive = pathname.includes(label.toLowerCase());
+  const defaultRoute =
+    label.toLowerCase() === 'settings' ? '/workspace' : '/workspaces';
+  const route = `${defaultRoute}/${workspaceId}/${path}`;
 
   const IconToRender = icons[icon as keyof typeof icons];
   const bgColor = isActive ? colors.purple : 'transparent';
@@ -42,8 +47,8 @@ export const NavLinkButtons = ({ item }: Props) => {
   const fill = isActive ? 'white' : 'transparent';
 
   const onClick = () => {
-    if (pathname === path) return;
-    router.push(path);
+    if (pathname === route) return;
+    router.push(route);
     drawerStore$.setOpen(false);
   };
   return (

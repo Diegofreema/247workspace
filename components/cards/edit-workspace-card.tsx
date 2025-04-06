@@ -59,7 +59,7 @@ export const EditWorkspaceCard = ({ initialValue, onCancel }: Props) => {
       image === initialValue.imageUrl) ||
     (name.trim() === initialValue.name.trim() && image === '');
   return (
-    <Card.Root bg={colors.white} boxShadow={'lg'}>
+    <Card.Root bg={colors.white} boxShadow={'md'}>
       <Card.Body gap="2">
         <FlexBox alignItems={'center'} gap={2}>
           <IconArrowLeft color={colors.black} onClick={handleCancel} />

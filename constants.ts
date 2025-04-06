@@ -6,4 +6,5 @@ export const colors = {
   white: '#ffffff',
   divider: '#686677',
   iconGrey: '#565656',
+  red: '#D70040',
 };
