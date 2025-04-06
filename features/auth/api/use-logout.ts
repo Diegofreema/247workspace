@@ -20,6 +20,7 @@ export const useLogout = () => {
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ['current'] });
       queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ['workspaces'] });
       toaster.create({
         title: 'Success',
         description: 'Logout Successful ',

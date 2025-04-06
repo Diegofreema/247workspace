@@ -1,7 +1,7 @@
 export const routes = [
   {
     label: 'Home',
-    path: '/',
+    path: '/home',
     icon: 'IconLayout2',
   },
   {
