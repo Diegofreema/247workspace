@@ -10,7 +10,7 @@ type Props = {
 
 const StandaloneLayout = ({ children }: Props) => {
   return (
-    <FlexBox bg={colors.white} flexDir={'column'}>
+    <FlexBox bg={colors.white} flexDir={'column'} px={4}>
       <FlexBox
         className="max-w-screen-2xl w-full"
         justifyContent={'space-between'}

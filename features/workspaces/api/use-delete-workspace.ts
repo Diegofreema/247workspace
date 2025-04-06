@@ -29,8 +29,7 @@ export const useDeleteWorkspace = () => {
     onSuccess: ({ data }) => {
       queryClient.invalidateQueries({ queryKey: ['workspaces'] });
       queryClient.invalidateQueries({ queryKey: ['workspace', data.$id] });
-
-      router.back();
+      router.replace('/');
       toaster.create({
         title: 'Success',
         description: 'Workspace has been deleted',
