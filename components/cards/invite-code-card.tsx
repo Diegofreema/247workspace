@@ -1,28 +1,10 @@
 'use client';
 import { colors } from '@/constants';
-import { createWorkspaceSchema } from '@/features/workspaces/schema';
 
 import { useUpdateWorkspaceInviteCode } from '@/features/workspaces/api/use-update-workspace-invite-code';
-import {
-  Button,
-  Card,
-  IconButton,
-  Image,
-  Input,
-  Stack,
-} from '@chakra-ui/react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  IconClipboard,
-  IconCopy,
-  IconPhotoCirclePlus,
-  IconRestore,
-} from '@tabler/icons-react';
-import { useRef } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { FormInput } from '../form/form-input';
 import { useConfirm } from '@/hooks/use-confirm';
+import { Button, Card, IconButton, Input } from '@chakra-ui/react';
+import { IconCopy, IconRestore } from '@tabler/icons-react';
 import { toaster } from '../ui/toaster';
 
 type Props = {
@@ -44,7 +26,7 @@ export const InviteCodeCard = ({ inviteCode, workspaceId }: Props) => {
     if (!ok) return;
     mutateAsync({ param: { workspaceId } });
   };
-  const fullInviteLink = `${window.location.origin}/workspaces/${workspaceId}/join/${inviteCode}`;
+  const fullInviteLink = `${window.location.origin}/workspace/${workspaceId}/join/${inviteCode}`;
 
   const copyToClipboard = () => {
     navigator.clipboard
