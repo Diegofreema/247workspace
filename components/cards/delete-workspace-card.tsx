@@ -12,8 +12,8 @@ export const DeleteWorkspaceCard = () => {
   const [DeleteDialog, confirmDelete] = useConfirm({
     title: 'Delete Workspace',
     colorPalette: 'red',
-    btnColor: colors.red,
     icon: LuTrash2,
+    isPending,
   });
 
   const handleDelete = async () => {

@@ -14,7 +14,7 @@ import { LuShare, LuTrash2 } from 'react-icons/lu';
 
 type Props = {
   title: string;
-  btnColor?: string;
+  isPending: boolean;
   icon: IconType;
   colorPalette?:
     | ConditionalValue<
@@ -43,9 +43,8 @@ type Props = {
 };
 
 export const useConfirm = ({
-  colorPalette,
   title,
-  btnColor = colors.purple,
+  isPending,
   icon: Icon,
 }: Props): [() => JSX.Element, () => Promise<any>] => {
   const [promise, setPromise] = useState<{
@@ -90,6 +89,7 @@ export const useConfirm = ({
                 size="sm"
                 variant="outline"
                 onClick={handleConfirm}
+                disabled={isPending}
               >
                 <Icon />
                 {title}

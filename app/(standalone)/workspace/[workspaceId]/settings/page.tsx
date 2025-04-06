@@ -1,5 +1,6 @@
 import { DeleteWorkspaceCard } from '@/components/cards/delete-workspace-card';
 import { EditWorkspaceCard } from '@/components/cards/edit-workspace-card';
+import { InviteCodeCard } from '@/components/cards/invite-code-card';
 import { getLoggedInUser } from '@/features/auth/queries';
 import { getWorkspace } from '@/features/workspaces/queries';
 import { notFound, redirect } from 'next/navigation';
@@ -23,6 +24,12 @@ const WorkspaceSettingsPage = async ({ params }: Props) => {
       </Suspense>
       <Suspense fallback={null}>
         <DeleteWorkspaceCard />
+      </Suspense>
+      <Suspense fallback={null}>
+        <InviteCodeCard
+          inviteCode={initialValues.inviteCode}
+          workspaceId={initialValues.$id}
+        />
       </Suspense>
     </div>
   );
