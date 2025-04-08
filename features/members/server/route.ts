@@ -10,6 +10,31 @@ import { MemberRole } from '@/types';
 
 const app = new Hono()
   .get(
+    '/member',
+    sessionMiddleware,
+    zValidator('query', z.object({ memberId: z.string() })),
+    async (c) => {
+      const { memberId } = c.req.query();
+      const databases = c.get('databases');
+      const member = await databases.getDocument(
+        DATABASE_ID,
+        MEMBERS_ID,
+        memberId
+      );
+      if (!member) {
+        return c.json(
+          {
+            error: 'Member not found',
+          },
+          404
+        );
+      }
+      return c.json({
+        data: member,
+      });
+    }
+  )
+  .get(
     '/',
     sessionMiddleware,
     zValidator('query', z.object({ workspaceId: z.string() })),
