@@ -1,7 +1,7 @@
-import { Image } from '@chakra-ui/react';
+import { colors } from '@/constants';
 import { FlexBox } from '../custom/flex-box';
 import { Title } from '../custom/title';
-import { colors } from '@/constants';
+import { LogoSvg } from '../svg-icons/logo';
 
 type Props = {
   isPurple?: boolean;
@@ -9,17 +9,11 @@ type Props = {
 };
 
 export const Logo = ({ isPurple = false, className }: Props) => {
-  const imageSrc = isPurple ? '/logo.png' : '/logo.svg';
+  // const imageSrc = isPurple ? '/logo.png' : '/logo.svg';
   const textColor = isPurple ? colors.purple : colors.white;
   return (
     <FlexBox gap={3} alignItems={'center'} className={className}>
-      <Image
-        src={imageSrc}
-        alt="logo"
-        width={35}
-        height={35}
-        objectFit={'contain'}
-      />
+      <LogoSvg isPurple={isPurple} />
       <Title as="h2" color={textColor} fontSize={isPurple ? '20px' : '30px'}>
         247workspace
       </Title>

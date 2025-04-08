@@ -1,6 +1,5 @@
 import { FlexBox } from '@/components/custom/flex-box';
 import { Title } from '@/components/custom/title';
-import { Logo } from '@/components/ui/logo';
 import { colors } from '@/constants';
 import { Image, Stack, Text } from '@chakra-ui/react';
 
@@ -14,7 +13,7 @@ export const Aside = () => {
       borderRadius={10}
       minHeight={'100%'}
     >
-      <Logo />
+      {/* <Logo isPurple={false} /> */}
       <Stack mt={20} gap={5}>
         <Image
           alt="image"
