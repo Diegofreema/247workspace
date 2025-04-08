@@ -8,7 +8,7 @@ import { Member } from './member';
 
 export const MemberList = () => {
   return (
-    <Box bg={colors.white} p={4} flex={1} minHeight={'85vh'}>
+    <Box bg={colors.white} p={4} flex={1} minHeight={'88vh'}>
       <Member />
     </Box>
   );
