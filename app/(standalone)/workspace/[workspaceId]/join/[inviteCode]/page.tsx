@@ -1,9 +1,8 @@
-import { InviteCodeCard } from '@/components/cards/invite-code-card';
 import { JoinCard } from '@/components/cards/join-card';
 import { getLoggedInUser } from '@/features/auth/queries';
 import { getWorkspaceInfo } from '@/features/workspaces/queries';
 import { redirect } from 'next/navigation';
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 
 type Props = {
   params: { workspaceId: string };

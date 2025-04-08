@@ -37,7 +37,7 @@ export const InviteCodeCard = ({ inviteCode, workspaceId }: Props) => {
           type: 'info',
         });
       })
-      .catch((err) => {
+      .catch(() => {
         toaster.create({
           title: 'Failed to copy invite link!',
           type: 'info',

@@ -8,14 +8,14 @@ import {
   IconUsers,
 } from '@tabler/icons-react';
 import { Link } from 'next-view-transitions';
-import { useParams, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 import { colors } from '@/constants';
 import { routes } from '@/utils/routes';
 
+import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { FlexBox } from '../custom/flex-box';
 import { CustomText } from '../custom/title';
-import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 
 type Props = {
   item: (typeof routes)[0];

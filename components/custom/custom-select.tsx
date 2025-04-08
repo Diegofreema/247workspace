@@ -5,7 +5,6 @@ import {
   Portal,
   Select,
   SelectValueChangeDetails,
-  createListCollection,
 } from '@chakra-ui/react';
 
 type Props = {

@@ -8,7 +8,7 @@ type Props = {
   id: string;
 };
 
-export const WorkspaceItem = ({ name, image, id }: Props) => {
+export const WorkspaceItem = ({ name, image }: Props) => {
   return (
     <FlexBox alignItems={'center'} gap={3}>
       <WorkspaceAvatar name={name} image={image} />

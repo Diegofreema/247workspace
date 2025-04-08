@@ -1,5 +1,4 @@
 import { getLoggedInUser } from '@/features/auth/queries';
-import { getWorkspace } from '@/features/workspaces/queries';
 import { redirect } from 'next/navigation';
 
 const WorkspaceSettingsPage = async () => {
