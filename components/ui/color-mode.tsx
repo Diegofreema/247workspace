@@ -45,7 +45,9 @@ export function ColorModeIcon() {
   return colorMode === 'dark' ? <LuMoon /> : <LuSun />;
 }
 
-interface ColorModeButtonProps extends Omit<IconButtonProps, 'aria-label'> {}
+interface ColorModeButtonProps extends Omit<IconButtonProps, 'aria-label'> {
+  name?: string;
+}
 
 export const ColorModeButton = React.forwardRef<
   HTMLButtonElement,
