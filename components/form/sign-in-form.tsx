@@ -18,9 +18,11 @@ import { SignInValidator } from '@/utils/validators';
 import { SocialLogin } from '../buttons/social-login';
 import { useLogin } from '../../features/auth/api/use-login';
 import { toaster } from '../ui/toaster';
+import { useRouter } from 'next/navigation';
 
 export const SignInForm = () => {
   const { mutateAsync } = useLogin();
+  const router = useRouter();
   const [type, setType] = useState<'password' | 'text'>('password');
   const togglePassword = () =>
     setType((prev) => (prev === 'password' ? 'text' : 'password'));
@@ -47,7 +49,7 @@ export const SignInForm = () => {
       return;
     }
     reset();
-
+    router.push('/');
     toaster.create({
       title: 'Success',
       description: 'Welcome back',
@@ -90,6 +92,7 @@ export const SignInForm = () => {
           disabled={isSubmitting}
           loading={isSubmitting}
           width="100%"
+          color="white"
         >
           Sign in
         </Button>

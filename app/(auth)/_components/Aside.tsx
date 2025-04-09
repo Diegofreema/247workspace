@@ -11,7 +11,7 @@ export const Aside = () => {
       px={10}
       bg={colors.purple}
       borderRadius={10}
-      minHeight={'100%'}
+      flex={1}
     >
       {/* <Logo isPurple={false} /> */}
       <Stack mt={20} gap={5}>
@@ -23,10 +23,10 @@ export const Aside = () => {
           height={400}
           alignSelf={'center'}
         />
-        <Title fontSize={'48px'} lineHeight={1.3}>
+        <Title fontSize={'48px'} lineHeight={1.3} color="white">
           Organize and manager your task with ease
         </Title>
-        <Text className="font-sans ">
+        <Text className="font-sans text-white ">
           Discover endless opportunities on Freelance Connect, where talented
           freelancers and businesses unite. Jump right in with us!
         </Text>

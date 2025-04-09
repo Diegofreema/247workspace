@@ -16,6 +16,7 @@ export const DashboardSidebar = () => {
         alignItems={'center'}
         width="100%"
         height={'100%'}
+        className="overflow-y-auto"
       >
         <Logo isPurple />
         <Stack gap={7} mt={10} height={'100%'} width={'100%'}>

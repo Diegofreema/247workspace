@@ -16,11 +16,12 @@ import { SignUpValidator } from '@/utils/validators';
 import { SocialLogin } from '../buttons/social-login';
 import { useRegister } from '../../features/auth/api/use-register';
 import { toaster } from '../ui/toaster';
+import { useRouter } from 'next/navigation';
 
 export const SignUpForm = () => {
   const { mutateAsync } = useRegister();
   const [type, setType] = useState<'password' | 'text'>('password');
-
+  const router = useRouter();
   const togglePassword = () =>
     setType((prev) => (prev === 'password' ? 'text' : 'password'));
 
@@ -49,6 +50,7 @@ export const SignUpForm = () => {
       });
       return;
     }
+    router.push('/');
     reset();
     toaster.create({
       title: 'Success',
@@ -110,6 +112,7 @@ export const SignUpForm = () => {
           loading={isSubmitting}
           onClick={handleSubmit(onSubmit)}
           width="100%"
+          color="white"
         >
           Sign Up
         </Button>
