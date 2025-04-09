@@ -6,6 +6,7 @@ import { createAdminClient } from '@/lib/appwrite';
 import { SignInValidator, SignUpValidator } from '@/utils/validators';
 import { AUTH_COOKIE } from '../constants';
 import { sessionMiddleware } from '@/lib/session-middleware';
+import { DATABASE_ID, PROFILE_ID } from '@/config';
 
 const app = new Hono()
   .get('/current', sessionMiddleware, (c) => {
@@ -38,10 +39,18 @@ const app = new Hono()
     }
   })
   .post('/register', zValidator('json', SignUpValidator), async (c) => {
-    const { email, password, fullName } = c.req.valid('json');
-    const { account } = await createAdminClient();
+    const { email, password, fullName, role } = c.req.valid('json');
+    const { account, databases } = await createAdminClient();
     try {
-      await account.create(ID.unique(), email, password, fullName);
+      const user = await account.create(ID.unique(), email, password, fullName);
+
+      // await databases.createDocument(DATABASE_ID, PROFILE_ID, ID.unique(), {
+      //   userId: user.$id,
+      //   name: fullName,
+      //   email: email,
+      //   role: role,
+      // });
+
       const session = await account.createEmailPasswordSession(email, password);
       setCookie(c, AUTH_COOKIE, session.secret, {
         httpOnly: true,

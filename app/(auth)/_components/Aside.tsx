@@ -11,7 +11,7 @@ export const Aside = () => {
       px={10}
       bg={colors.purple}
       borderRadius={10}
-      flex={1}
+      height={'100%'}
     >
       {/* <Logo isPurple={false} /> */}
       <Stack mt={20} gap={5}>

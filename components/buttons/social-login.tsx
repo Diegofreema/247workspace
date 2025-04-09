@@ -1,3 +1,4 @@
+import { signUpWithGithub } from '@/lib/oauth';
 import { Button, Image, Stack } from '@chakra-ui/react';
 // import {  } from '../custom/custom-button';
 
@@ -29,6 +30,7 @@ export const SocialLogin = ({ isSubmitting }: Props) => {
         border={'1px solid #ccc'}
         disabled={isSubmitting}
         type="submit"
+        onClick={() => signUpWithGithub()}
       >
         <Image
           alt="github image"

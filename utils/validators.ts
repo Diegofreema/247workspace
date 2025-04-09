@@ -13,7 +13,9 @@ export const SignUpValidator = z.object({
     .string()
     .email({ message: 'Please enter a valid email address' })
     .min(1, { message: 'Please enter an email address' }),
+  role: z.string().min(1, { message: 'Please select a role' }),
   fullName: z.string().min(1, { message: 'Please enter your full name' }),
+
   password: z
     .string()
     .min(8, { message: 'Password must be at least 8 characters long' })

@@ -10,6 +10,7 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import { MemberTable } from './member-table';
 
 type Props = {};
 
@@ -34,6 +35,7 @@ export const Member = () => {
         <SearchInput />
         <CustomSelect data={data} value={value} onChange={onChange} />
       </FlexBox>
+      <MemberTable />
     </Box>
   );
 };

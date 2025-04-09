@@ -3,3 +3,4 @@ export const PROJECT_ID = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID!;
 export const IMAGES_BUCKET_ID = process.env.NEXT_PUBLIC_IMAGES_BUCKET_ID!;
 export const MEMBERS_ID = process.env.NEXT_PUBLIC_APPWRITE_MEMBER_ID!;
 export const WORKSPACE_ID = process.env.NEXT_PUBLIC_APPWRITE_WORKSPACE_ID!;
+export const PROFILE_ID = process.env.NEXT_PUBLIC_APPWRITE_PROFILE_ID!;

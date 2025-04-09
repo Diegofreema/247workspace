@@ -42,9 +42,13 @@ export const CustomSelect = <TFormValues extends FieldValues>({
       </Select.Control>
       <Portal>
         <Select.Positioner>
-          <Select.Content>
+          <Select.Content bg={colors.white}>
             {data.items.map((framework) => (
-              <Select.Item item={framework} key={framework.value}>
+              <Select.Item
+                item={framework}
+                key={framework.value}
+                color={colors.black}
+              >
                 {framework.label}
                 <Select.ItemIndicator />
               </Select.Item>

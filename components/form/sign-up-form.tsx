@@ -1,5 +1,5 @@
 'use client';
-import { Stack, Button } from '@chakra-ui/react';
+import { Stack, Button, createListCollection } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'next-view-transitions';
 import { useState } from 'react';
@@ -80,7 +80,7 @@ export const SignUpForm = () => {
           required
         />
 
-        {/* <FormInput
+        <FormInput
           label="Role"
           placeholder="Select a role"
           register={register}
@@ -90,7 +90,7 @@ export const SignUpForm = () => {
           select
           data={data}
           required
-        /> */}
+        />
 
         <FormInput
           label="Password"
@@ -134,13 +134,13 @@ export const SignUpForm = () => {
   );
 };
 
-// const data = createListCollection({
-//   items: [
-//     { label: 'Project manager', value: 'project manager' },
-//     { label: 'Developer', value: 'developer' },
-//     { label: 'UI/UX Designer', value: 'ui/ux designer' },
-//     { label: 'Customer Support', value: 'customer support' },
-//     { label: 'UI/UX Designer', value: 'ui/ux designer' },
-//     { label: 'Others', value: 'others' },
-//   ],
-// });
+const data = createListCollection({
+  items: [
+    { label: 'CTO', value: 'CTO' },
+    { label: 'Project manager', value: 'Project manager' },
+    { label: 'Developer', value: 'Developer' },
+    { label: 'UI/UX Designer', value: 'UI/UX Designer' },
+    { label: 'Customer Support', value: 'Customer support' },
+    { label: 'Others', value: 'others' },
+  ],
+});
