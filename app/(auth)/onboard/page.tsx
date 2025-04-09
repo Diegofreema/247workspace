@@ -5,10 +5,19 @@ import { InstructionHeading } from '@/components/ui/instruction-heading';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
-const SignIn = async () => {
+import { getProfile } from '@/features/workspaces/queries';
+import { OnboardForm } from '@/components/form/onboard-form';
+
+const Onboard = async () => {
   const user = await getLoggedInUser();
 
-  if (user) redirect('/');
+  if (!user) redirect('/sign-in');
+  console.log(user);
+
+  const profile = await getProfile();
+  if (profile) {
+    redirect('/');
+  }
   return (
     <FlexBox
       mx="auto"
@@ -19,14 +28,14 @@ const SignIn = async () => {
       gap={6}
     >
       <InstructionHeading
-        title="Welcome to 247workspace"
-        subtitle="Please sign in below with google or github"
+        title="Set up your profile"
+        subtitle="Please fill in your details to get started"
       />
       <Suspense fallback={null}>
-        <SignInForm />
+        <OnboardForm initialValue={{ email: user.email, name: user.name }} />
       </Suspense>
     </FlexBox>
   );
 };
 
-export default SignIn;
+export default Onboard;

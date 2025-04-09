@@ -4,6 +4,7 @@ import {
   IconButton,
   Input,
   ListCollection,
+  Textarea,
 } from '@chakra-ui/react';
 import {
   FieldErrors,
@@ -28,6 +29,7 @@ type FormInputProps<TFormValues extends FieldValues> = {
   required?: boolean;
   helperText?: string;
   select?: boolean;
+  variant?: 'text' | 'select' | 'textarea';
   data?: ListCollection<{
     label: string;
     value: string;
@@ -41,29 +43,28 @@ export const FormInput = <TFormValues extends FieldValues>({
   label,
   placeholder,
   type = 'text',
-  password,
-  togglePassword,
+
   disabled,
   required,
   helperText,
-  select,
-  data,
-}: FormInputProps<TFormValues>) => {
-  const hide = type === 'password';
 
+  data,
+  variant = 'text',
+}: FormInputProps<TFormValues>) => {
   return (
     <Field.Root invalid={!!errors[name]} width="100%" required={required}>
       <Field.Label color={colors.black}>
         {label} <Field.RequiredIndicator />
       </Field.Label>
-      {select && data ? (
+      {variant === 'select' && data && (
         <CustomSelect
           data={data}
           placeholder={placeholder}
           register={register}
           name={name}
         />
-      ) : (
+      )}
+      {variant === 'text' && (
         <Group
           attached
           w="full"
@@ -84,16 +85,24 @@ export const FormInput = <TFormValues extends FieldValues>({
             color={colors.black}
             css={{ '--error-color': 'red' }}
           />
-          {password && (
-            <IconButton onClick={togglePassword}>
-              {hide ? (
-                <IconEye color={colors.black} />
-              ) : (
-                <IconEyeOff color={colors.black} />
-              )}
-            </IconButton>
-          )}
         </Group>
+      )}
+      {variant === 'textarea' && (
+        <Textarea
+          flex="1"
+          {...register(name)}
+          placeholder={placeholder}
+          disabled={disabled}
+          w="full"
+          maxW="100%"
+          borderWidth={1}
+          borderStyle={'solid'}
+          borderColor={colors.grey}
+          borderRadius={5}
+          p={3}
+          color={colors.black}
+          css={{ '--error-color': 'red' }}
+        />
       )}
       {helperText && <Field.HelperText>{helperText}</Field.HelperText>}
       <Field.ErrorText>{errors[name]?.message as string}</Field.ErrorText>

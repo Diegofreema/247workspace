@@ -1,5 +1,5 @@
 'use client';
-import { Stack, Button, createListCollection } from '@chakra-ui/react';
+import { Button, createListCollection, Stack } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'next-view-transitions';
 import { useState } from 'react';
@@ -13,10 +13,9 @@ import { FormSeparator } from './form-separator';
 
 import { colors } from '@/constants';
 import { SignUpValidator } from '@/utils/validators';
-import { SocialLogin } from '../buttons/social-login';
+import { useRouter } from 'next/navigation';
 import { useRegister } from '../../features/auth/api/use-register';
 import { toaster } from '../ui/toaster';
-import { useRouter } from 'next/navigation';
 
 export const SignUpForm = () => {
   const { mutateAsync } = useRegister();
@@ -117,7 +116,7 @@ export const SignUpForm = () => {
           Sign Up
         </Button>
         <FormSeparator />
-        <SocialLogin isSubmitting={isSubmitting} />
+        {/* <SocialLogin isSubmitting={isSubmitting} /> */}
         <FlexBox justifyContent={'center'} width="100%" gap={1} mt={10}>
           <CustomText className="text-black">
             Already have an Account?

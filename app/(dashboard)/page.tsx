@@ -1,11 +1,13 @@
 import { getLoggedInUser } from '@/features/auth/queries';
-import { getWorkspaces } from '@/features/workspaces/queries';
+import { getProfile, getWorkspaces } from '@/features/workspaces/queries';
 import { redirect } from 'next/navigation';
 
 const WorkspaceHomePage = async () => {
   const user = await getLoggedInUser();
 
   if (!user) redirect('/sign-in');
+  const profile = await getProfile();
+  if (!profile) redirect('/onboard');
   const workspaces = await getWorkspaces();
 
   if (workspaces.total === 0) {

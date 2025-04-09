@@ -1,4 +1,4 @@
-import { DATABASE_ID, MEMBERS_ID, WORKSPACE_ID } from '@/config';
+import { DATABASE_ID, MEMBERS_ID, PROFILE_ID, WORKSPACE_ID } from '@/config';
 import { createSessionClient } from '@/lib/appwrite';
 import { Workspace } from '@/types';
 import { Query } from 'node-appwrite';
@@ -25,6 +25,24 @@ export const getWorkspaces = async () => {
     return data;
   } catch (error) {
     return { documents: [] as any[], total: 0 };
+  }
+};
+export const getProfile = async () => {
+  try {
+    const { account, databases } = await createSessionClient();
+    const user = await account.get();
+    const profile = await databases.getDocument(
+      DATABASE_ID,
+      PROFILE_ID,
+      user.$id
+    );
+
+    if (!profile) {
+      return null;
+    }
+    return profile;
+  } catch (error) {
+    return null;
   }
 };
 export const getWorkspace = async ({
