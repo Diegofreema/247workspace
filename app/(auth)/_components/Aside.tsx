@@ -23,10 +23,17 @@ export const Aside = () => {
           height={400}
           alignSelf={'center'}
         />
-        <Title fontSize={'48px'} lineHeight={1.3} color="white">
+        <Title
+          fontSize={{ base: '30px', md: '48px' }}
+          lineHeight={1.3}
+          color="white"
+        >
           Organize and manager your task with ease
         </Title>
-        <Text className="font-sans text-white ">
+        <Text
+          className="font-sans text-white"
+          fontSize={{ base: '16px', md: '20px' }}
+        >
           Discover endless opportunities on Freelance Connect, where talented
           freelancers and businesses unite. Jump right in with us!
         </Text>

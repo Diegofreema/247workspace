@@ -22,6 +22,7 @@ export const AvatarMenu = ({ name, email }: Props) => {
           size="md"
           borderRadius={1000}
           bg={colors.purple}
+          color={colors.white}
         >
           {prefix}
         </Button>

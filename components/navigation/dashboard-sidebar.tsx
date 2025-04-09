@@ -10,16 +10,15 @@ import { WorkspaceSwitcher } from './workspace-switcher';
 
 export const DashboardSidebar = () => {
   return (
-    <aside className="p-4 h-full">
+    <aside className="p-4 h-full overflow-y-auto min-h-full">
       <FlexBox
         flexDirection={'column'}
         alignItems={'center'}
         width="100%"
-        height={'100%'}
-        className="overflow-y-auto"
+        minHeight={'100%'}
       >
         <Logo isPurple />
-        <Stack gap={7} mt={10} height={'100%'} width={'100%'}>
+        <Stack gap={7} mt={10} flex={1} width={'100%'}>
           <Suspense fallback={<ReusableSkeleton />}>
             <WorkspaceSwitcher />
           </Suspense>
@@ -30,8 +29,8 @@ export const DashboardSidebar = () => {
               </Suspense>
             )}
           </For>
-          <LogoutBtn className="mt-auto" />
         </Stack>
+        <LogoutBtn className="mt-auto" />
       </FlexBox>
     </aside>
   );

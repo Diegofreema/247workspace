@@ -21,7 +21,11 @@ export const NavigationHeader = () => {
         <SidebarBtn />
         <FlexBox alignItems={'center'} gap={4} flex={1}>
           <SearchInput />
-          <CreateButton width="fit-content" text="Create a project" />
+          <CreateButton
+            width="fit-content"
+            text="Create a project"
+            color="white"
+          />
         </FlexBox>
       </Suspense>
       <UserAvatarAction />

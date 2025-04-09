@@ -54,13 +54,12 @@ export const NavLink = ({ item }: Props) => {
         className="hover:bg-purple group transition w-full"
       >
         <IconToRender
-          size={30}
-          className={`group-hover:text-white transition ${isActive ? 'text-white' : 'text-iconGrey'}`}
+          className={` size-5 sm:size-7 group-hover:text-white transition ${isActive ? 'text-white' : 'text-iconGrey'}`}
           fill={fill}
         />
         <CustomText
           color={color}
-          className="group-hover:text-white transition font-semibold"
+          className="group-hover:text-white transition font-semibold text-[15px] sm:text-[17px]"
         >
           {label}
         </CustomText>
