@@ -1,4 +1,4 @@
-import { signUpWithGithub } from '@/lib/oauth';
+import { signUpWithGithub, signUpWithGoogle } from '@/lib/oauth';
 import { Button, Image, Stack } from '@chakra-ui/react';
 import { useState } from 'react';
 import { toaster } from '../ui/toaster';
@@ -22,6 +22,21 @@ export const SocialLogin = () => {
       setIsSubmitting(false);
     }
   };
+  const onGoogleLogin = async () => {
+    setIsSubmitting(true);
+    try {
+      await signUpWithGoogle();
+    } catch (error) {
+      console.log(error);
+      toaster.create({
+        title: 'Error',
+        description: 'Failed to login, please try again',
+        type: 'error',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <Stack gap={4} width={'100%'}>
       <Button
@@ -29,6 +44,7 @@ export const SocialLogin = () => {
         border={'1px solid #ccc'}
         disabled={isSubmitting}
         color="black"
+        onClick={onGoogleLogin}
       >
         <Image
           alt="google image"

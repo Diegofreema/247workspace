@@ -27,16 +27,14 @@ export const getWorkspaces = async () => {
     return { documents: [] as any[], total: 0 };
   }
 };
-export const getProfile = async () => {
+export const getProfile = async (id: string) => {
   try {
-    const { account, databases } = await createSessionClient();
-    const user = await account.get();
-    const profile = await databases.getDocument(
-      DATABASE_ID,
-      PROFILE_ID,
-      user.$id
-    );
+    const { databases } = await createSessionClient();
 
+    const profiles = await databases.listDocuments(DATABASE_ID, PROFILE_ID, [
+      Query.equal('userId', id),
+    ]);
+    const profile = profiles.documents[0];
     if (!profile) {
       return null;
     }

@@ -6,7 +6,7 @@ const WorkspaceHomePage = async () => {
   const user = await getLoggedInUser();
 
   if (!user) redirect('/sign-in');
-  const profile = await getProfile();
+  const profile = await getProfile(user.$id);
   if (!profile) redirect('/onboard');
   const workspaces = await getWorkspaces();
 

@@ -14,7 +14,7 @@ const Onboard = async () => {
   if (!user) redirect('/sign-in');
   console.log(user);
 
-  const profile = await getProfile();
+  const profile = await getProfile(user?.$id);
   if (profile) {
     redirect('/');
   }
