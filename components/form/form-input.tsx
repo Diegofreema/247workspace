@@ -1,7 +1,6 @@
 import {
   Field,
   Group,
-  IconButton,
   Input,
   ListCollection,
   Textarea,
@@ -14,7 +13,6 @@ import {
 } from 'react-hook-form';
 
 import { colors } from '@/constants';
-import { IconEye, IconEyeOff } from '@tabler/icons-react';
 import { CustomSelect } from './custom-select';
 type FormInputProps<TFormValues extends FieldValues> = {
   errors: FieldErrors<TFormValues>;

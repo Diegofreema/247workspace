@@ -1,12 +1,11 @@
 import { FlexBox } from '@/components/custom/flex-box';
-import { getLoggedInUser } from '@/features/auth/queries';
-import { SignInForm } from '@/components/form/sign-in-form';
 import { InstructionHeading } from '@/components/ui/instruction-heading';
+import { getLoggedInUser } from '@/features/auth/queries';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
-import { getProfile } from '@/features/workspaces/queries';
 import { OnboardForm } from '@/components/form/onboard-form';
+import { getProfile } from '@/features/workspaces/queries';
 
 const Onboard = async () => {
   const user = await getLoggedInUser();
