@@ -1,23 +1,43 @@
 'use client';
 import { colors } from '@/constants';
-import { Card } from '@chakra-ui/react';
-import React from 'react';
-import { Button } from '../custom/custom-button';
+import { useCurrentUser } from '@/features/auth/api/use-current-user';
 import { useJoinWorkspace } from '@/features/workspaces/api/use-join-workspace';
-import { useTransitionRouter } from 'next-view-transitions';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
+import { Card } from '@chakra-ui/react';
+import { useTransitionRouter } from 'next-view-transitions';
+import { Button } from '../custom/custom-button';
+import { Loading } from '../ui/loading';
+import { APP_URL } from '@/config';
 
 type Props = {
   initialValue: { name: string; inviteCode: string };
 };
 
 export const JoinCard = ({ initialValue: { inviteCode, name } }: Props) => {
+  const { data, isError, isPending: isPendingUser } = useCurrentUser();
   const { mutateAsync, isPending } = useJoinWorkspace();
   const workspaceId = useWorkspaceId();
   const router = useTransitionRouter();
   const onSubmit = async () => {
     await mutateAsync({ param: { workspaceId }, json: { code: inviteCode } });
   };
+
+  if (isError) {
+    return <div>Error</div>;
+  }
+  if (isPendingUser) {
+    return <Loading />;
+  }
+
+  if (!data) {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(
+        'redirectUrl',
+        `${APP_URL}/workspace/${workspaceId}/join/${inviteCode}`
+      );
+      router.replace('/');
+    }
+  }
   return (
     <div className="flex flex-col h-full justify-center">
       <Card.Root bg={colors.white} boxShadow={'lg'}>

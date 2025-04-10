@@ -2,7 +2,6 @@ import { signUpWithGithub, signUpWithGoogle } from '@/lib/oauth';
 import { Button, Image, Stack } from '@chakra-ui/react';
 import { useState } from 'react';
 import { toaster } from '../ui/toaster';
-// import {  } from '../custom/custom-button';
 
 export const SocialLogin = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);

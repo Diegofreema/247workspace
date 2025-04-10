@@ -43,34 +43,40 @@ const app = new Hono()
       const databases = c.get('databases');
       const user = c.get('user');
       const { users } = await createAdminClient();
-      const member = getMember({ databases, userId: user.$id, workspaceId });
+      try {
+        const member = getMember({ databases, userId: user.$id, workspaceId });
 
-      if (!member) {
-        return c.json(
-          {
-            error: 'Unauthorized',
-          },
-          401
+        if (!member) {
+          return c.json(
+            {
+              error: 'Unauthorized',
+            },
+            401
+          );
+        }
+        const members = await databases.listDocuments(DATABASE_ID, MEMBERS_ID, [
+          Query.equal('workspaceId', workspaceId),
+        ]);
+        const membersWithUser = await Promise.all(
+          members.documents.map(async (member) => {
+            const user = await users.get(member.userId);
+            return {
+              ...member,
+              name: user.name,
+              email: user.email,
+            };
+          })
         );
-      }
-      const members = await databases.listDocuments(DATABASE_ID, MEMBERS_ID, [
-        Query.equal('workspaceId', workspaceId),
-      ]);
-      const membersWithUser = await Promise.all(
-        members.documents.map(async (member) => {
-          const user = await users.get(member.userId);
-          return {
-            ...member,
-            name: user.name,
-            email: user.email,
-          };
-        })
-      );
 
-      return c.json({
-        ...members,
-        documents: membersWithUser,
-      });
+        return c.json({
+          ...members,
+          documents: membersWithUser,
+        });
+      } catch (error) {
+        console.log(error);
+
+        return c.json({ error: 'Failed to get members' }, 401);
+      }
     }
   )
   .delete('/:memberId', sessionMiddleware, async (c) => {

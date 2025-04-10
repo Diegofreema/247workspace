@@ -5,6 +5,8 @@ import { SkeletonCircle } from '@chakra-ui/react';
 
 export const UserAvatarAction = async () => {
   const user = await getLoggedInUser();
+  console.log(user);
+
   if (!user) return <SkeletonCircle size="12" />;
   return (
     <Suspense fallback={<SkeletonCircle size="12" />}>

@@ -16,6 +16,7 @@ import { routes } from '@/utils/routes';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { FlexBox } from '../custom/flex-box';
 import { CustomText } from '../custom/title';
+import { ReusableSkeleton } from '../skeletons/link-skeleton';
 
 type Props = {
   item: (typeof routes)[0];
@@ -42,6 +43,10 @@ export const NavLink = ({ item }: Props) => {
   const color = isActive ? colors.white : colors.iconGrey;
 
   const fill = isActive ? 'white' : 'transparent';
+  const showSkeleton = !workspaceId;
+  if (showSkeleton) {
+    return <ReusableSkeleton />;
+  }
   return (
     <Link href={route} className="w-full">
       <FlexBox
