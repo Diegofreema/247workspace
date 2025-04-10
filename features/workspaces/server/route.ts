@@ -270,7 +270,7 @@ const app = new Hono()
       await databases.createDocument(DATABASE_ID, MEMBERS_ID, ID.unique(), {
         userId: user.$id,
         workspaceId: workspace.$id,
-        role: MemberRole.MEMBER,
+        memberRole: MemberRole.MEMBER,
       });
 
       return c.json({ data: workspace });
