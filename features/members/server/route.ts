@@ -212,7 +212,7 @@ const app = new Hono()
       );
 
       return c.json({
-        data: { $id: memberToUpdate.$id },
+        data: { $id: memberToUpdate.workspaceId },
       });
     }
   );

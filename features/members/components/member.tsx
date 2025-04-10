@@ -15,9 +15,10 @@ import { MemberTable } from './member-table';
 
 type Props = {
   members: MemberWithProfile[];
+  userId: string;
 };
 
-export const Member = ({ members }: Props) => {
+export const Member = ({ members, userId }: Props) => {
   const [value, setValue] = useState(['CHIEF_ADMIN']);
   const onChange = (
     data: SelectValueChangeDetails<{ label: string; value: string }>
@@ -38,7 +39,7 @@ export const Member = ({ members }: Props) => {
         <CustomSelect data={data} value={value} onChange={onChange} />
       </FlexBox>
 
-      <MemberTable members={members} />
+      <MemberTable members={members} userId={userId} />
     </Box>
   );
 };

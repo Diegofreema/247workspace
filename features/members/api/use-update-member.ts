@@ -30,7 +30,7 @@ export const useUpdateMemberRole = () => {
     onSuccess: ({ data }) => {
       queryClient.invalidateQueries({ queryKey: ['member'] });
       queryClient.invalidateQueries({
-        queryKey: ['member', data?.$id],
+        queryKey: ['members', data?.$id],
       });
       router.refresh();
       toaster.create({

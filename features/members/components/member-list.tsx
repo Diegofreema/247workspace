@@ -8,7 +8,7 @@ import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { useGetMembers } from '../api/use-get-members';
 import { Member } from './member';
 
-export const MemberList = () => {
+export const MemberList = ({ userId }: { userId: string }) => {
   const workspaceId = useWorkspaceId();
   const { data, isPending, isError } = useGetMembers({ workspaceId });
   if (isError) return <Box>Failed to load members</Box>;
@@ -18,7 +18,7 @@ export const MemberList = () => {
 
   return (
     <Box bg={colors.white} p={4} flex={1} minHeight={'88vh'}>
-      <Member members={documents} />
+      <Member members={documents} userId={userId} />
     </Box>
   );
 };

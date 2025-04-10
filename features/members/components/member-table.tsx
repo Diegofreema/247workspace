@@ -1,12 +1,36 @@
 import { colors } from '@/constants';
-import { MemberWithProfile } from '@/types';
-import { IconButton, Table } from '@chakra-ui/react';
-import { IconDotsVertical } from '@tabler/icons-react';
+import { MemberRole, MemberWithProfile } from '@/types';
+import { Table } from '@chakra-ui/react';
+import { useDeleteMember } from '../api/use-delete-member';
+import { useUpdateMemberRole } from '../api/use-update-member';
+import { MemberMenu } from './member-menu';
+import { CustomAvatar } from '@/components/custom/cutom-avatar';
 
 type Props = {
   members: MemberWithProfile[];
+  userId: string;
 };
-export const MemberTable = ({ members }: Props) => {
+export const MemberTable = ({ members, userId }: Props) => {
+  const { mutateAsync: updateMemberRole, isPending: isPendingMemberRole } =
+    useUpdateMemberRole();
+  const { mutateAsync: deleteMember, isPending: isPendingDeleteMember } =
+    useDeleteMember();
+  const handleUpdateMemberRole = async (memberId: string, role: MemberRole) => {
+    await updateMemberRole({ json: { role }, param: { memberId } });
+  };
+
+  const handleDeleteMember = async (memberId: string) => {
+    await deleteMember({ param: { memberId } });
+  };
+  const disabled = isPendingDeleteMember || isPendingMemberRole;
+  const chiefAdmin = members.find(
+    (item) => item?.memberRole === 'CHIEF_ADMIN'
+  )!;
+  const admin = members.filter((item) => item?.memberRole === 'ADMIN');
+  const isChiefAdminId = chiefAdmin?.userId === userId;
+  const isAdmin = admin?.find((item) => item?.userId === userId);
+  console.log({ isAdmin, userId, chif: chiefAdmin.userId });
+
   return (
     <Table.Root
       size="sm"
@@ -36,16 +60,34 @@ export const MemberTable = ({ members }: Props) => {
       <Table.Body>
         {members?.map((item) => (
           <Table.Row key={item.$id}>
-            <Table.Cell textAlign={'start'}>{item?.name}</Table.Cell>
+            <Table.Cell
+              textAlign={'start'}
+              alignItems={'center'}
+              display={'flex'}
+              gap={1}
+            >
+              <CustomAvatar
+                name={item?.name?.charAt(0)?.toUpperCase()}
+                src={item?.avatarUrl}
+              />
+              {item?.name}
+            </Table.Cell>
             <Table.Cell textAlign={'start'}>{item?.email}</Table.Cell>
             <Table.Cell textAlign="start">{item?.role}</Table.Cell>
             <Table.Cell textAlign="start">
               {item?.memberRole?.replace('_', ' ')}
             </Table.Cell>
-            <Table.Cell textAlign="end">
-              <IconButton>
-                <IconDotsVertical color={colors.black} />
-              </IconButton>
+            <Table.Cell textAlign="end" className="group">
+              <MemberMenu
+                name={item?.name?.split(' ')[0]}
+                handleUpdateMemberRole={handleUpdateMemberRole}
+                handleDeleteMember={handleDeleteMember}
+                disabled={disabled}
+                memberId={item?.$id}
+                isChiefAdminId={chiefAdmin.userId}
+                userId={userId}
+                memberRole={item?.memberRole}
+              />
             </Table.Cell>
           </Table.Row>
         ))}

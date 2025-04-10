@@ -8,10 +8,11 @@ const page = async () => {
   if (!user) {
     redirect('/sign-in');
   }
+  const userId = user.$id;
   return (
     <div className="text-black p-6">
       <Suspense fallback={null}>
-        <MemberList />
+        <MemberList userId={userId} />
       </Suspense>
     </div>
   );
