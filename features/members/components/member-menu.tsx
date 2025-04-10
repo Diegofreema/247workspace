@@ -13,6 +13,7 @@ type Props = {
   isChiefAdminId: string;
   userId: string;
   memberRole: MemberRole;
+  showAction: boolean;
 };
 
 export const MemberMenu = ({
@@ -24,6 +25,7 @@ export const MemberMenu = ({
   isChiefAdminId,
   userId,
   memberRole,
+  showAction,
 }: Props) => {
   const isChiefAdmin = memberRole === MemberRole.CHIEF_ADMIN;
   return (
@@ -39,37 +41,42 @@ export const MemberMenu = ({
       <Portal>
         <Menu.Positioner>
           <Menu.Content bg={colors.white} color={colors.black}>
-            <Menu.Item
-              value="set-admin"
-              fontWeight={'bold'}
-              color={colors.black}
-              disabled={disabled}
-              onClick={() => handleUpdateMemberRole(memberId, MemberRole.ADMIN)}
-            >
-              Set as Admin
-            </Menu.Item>
-            <Menu.Item
-              value="set-member"
-              fontWeight={'bold'}
-              color={colors.black}
-              disabled={disabled}
-              onClick={() =>
-                handleUpdateMemberRole(memberId, MemberRole.MEMBER)
-              }
-            >
-              Set as Member
-            </Menu.Item>
-            {!isChiefAdmin && (
-              <Menu.Item
-                value="remove-member"
-                fontWeight={'bold'}
-                color={colors.red}
-                disabled={disabled}
-                onClick={() => handleDeleteMember(memberId)}
-              >
-                Remove {name}
-              </Menu.Item>
+            {showAction && (
+              <>
+                <Menu.Item
+                  value="set-admin"
+                  fontWeight={'bold'}
+                  color={colors.black}
+                  disabled={disabled}
+                  onClick={() =>
+                    handleUpdateMemberRole(memberId, MemberRole.ADMIN)
+                  }
+                >
+                  Set as Admin
+                </Menu.Item>
+                <Menu.Item
+                  value="set-member"
+                  fontWeight={'bold'}
+                  color={colors.black}
+                  disabled={disabled}
+                  onClick={() =>
+                    handleUpdateMemberRole(memberId, MemberRole.MEMBER)
+                  }
+                >
+                  Set as Member
+                </Menu.Item>
+              </>
             )}
+
+            <Menu.Item
+              value="remove-member"
+              fontWeight={'bold'}
+              color={colors.red}
+              disabled={disabled}
+              onClick={() => handleDeleteMember(memberId)}
+            >
+              {showAction ? `Remove ${name}` : 'Leave workspace'}
+            </Menu.Item>
           </Menu.Content>
         </Menu.Positioner>
       </Portal>

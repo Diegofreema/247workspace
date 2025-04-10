@@ -29,7 +29,7 @@ export const MemberTable = ({ members, userId }: Props) => {
   const admin = members.filter((item) => item?.memberRole === 'ADMIN');
   const isChiefAdminId = chiefAdmin?.userId === userId;
   const isAdmin = admin?.find((item) => item?.userId === userId);
-  console.log({ isAdmin, userId, chif: chiefAdmin.userId });
+  const showAction = isChiefAdminId || !!isAdmin;
 
   return (
     <Table.Root
@@ -77,18 +77,21 @@ export const MemberTable = ({ members, userId }: Props) => {
             <Table.Cell textAlign="start">
               {item?.memberRole?.replace('_', ' ')}
             </Table.Cell>
-            <Table.Cell textAlign="end" className="group">
-              <MemberMenu
-                name={item?.name?.split(' ')[0]}
-                handleUpdateMemberRole={handleUpdateMemberRole}
-                handleDeleteMember={handleDeleteMember}
-                disabled={disabled}
-                memberId={item?.$id}
-                isChiefAdminId={chiefAdmin.userId}
-                userId={userId}
-                memberRole={item?.memberRole}
-              />
-            </Table.Cell>
+            {item.memberRole !== MemberRole.CHIEF_ADMIN && (
+              <Table.Cell textAlign="end" className="group">
+                <MemberMenu
+                  name={item?.name?.split(' ')[0]}
+                  handleUpdateMemberRole={handleUpdateMemberRole}
+                  handleDeleteMember={handleDeleteMember}
+                  disabled={disabled}
+                  memberId={item?.$id}
+                  isChiefAdminId={chiefAdmin.userId}
+                  userId={userId}
+                  memberRole={item?.memberRole}
+                  showAction={showAction}
+                />
+              </Table.Cell>
+            )}
           </Table.Row>
         ))}
       </Table.Body>
