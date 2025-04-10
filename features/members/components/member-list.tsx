@@ -14,11 +14,11 @@ export const MemberList = () => {
   if (isError) return <Box>Failed to load members</Box>;
   if (isPending) return <Loading />;
 
-  console.log(data);
+  const { documents } = data;
 
   return (
     <Box bg={colors.white} p={4} flex={1} minHeight={'88vh'}>
-      <Member />
+      <Member members={documents} />
     </Box>
   );
 };

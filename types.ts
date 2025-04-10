@@ -13,7 +13,24 @@ export type Workspace = Models.Document & {
   userId: string;
 };
 export type Member = Models.Document & {
-  role: MemberRole;
+  memberRole: MemberRole;
   userId: string;
   workspaceId: string;
+};
+export type Profile = Models.Document & {
+  userId: string;
+  avatarUrl?: string;
+  role: string;
+  email: string;
+  bio?: string;
+  name: string;
+};
+
+export type MemberWithProfile = Member & {
+  userId: string;
+  avatarUrl?: string;
+  role: string;
+  email: string;
+  bio?: string;
+  name: string;
 };

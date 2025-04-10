@@ -3,6 +3,7 @@ import { FlexBox } from '@/components/custom/flex-box';
 import { CustomText, Title } from '@/components/custom/title';
 import { SearchInput } from '@/components/navigation/search-input';
 import { colors } from '@/constants';
+import { MemberWithProfile } from '@/types';
 import {
   Box,
   createListCollection,
@@ -10,18 +11,19 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-// import { MemberTable } from './member-table';
+import { MemberTable } from './member-table';
 
-type Props = {};
+type Props = {
+  members: MemberWithProfile[];
+};
 
-export const Member = () => {
+export const Member = ({ members }: Props) => {
   const [value, setValue] = useState(['CHIEF_ADMIN']);
   const onChange = (
     data: SelectValueChangeDetails<{ label: string; value: string }>
   ) => {
     setValue(data.value);
   };
-  console.log(value);
 
   return (
     <Box>
@@ -35,7 +37,8 @@ export const Member = () => {
         <SearchInput />
         <CustomSelect data={data} value={value} onChange={onChange} />
       </FlexBox>
-      {/* <MemberTable /> */}
+
+      <MemberTable members={members} />
     </Box>
   );
 };

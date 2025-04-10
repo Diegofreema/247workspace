@@ -1,6 +1,6 @@
 import { DATABASE_ID, MEMBERS_ID, PROFILE_ID, WORKSPACE_ID } from '@/config';
 import { createSessionClient } from '@/lib/appwrite';
-import { Workspace } from '@/types';
+import { Profile, Workspace } from '@/types';
 import { Query } from 'node-appwrite';
 import { getMember } from '../members/utils';
 
@@ -31,9 +31,11 @@ export const getProfile = async (id: string) => {
   try {
     const { databases } = await createSessionClient();
 
-    const profiles = await databases.listDocuments(DATABASE_ID, PROFILE_ID, [
-      Query.equal('userId', id),
-    ]);
+    const profiles = await databases.listDocuments<Profile>(
+      DATABASE_ID,
+      PROFILE_ID,
+      [Query.equal('userId', id)]
+    );
     const profile = profiles.documents[0];
     if (!profile) {
       return null;

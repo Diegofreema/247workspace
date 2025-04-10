@@ -6,7 +6,8 @@ import { z } from 'zod';
 import { getMember } from '../utils';
 import { DATABASE_ID, MEMBERS_ID } from '@/config';
 import { Query } from 'node-appwrite';
-import { MemberRole } from '@/types';
+import { Member, MemberRole, Profile } from '@/types';
+import { getProfile } from '@/features/workspaces/queries';
 
 const app = new Hono()
   .get(
@@ -42,7 +43,7 @@ const app = new Hono()
       const { workspaceId } = c.req.query();
       const databases = c.get('databases');
       const user = c.get('user');
-      const { users } = await createAdminClient();
+
       try {
         const member = getMember({ databases, userId: user.$id, workspaceId });
 
@@ -54,16 +55,21 @@ const app = new Hono()
             401
           );
         }
-        const members = await databases.listDocuments(DATABASE_ID, MEMBERS_ID, [
-          Query.equal('workspaceId', workspaceId),
-        ]);
+        const members = await databases.listDocuments<Member>(
+          DATABASE_ID,
+          MEMBERS_ID,
+          [Query.equal('workspaceId', workspaceId)]
+        );
         const membersWithUser = await Promise.all(
           members.documents.map(async (member) => {
-            const user = await users.get(member.userId);
+            const user = (await getProfile(member.userId)) as Profile;
             return {
               ...member,
-              name: user.name,
-              email: user.email,
+              name: user?.name,
+              email: user?.email,
+              role: user?.role,
+              avatarUrl: user?.avatarUrl,
+              boi: user?.bio,
             };
           })
         );

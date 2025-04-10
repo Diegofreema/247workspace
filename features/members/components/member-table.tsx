@@ -1,7 +1,12 @@
 import { colors } from '@/constants';
-import { Table } from '@chakra-ui/react';
+import { MemberWithProfile } from '@/types';
+import { IconButton, Table } from '@chakra-ui/react';
+import { IconDotsVertical } from '@tabler/icons-react';
 
-export const MemberTable = () => {
+type Props = {
+  members: MemberWithProfile[];
+};
+export const MemberTable = ({ members }: Props) => {
   return (
     <Table.Root
       size="sm"
@@ -29,11 +34,19 @@ export const MemberTable = () => {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {items.map((item) => (
-          <Table.Row key={item.id}>
-            <Table.Cell>{item.name}</Table.Cell>
-            <Table.Cell>{item.category}</Table.Cell>
-            <Table.Cell textAlign="end">{item.price}</Table.Cell>
+        {members?.map((item) => (
+          <Table.Row key={item.$id}>
+            <Table.Cell textAlign={'start'}>{item?.name}</Table.Cell>
+            <Table.Cell textAlign={'start'}>{item?.email}</Table.Cell>
+            <Table.Cell textAlign="start">{item?.role}</Table.Cell>
+            <Table.Cell textAlign="start">
+              {item?.memberRole?.replace('_', ' ')}
+            </Table.Cell>
+            <Table.Cell textAlign="end">
+              <IconButton>
+                <IconDotsVertical color={colors.black} />
+              </IconButton>
+            </Table.Cell>
           </Table.Row>
         ))}
       </Table.Body>
