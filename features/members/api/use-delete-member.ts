@@ -32,14 +32,15 @@ export const useDeleteMember = () => {
       router.refresh();
       toaster.create({
         title: 'Success',
-        description: 'Member has been removed',
+
         type: 'success',
       });
     },
     onError: () => {
       toaster.create({
         title: 'Something went wrong',
-        description: 'Failed to remove member',
+        description:
+          'Please try again later or contact support if the issue persists',
         type: 'error',
       });
     },

@@ -120,14 +120,6 @@ const app = new Hono()
       );
     }
 
-    if (member.$id === memberToDelete.$id || member.role !== MemberRole.ADMIN) {
-      return c.json(
-        {
-          error: 'Unauthorized',
-        },
-        401
-      );
-    }
     if (allMembers.documents.length === 1) {
       return c.json(
         {
@@ -152,68 +144,82 @@ const app = new Hono()
       const databases = c.get('databases');
       const user = c.get('user');
       const { role } = c.req.valid('json');
-      const memberToUpdate = await databases.getDocument(
-        DATABASE_ID,
-        MEMBERS_ID,
-        memberId
-      );
-      if (!memberToUpdate) {
-        return c.json(
-          {
-            error: 'Member not found',
-          },
-          404
+      try {
+        const memberToUpdate = await databases.getDocument(
+          DATABASE_ID,
+          MEMBERS_ID,
+          memberId
         );
-      }
-      const allMembers = await databases.listDocuments(
-        DATABASE_ID,
-        MEMBERS_ID,
-        [Query.equal('workspaceId', memberToUpdate.workspaceId)]
-      );
-
-      const member = await getMember({
-        databases,
-        userId: user.$id,
-        workspaceId: memberToUpdate.workspaceId,
-      });
-      if (!member) {
-        return c.json(
-          {
-            error: 'Unauthorized',
-          },
-          401
-        );
-      }
-
-      if (member.role !== MemberRole.ADMIN) {
-        return c.json(
-          {
-            error: 'Unauthorized',
-          },
-          401
-        );
-      }
-      if (allMembers.documents.length === 1) {
-        return c.json(
-          {
-            error: 'Cannot delete the last member',
-          },
-          400
-        );
-      }
-
-      await databases.updateDocument(
-        DATABASE_ID,
-        MEMBERS_ID,
-        memberToUpdate.$id,
-        {
-          role,
+        if (!memberToUpdate) {
+          return c.json(
+            {
+              error: 'Member not found',
+            },
+            404
+          );
         }
-      );
+        const allMembers = await databases.listDocuments(
+          DATABASE_ID,
+          MEMBERS_ID,
+          [Query.equal('workspaceId', memberToUpdate.workspaceId)]
+        );
 
-      return c.json({
-        data: { $id: memberToUpdate.workspaceId },
-      });
+        const member = await getMember({
+          databases,
+          userId: user.$id,
+          workspaceId: memberToUpdate.workspaceId,
+        });
+        if (!member) {
+          return c.json(
+            {
+              error: 'Unauthorized',
+            },
+            401
+          );
+        }
+
+        if (
+          member.role !== MemberRole.ADMIN &&
+          role !== MemberRole.CHIEF_ADMIN
+        ) {
+          return c.json(
+            {
+              error: 'Unauthorized',
+            },
+            401
+          );
+        }
+        if (allMembers.documents.length === 1) {
+          return c.json(
+            {
+              error: 'Cannot delete the last member',
+            },
+            400
+          );
+        }
+
+        await databases.updateDocument(
+          DATABASE_ID,
+          MEMBERS_ID,
+          memberToUpdate.$id,
+          {
+            memberRole: role,
+          }
+        );
+
+        return c.json({
+          data: { $id: memberToUpdate.workspaceId },
+        });
+      } catch (error) {
+        console.log(error);
+
+        return c.json(
+          {
+            error: 'Internal Server Error',
+          },
+          500
+        );
+      }
     }
   );
 

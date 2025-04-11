@@ -5,6 +5,8 @@ import { useDeleteMember } from '../api/use-delete-member';
 import { useUpdateMemberRole } from '../api/use-update-member';
 import { MemberMenu } from './member-menu';
 import { CustomAvatar } from '@/components/custom/cutom-avatar';
+import { useEffect } from 'react';
+import { toaster } from '@/components/ui/toaster';
 
 type Props = {
   members: MemberWithProfile[];
@@ -16,7 +18,7 @@ export const MemberTable = ({ members, userId }: Props) => {
   const { mutateAsync: deleteMember, isPending: isPendingDeleteMember } =
     useDeleteMember();
   const handleUpdateMemberRole = async (memberId: string, role: MemberRole) => {
-    await updateMemberRole({ json: { role }, param: { memberId } });
+    await updateMemberRole({ json: { role }, param: { memberId } }, {});
   };
 
   const handleDeleteMember = async (memberId: string) => {
@@ -30,7 +32,7 @@ export const MemberTable = ({ members, userId }: Props) => {
   const isChiefAdminId = chiefAdmin?.userId === userId;
   const isAdmin = admin?.find((item) => item?.userId === userId);
   const showAction = isChiefAdminId || !!isAdmin;
-
+  const isLoading = isPendingDeleteMember || isPendingMemberRole;
   return (
     <Table.Root
       size="sm"
@@ -89,6 +91,7 @@ export const MemberTable = ({ members, userId }: Props) => {
                   userId={userId}
                   memberRole={item?.memberRole}
                   showAction={showAction}
+                  isLoading={isLoading}
                 />
               </Table.Cell>
             )}

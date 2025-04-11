@@ -1,8 +1,9 @@
 import { colors } from '@/constants';
 import { MemberRole } from '@/types';
-import { IconButton, Menu, Portal } from '@chakra-ui/react';
-import { IconDotsVertical } from '@tabler/icons-react';
+import { IconButton, Menu, Portal, Spinner } from '@chakra-ui/react';
+import { IconDotsVertical, IconLoader2 } from '@tabler/icons-react';
 import React from 'react';
+import { Rings } from 'react-loader-spinner';
 
 type Props = {
   name: string;
@@ -14,6 +15,7 @@ type Props = {
   userId: string;
   memberRole: MemberRole;
   showAction: boolean;
+  isLoading: boolean;
 };
 
 export const MemberMenu = ({
@@ -26,16 +28,30 @@ export const MemberMenu = ({
   userId,
   memberRole,
   showAction,
+  isLoading,
 }: Props) => {
-  const isChiefAdmin = memberRole === MemberRole.CHIEF_ADMIN;
+  const isAdmin = memberRole === MemberRole.ADMIN;
   return (
     <Menu.Root>
       <Menu.Trigger asChild>
         <IconButton
           border={'1px solid #ccc'}
           className="group-hover:opacity-50 transition"
+          disabled={disabled || isLoading}
         >
-          <IconDotsVertical color={colors.black} />
+          {isLoading ? (
+            <Rings
+              visible={true}
+              height="80"
+              width="80"
+              color={colors.iconGrey}
+              ariaLabel="rings-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+            />
+          ) : (
+            <IconDotsVertical color={colors.black} />
+          )}
         </IconButton>
       </Menu.Trigger>
       <Portal>
@@ -43,28 +59,31 @@ export const MemberMenu = ({
           <Menu.Content bg={colors.white} color={colors.black}>
             {showAction && (
               <>
-                <Menu.Item
-                  value="set-admin"
-                  fontWeight={'bold'}
-                  color={colors.black}
-                  disabled={disabled}
-                  onClick={() =>
-                    handleUpdateMemberRole(memberId, MemberRole.ADMIN)
-                  }
-                >
-                  Set as Admin
-                </Menu.Item>
-                <Menu.Item
-                  value="set-member"
-                  fontWeight={'bold'}
-                  color={colors.black}
-                  disabled={disabled}
-                  onClick={() =>
-                    handleUpdateMemberRole(memberId, MemberRole.MEMBER)
-                  }
-                >
-                  Set as Member
-                </Menu.Item>
+                {isAdmin ? (
+                  <Menu.Item
+                    value="set-member"
+                    fontWeight={'bold'}
+                    color={colors.black}
+                    disabled={disabled}
+                    onClick={() =>
+                      handleUpdateMemberRole(memberId, MemberRole.MEMBER)
+                    }
+                  >
+                    Set as Member
+                  </Menu.Item>
+                ) : (
+                  <Menu.Item
+                    value="set-admin"
+                    fontWeight={'bold'}
+                    color={colors.black}
+                    disabled={disabled}
+                    onClick={() =>
+                      handleUpdateMemberRole(memberId, MemberRole.ADMIN)
+                    }
+                  >
+                    Set as Admin
+                  </Menu.Item>
+                )}
               </>
             )}
 
