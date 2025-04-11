@@ -41,3 +41,5 @@ export type Project = Models.Document & {
   workspaceId: string;
   userId: string;
 };
+
+export type SizeType = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';

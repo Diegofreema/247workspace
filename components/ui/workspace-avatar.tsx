@@ -1,25 +1,17 @@
-import { Avatar, Image } from '@chakra-ui/react';
-import React from 'react';
+import { SizeType } from '@/types';
+import { Avatar } from '@chakra-ui/react';
 
 type Props = {
   image?: string;
   name: string;
+  size?: SizeType;
 };
 
-export const WorkspaceAvatar = ({ name, image }: Props) => {
+export const WorkspaceAvatar = ({ name, image, size = 'md' }: Props) => {
   return (
-    <Avatar.Root colorPalette={'purple'}>
+    <Avatar.Root colorPalette={'purple'} size={size}>
       <Avatar.Fallback name={name[0]?.toUpperCase()} />
-      <Avatar.Image asChild width={38} height={38}>
-        <Image
-          src={image}
-          alt={name}
-          borderRadius={200}
-          width={35}
-          height={35}
-          objectFit={'fill'}
-        />
-      </Avatar.Image>
+      <Avatar.Image src={image} />
     </Avatar.Root>
   );
 };
