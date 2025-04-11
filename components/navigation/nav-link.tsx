@@ -52,19 +52,18 @@ export const NavLink = ({ item }: Props) => {
       <FlexBox
         gap={3}
         alignItems={'center'}
-        justifyContent={'center'}
         p={3}
         borderRadius={5}
         bg={bgColor}
         className="hover:bg-purple group transition w-full"
       >
         <IconToRender
-          className={` size-5 sm:size-7 group-hover:text-white transition ${isActive ? 'text-white' : 'text-iconGrey'}`}
+          className={` size-3 sm:size-5 group-hover:text-white transition ${isActive ? 'text-white' : 'text-iconGrey'}`}
           fill={fill}
         />
         <CustomText
           color={color}
-          className="group-hover:text-white transition font-semibold text-[15px] sm:text-[17px]"
+          className="group-hover:text-white transition font-semibold text-[12px] sm:text-[15px]"
         >
           {label}
         </CustomText>

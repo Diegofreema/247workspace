@@ -1,13 +1,12 @@
-import { createAdminClient } from '@/lib/appwrite';
+import { DATABASE_ID, MEMBERS_ID } from '@/config';
+import { getProfile } from '@/features/workspaces/queries';
 import { sessionMiddleware } from '@/lib/session-middleware';
+import { Member, MemberRole, Profile } from '@/types';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
+import { Query } from 'node-appwrite';
 import { z } from 'zod';
 import { getMember } from '../utils';
-import { DATABASE_ID, MEMBERS_ID } from '@/config';
-import { Query } from 'node-appwrite';
-import { Member, MemberRole, Profile } from '@/types';
-import { getProfile } from '@/features/workspaces/queries';
 
 const app = new Hono()
   .get(

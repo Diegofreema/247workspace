@@ -7,6 +7,7 @@ import { Suspense } from 'react';
 import { ReusableSkeleton } from '../skeletons/link-skeleton';
 import { LogoutBtn } from '../buttons/logout-button';
 import { WorkspaceSwitcher } from './workspace-switcher';
+import { Projects } from '@/features/projects/components/projects';
 
 export const DashboardSidebar = () => {
   return (
@@ -18,7 +19,7 @@ export const DashboardSidebar = () => {
         minHeight={'100%'}
       >
         <Logo isPurple />
-        <Stack gap={7} mt={10} flex={1} width={'100%'}>
+        <Stack gap={2} mt={5} flex={1} width={'100%'}>
           <Suspense fallback={<ReusableSkeleton />}>
             <WorkspaceSwitcher />
           </Suspense>
@@ -29,6 +30,7 @@ export const DashboardSidebar = () => {
               </Suspense>
             )}
           </For>
+          <Projects />
         </Stack>
         <LogoutBtn className="mt-auto" />
       </FlexBox>
