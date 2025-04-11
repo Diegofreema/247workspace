@@ -2,11 +2,20 @@
 
 import { colors } from '@/constants';
 
-import { createWorkspaceModal$ } from '@/lib/legend/create-workspace-store';
-import { CloseButton, Dialog, Image, Portal, Stack } from '@chakra-ui/react';
+import {
+  Circle,
+  CloseButton,
+  Dialog,
+  IconButton,
+  Image,
+  Portal,
+  Stack,
+} from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconPhotoCirclePlus } from '@tabler/icons-react';
 
+import { useCreateProject } from '@/features/projects/api/use-create-project';
+import { createProjectSchema } from '@/features/projects/schema';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { useCreateProjectModalController } from '@/lib/nuqs/use-create-project';
 import { useRef } from 'react';
@@ -14,11 +23,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '../custom/custom-button';
 import { FormInput } from '../form/form-input';
-import { useCreateProject } from '@/features/projects/api/use-create-project';
-import { createProjectSchema } from '@/features/projects/schema';
+import { FlexBox } from '../custom/flex-box';
 
 export const CreateProjectModal = () => {
-  const { isOpen, setIsOpen } = useCreateProjectModalController();
+  const { isOpen, setIsOpen, close } = useCreateProjectModalController();
   const workspaceId = useWorkspaceId();
   const { mutateAsync } = useCreateProject();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -28,10 +36,12 @@ export const CreateProjectModal = () => {
     register,
     reset,
     control,
+    watch,
   } = useForm<z.infer<typeof createProjectSchema>>({
     defaultValues: {
       name: '',
       image: '',
+      workspaceId: workspaceId,
     },
     resolver: zodResolver(createProjectSchema),
   });
@@ -44,11 +54,11 @@ export const CreateProjectModal = () => {
     };
     await mutateAsync({ form: finalValues });
     reset();
-    createWorkspaceModal$.setOpen(false);
+    close();
   };
   const onCancel = () => {
     reset();
-    createWorkspaceModal$.setOpen(false);
+    close();
   };
   return (
     <Dialog.Root
@@ -62,9 +72,18 @@ export const CreateProjectModal = () => {
         <Dialog.Positioner>
           <Dialog.Content bg={colors.white}>
             <Dialog.Header>
-              <Dialog.Title color={colors.black} fontSize={30}>
-                Create a project
-              </Dialog.Title>
+              <FlexBox
+                justifyContent={'space-between'}
+                width="100%"
+                alignItems={'center'}
+              >
+                <Dialog.Title color={colors.black} fontSize={30}>
+                  Create a new project
+                </Dialog.Title>
+                <IconButton onClick={onCancel} borderRadius={72}>
+                  <CloseButton bg={colors.white} color={colors.black} />
+                </IconButton>
+              </FlexBox>
             </Dialog.Header>
             <Dialog.Body>
               <Stack gap={5}>
@@ -182,9 +201,6 @@ export const CreateProjectModal = () => {
                 Create
               </Button>
             </Dialog.Footer>
-            <Dialog.CloseTrigger asChild>
-              <CloseButton size="lg" color={colors.black} />
-            </Dialog.CloseTrigger>
           </Dialog.Content>
         </Dialog.Positioner>
       </Portal>

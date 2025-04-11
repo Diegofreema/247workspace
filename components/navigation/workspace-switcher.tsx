@@ -17,7 +17,7 @@ import { CustomText } from '../custom/title';
 
 import { useGetWorkspaces } from '@/features/workspaces/api/use-get-workspaces';
 import { ReusableSkeleton } from '../skeletons/link-skeleton';
-import { WorkspaceItem } from './workpsace-item';
+import { AvatarItem } from './workpsace-item';
 
 import { createWorkspaceModal$ } from '@/lib/legend/create-workspace-store';
 import { useMemo } from 'react';
@@ -113,9 +113,8 @@ export const WorkspaceSwitcher = () => {
                       key={workspace.value}
                       className="group hover:bg-purple transition duration-300 ease-in-out"
                     >
-                      <WorkspaceItem
+                      <AvatarItem
                         name={workspace.label}
-                        id={workspace.value}
                         image={workspace.imageUrl}
                       />
                       <Select.ItemIndicator

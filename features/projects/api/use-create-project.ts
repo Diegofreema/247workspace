@@ -4,6 +4,7 @@ import { InferRequestType, InferResponseType } from 'hono';
 import { toaster } from '@/components/ui/toaster';
 import { client } from '@/lib/rpc';
 import { useRouter } from 'next/navigation';
+import { useTransitionRouter } from 'next-view-transitions';
 
 type ResponseType = InferResponseType<
   (typeof client.api.projects)['$post'],
@@ -13,7 +14,7 @@ type RequestType = InferRequestType<(typeof client.api.projects)['$post']>;
 
 export const useCreateProject = () => {
   const queryClient = useQueryClient();
-
+  const router = useTransitionRouter();
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ form }) => {
       const res = await client.api.projects.$post({ form });
@@ -22,9 +23,12 @@ export const useCreateProject = () => {
       }
       return await res.json();
     },
-    onSuccess: (data) => {
+    onSuccess: (res) => {
+      const {
+        data: { $id, workspaceId },
+      } = res;
       queryClient.invalidateQueries({ queryKey: ['projects'] });
-      // router.replace(`/workspaces/${data?.$id}/home`);
+      router.push(`/workspaces/${workspaceId}/projects/${$id}`);
       toaster.create({
         title: 'Success',
         description: 'Your project has been created',

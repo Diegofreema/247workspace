@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const createProjectSchema = z.object({
   name: z.string().min(1, {
-    message: 'Workspace name is required',
+    message: 'Project name is required',
   }),
   image: z
     .union([

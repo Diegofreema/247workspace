@@ -3,13 +3,17 @@
 import { CreateButton } from '@/components/buttons/create-button';
 import { FlexBox } from '@/components/custom/flex-box';
 import { CustomText } from '@/components/custom/title';
+import { AvatarItem } from '@/components/navigation/workpsace-item';
+import { ReusableSkeleton } from '@/components/skeletons/link-skeleton';
 import { Tooltip } from '@/components/ui/tooltip';
 import { colors } from '@/constants';
+import { useProjectId } from '@/hooks/useProjectId';
+import { useWorkspaceId } from '@/hooks/useWorkspaceId';
+import { useCreateProjectModalController } from '@/lib/nuqs/use-create-project';
 import {
   Avatar,
   Box,
   createListCollection,
-  For,
   HStack,
   Image,
   Portal,
@@ -18,13 +22,9 @@ import {
   useSelectContext,
 } from '@chakra-ui/react';
 import { IconPlus } from '@tabler/icons-react';
-import { useGetProjects } from '../api/use-get-projects';
-import { useWorkspaceId } from '@/hooks/useWorkspaceId';
-import { ReusableSkeleton } from '@/components/skeletons/link-skeleton';
+import { useTransitionRouter } from 'next-view-transitions';
 import { useMemo } from 'react';
-import { useProjectId } from '@/hooks/useProjectId';
-import { useCreateProjectModalController } from '@/lib/nuqs/use-create-project';
-import { ProjectItem } from './project-item';
+import { useGetProjects } from '../api/use-get-projects';
 
 export const Projects = () => {
   const workspaceId = useWorkspaceId();
@@ -32,17 +32,18 @@ export const Projects = () => {
   const { open } = useCreateProjectModalController();
   const { data, isPending, isError } = useGetProjects({ workspaceId });
 
+  const router = useTransitionRouter();
   const defaultValue = useMemo(() => {
     if (isPending) return '';
     if (isError) return '';
     return data?.data.documents[0]?.$id;
-  }, [data?.data.documents, isError, isPending]);
+  }, [data?.data.documents]);
   const items = useMemo(() => {
     return (
-      data?.data.documents.map((workspace) => ({
-        label: workspace.name,
-        value: workspace.$id,
-        imageUrl: workspace.imageUrl,
+      data?.data.documents.map((project) => ({
+        label: project.name,
+        value: project.$id,
+        imageUrl: project.imageUrl,
       })) ?? []
     );
   }, [data?.data?.documents]);
@@ -65,8 +66,8 @@ export const Projects = () => {
 
   const onSelect = (value: string[]) => {
     console.log(value[0]);
-
-    //    router.push(`/projects/${value[0]}/home`);
+    const href = `/workspaces/${workspaceId}/projects/${value[0]}`;
+    router.push(href);
   };
   const isEmpty = data?.data.total === 0;
   return (
@@ -114,20 +115,25 @@ export const Projects = () => {
           <Portal>
             <Select.Positioner>
               <Select.Content bg={'white'}>
-                {projects.items.map((project) => (
-                  <Select.Item
-                    item={project}
-                    key={project.value}
-                    className="group hover:bg-purple transition duration-300 ease-in-out"
-                  >
-                    <ProjectItem />
-                    <Select.ItemIndicator
-                      className={
-                        'text-purple group-hover:text-white transition duration-300 ease-in-out'
-                      }
-                    />
-                  </Select.Item>
-                ))}
+                {projects.items.map((project) => {
+                  return (
+                    <Select.Item
+                      item={project}
+                      key={project.value}
+                      className="group hover:bg-purple transition duration-300 ease-in-out"
+                    >
+                      <AvatarItem
+                        name={project.label}
+                        image={project.imageUrl}
+                      />
+                      <Select.ItemIndicator
+                        className={
+                          'text-purple group-hover:text-white transition duration-300 ease-in-out'
+                        }
+                      />
+                    </Select.Item>
+                  );
+                })}
                 {isEmpty && (
                   <CustomText color={colors.black} textAlign={'center'}>
                     No projects found

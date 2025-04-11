@@ -82,7 +82,7 @@ const app = new Hono()
           );
         }
 
-        const project = await databases.createDocument(
+        const project = await databases.createDocument<Project>(
           DATABASE_ID,
           PROJECT_ID,
           ID.unique(),
