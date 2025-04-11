@@ -6,6 +6,7 @@ import { Hono } from 'hono';
 import { AppwriteException, ID, Query } from 'node-appwrite';
 import { z } from 'zod';
 import { createProjectSchema } from '../schema';
+import { Project } from '@/types';
 
 const app = new Hono()
   .get(
@@ -30,10 +31,11 @@ const app = new Hono()
         );
       }
 
-      const projects = await databases.listDocuments(DATABASE_ID, PROJECT_ID, [
-        Query.equal('workspaceId', workspaceId),
-        Query.orderDesc('$createdAt'),
-      ]);
+      const projects = await databases.listDocuments<Project>(
+        DATABASE_ID,
+        PROJECT_ID,
+        [Query.equal('workspaceId', workspaceId), Query.orderDesc('$createdAt')]
+      );
 
       return c.json({
         data: projects,

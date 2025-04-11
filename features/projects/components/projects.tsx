@@ -9,6 +9,7 @@ import {
   Avatar,
   Box,
   createListCollection,
+  For,
   HStack,
   Image,
   Portal,
@@ -23,6 +24,7 @@ import { ReusableSkeleton } from '@/components/skeletons/link-skeleton';
 import { useMemo } from 'react';
 import { useProjectId } from '@/hooks/useProjectId';
 import { useCreateProjectModalController } from '@/lib/nuqs/use-create-project';
+import { ProjectItem } from './project-item';
 
 export const Projects = () => {
   const workspaceId = useWorkspaceId();
@@ -66,18 +68,18 @@ export const Projects = () => {
 
     //    router.push(`/projects/${value[0]}/home`);
   };
-
+  const isEmpty = data?.data.total === 0;
   return (
-    <Box mb={5} borderBottom={'1px solid #ccc'} pb={10}>
+    <Box>
       <FlexBox justifyContent={'space-between'} alignItems={'center'} px={4}>
         <CustomText
           color={colors.grey}
           fontWeight={'bold'}
-          fontSize={{ base: 'xl', md: '2xl' }}
+          fontSize={{ base: 'sm', md: 'md' }}
         >
           Projects
         </CustomText>
-        <Tooltip content="Create a workspace" openDelay={100} closeDelay={100}>
+        <Tooltip content="Create a project" openDelay={100} closeDelay={100}>
           <CreateButton
             width={'fit'}
             icon={<IconPlus size={25} color={colors.iconGrey} />}
@@ -86,7 +88,7 @@ export const Projects = () => {
           />
         </Tooltip>
       </FlexBox>
-      <Stack mt={5}>
+      <Stack mt={2}>
         <Select.Root
           collection={projects}
           size="lg"
@@ -118,6 +120,7 @@ export const Projects = () => {
                     key={project.value}
                     className="group hover:bg-purple transition duration-300 ease-in-out"
                   >
+                    <ProjectItem />
                     <Select.ItemIndicator
                       className={
                         'text-purple group-hover:text-white transition duration-300 ease-in-out'
@@ -125,6 +128,11 @@ export const Projects = () => {
                     />
                   </Select.Item>
                 ))}
+                {isEmpty && (
+                  <CustomText color={colors.black} textAlign={'center'}>
+                    No projects found
+                  </CustomText>
+                )}
               </Select.Content>
             </Select.Positioner>
           </Portal>
@@ -141,8 +149,12 @@ const SelectValue = () => {
     imageUrl: string;
   }>;
   const item = items[0];
+  if (!item) {
+    return <CustomText color={colors.grey}>No projects selected</CustomText>;
+  }
+
   return (
-    <Select.ValueText placeholder="No workspace selected" bg="white">
+    <Select.ValueText placeholder="No projects selected" bg="white">
       <HStack>
         <Avatar.Root colorPalette={'purple'}>
           <Avatar.Image asChild width={38} height={38}>

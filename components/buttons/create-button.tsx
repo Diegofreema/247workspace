@@ -2,6 +2,7 @@
 import { colors } from '@/constants';
 import { ButtonProps } from '@chakra-ui/react';
 import { Button } from '../custom/custom-button';
+import { useCreateProjectModalController } from '@/lib/nuqs/use-create-project';
 
 type Props = ButtonProps & {
   text?: string;
@@ -14,8 +15,9 @@ export const CreateButton = ({
   text,
   ...props
 }: Props) => {
+  const { open } = useCreateProjectModalController();
   return (
-    <Button {...props} bg={bg} px={2}>
+    <Button {...props} bg={bg} px={2} onClick={open}>
       {Icon && Icon} {text && text}
     </Button>
   );

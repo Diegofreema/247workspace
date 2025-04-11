@@ -142,6 +142,9 @@ const SelectValue = () => {
     imageUrl: string;
   }>;
   const item = items[0];
+  if (!item) {
+    return <CustomText color={colors.grey}>No workspace selected</CustomText>;
+  }
   return (
     <Select.ValueText placeholder="No workspace selected" bg="white">
       <HStack>

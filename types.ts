@@ -34,3 +34,10 @@ export type MemberWithProfile = Member & {
   bio?: string;
   name: string;
 };
+
+export type Project = Models.Document & {
+  name: string;
+  imageUrl: string;
+  workspaceId: string;
+  userId: string;
+};

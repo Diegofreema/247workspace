@@ -1,4 +1,5 @@
 import { CreateWorkspaceForm } from '@/components/form/create-workspace-form';
+import { CreateProjectModal } from '@/components/modals/create-project-modal';
 import { DashboardSidebar } from '@/components/navigation/dashboard-sidebar';
 import { MobileSidebar } from '@/components/navigation/mobile-sidebar';
 import { NavigationHeader } from '@/components/navigation/navigation-header';
@@ -12,6 +13,7 @@ const DashboardLayout = ({ children }: Props) => {
   return (
     <Box className="min-h-screen bg-gray-200 flex relative">
       <CreateWorkspaceForm />
+      <CreateProjectModal />
       <Box
         position="fixed"
         left={0}
