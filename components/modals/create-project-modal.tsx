@@ -2,23 +2,25 @@
 
 import { colors } from '@/constants';
 
-import { createWorkspaceSchema } from '@/features/workspaces/schema';
 import { createWorkspaceModal$ } from '@/lib/legend/create-workspace-store';
 import { CloseButton, Dialog, Image, Portal, Stack } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { use$ } from '@legendapp/state/react';
 import { IconPhotoCirclePlus } from '@tabler/icons-react';
 
+import { useWorkspaceId } from '@/hooks/useWorkspaceId';
+import { useCreateProjectModalController } from '@/lib/nuqs/use-create-project';
 import { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '../custom/custom-button';
 import { FormInput } from '../form/form-input';
-import { useCreateWorkspace } from '@/features/workspaces/api/use-create-workspace';
+import { useCreateProject } from '@/features/projects/api/use-create-project';
+import { createProjectSchema } from '@/features/projects/schema';
 
-export const CreateWorkspaceModal = () => {
-  const isOpen = use$(createWorkspaceModal$.isOpen);
-  const { mutateAsync } = useCreateWorkspace();
+export const CreateProjectModal = () => {
+  const { isOpen, setIsOpen } = useCreateProjectModalController();
+  const workspaceId = useWorkspaceId();
+  const { mutateAsync } = useCreateProject();
   const inputRef = useRef<HTMLInputElement>(null);
   const {
     handleSubmit,
@@ -26,18 +28,19 @@ export const CreateWorkspaceModal = () => {
     register,
     reset,
     control,
-  } = useForm<z.infer<typeof createWorkspaceSchema>>({
+  } = useForm<z.infer<typeof createProjectSchema>>({
     defaultValues: {
       name: '',
       image: '',
     },
-    resolver: zodResolver(createWorkspaceSchema),
+    resolver: zodResolver(createProjectSchema),
   });
 
-  const onSubmit = async (data: z.infer<typeof createWorkspaceSchema>) => {
+  const onSubmit = async (data: z.infer<typeof createProjectSchema>) => {
     const finalValues = {
       ...data,
       image: data.image instanceof File ? data.image : '',
+      workspaceId,
     };
     await mutateAsync({ form: finalValues });
     reset();
@@ -52,7 +55,7 @@ export const CreateWorkspaceModal = () => {
       placement="center"
       motionPreset={'slide-in-bottom'}
       open={isOpen}
-      onOpenChange={(e) => createWorkspaceModal$.setOpen(e.open)}
+      onOpenChange={(e) => setIsOpen(e.open)}
     >
       <Portal>
         <Dialog.Backdrop />
@@ -60,7 +63,7 @@ export const CreateWorkspaceModal = () => {
           <Dialog.Content bg={colors.white}>
             <Dialog.Header>
               <Dialog.Title color={colors.black} fontSize={30}>
-                Create a workspace
+                Create a project
               </Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
@@ -68,9 +71,9 @@ export const CreateWorkspaceModal = () => {
                 <FormInput
                   register={register}
                   name="name"
-                  label="Workspace name"
+                  label="Project name"
                   errors={errors}
-                  placeholder="My workspace"
+                  placeholder="My project"
                   required
                   disabled={isSubmitting}
                 />
@@ -101,7 +104,7 @@ export const CreateWorkspaceModal = () => {
                           />
                         )}
                         <div className="flex flex-col">
-                          <p className="text-sm text-black">Workspace icon</p>
+                          <p className="text-sm text-black">Project icon</p>
                           <p className="text-sm text-[#ccc]">
                             JPG, PNG, JPEG, SVG, up to 1MB
                           </p>

@@ -30,7 +30,9 @@ export const DashboardSidebar = () => {
               </Suspense>
             )}
           </For>
-          <Projects />
+          <Suspense fallback={<ReusableSkeleton />}>
+            <Projects />
+          </Suspense>
         </Stack>
         <LogoutBtn className="mt-auto" />
       </FlexBox>

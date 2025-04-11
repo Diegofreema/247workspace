@@ -1,42 +1,126 @@
-import { DATABASE_ID, PROJECT_ID } from '@/config';
+import { DATABASE_ID, IMAGES_BUCKET_ID, PROJECT_ID } from '@/config';
 import { getMember } from '@/features/members/utils';
 import { sessionMiddleware } from '@/lib/session-middleware';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { Query } from 'node-appwrite';
+import { AppwriteException, ID, Query } from 'node-appwrite';
 import { z } from 'zod';
+import { createProjectSchema } from '../schema';
 
-const app = new Hono().get(
-  '/',
-  sessionMiddleware,
-  zValidator('query', z.object({ workspaceId: z.string() })),
-  async (c) => {
-    const { workspaceId } = c.req.valid('query');
-    const databases = c.get('databases');
-    const user = c.get('user');
-    const member = await getMember({
-      databases,
-      userId: user.$id,
-      workspaceId,
-    });
-    if (!member) {
-      return c.json(
-        {
-          error: 'Unauthorized',
-        },
-        401
-      );
+const app = new Hono()
+  .get(
+    '/',
+    sessionMiddleware,
+    zValidator('query', z.object({ workspaceId: z.string() })),
+    async (c) => {
+      const { workspaceId } = c.req.valid('query');
+      const databases = c.get('databases');
+      const user = c.get('user');
+      const member = await getMember({
+        databases,
+        userId: user.$id,
+        workspaceId,
+      });
+      if (!member) {
+        return c.json(
+          {
+            error: 'Unauthorized',
+          },
+          401
+        );
+      }
+
+      const projects = await databases.listDocuments(DATABASE_ID, PROJECT_ID, [
+        Query.equal('workspaceId', workspaceId),
+        Query.orderDesc('$createdAt'),
+      ]);
+
+      return c.json({
+        data: projects,
+      });
     }
+  )
+  .post(
+    '/',
+    zValidator('form', createProjectSchema),
+    sessionMiddleware,
+    async (c) => {
+      const databases = c.get('databases');
+      const user = c.get('user');
+      const storage = c.get('storage');
+      const { name, image, workspaceId } = c.req.valid('form');
 
-    const projects = await databases.listDocuments(DATABASE_ID, PROJECT_ID, [
-      Query.equal('workspaceId', workspaceId),
-      Query.orderDesc('$createdAt'),
-    ]);
+      let uploadUrl: string | undefined;
+      if (image instanceof File) {
+        const file = await storage.createFile(
+          IMAGES_BUCKET_ID,
+          ID.unique(),
+          image
+        );
 
-    return c.json({
-      data: projects,
-    });
-  }
-);
+        const arrayBufferToBase64 = await storage.getFileView(
+          file.bucketId,
+          file.$id
+        );
+        uploadUrl = `data:image/png;base64,${Buffer.from(arrayBufferToBase64).toString('base64')}`;
+      }
+      try {
+        const member = await getMember({
+          databases,
+          userId: user.$id,
+          workspaceId,
+        });
+
+        if (!member) {
+          return c.json(
+            {
+              error: 'Unauthorized',
+            },
+            401
+          );
+        }
+
+        const project = await databases.createDocument(
+          DATABASE_ID,
+          PROJECT_ID,
+          ID.unique(),
+          {
+            name,
+            userId: user.$id,
+            imageUrl: uploadUrl,
+            workspaceId,
+          }
+        );
+
+        return c.json({
+          data: project,
+        });
+      } catch (error) {
+        console.log(error);
+
+        if (error instanceof AppwriteException) {
+          let errorMessage = error.message;
+          if (error.type === 'document_invalid_structure') {
+            errorMessage = 'Missing a required field';
+          }
+          if (error.type === 'storage_invalid_file_size') {
+            errorMessage = 'File size is too large, max 1mb';
+          }
+          return c.json(
+            {
+              error: errorMessage,
+            },
+            400
+          );
+        }
+        return c.json(
+          {
+            error: 'Something went wrong, please try again',
+          },
+          500
+        );
+      }
+    }
+  );
 
 export default app;
