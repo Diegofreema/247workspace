@@ -3,7 +3,6 @@
 import { colors } from '@/constants';
 
 import {
-  Circle,
   CloseButton,
   Dialog,
   IconButton,
@@ -18,25 +17,28 @@ import { useCreateProject } from '@/features/projects/api/use-create-project';
 import { createProjectSchema } from '@/features/projects/schema';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { useCreateProjectModalController } from '@/lib/nuqs/use-create-project';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '../custom/custom-button';
-import { FormInput } from '../form/form-input';
 import { FlexBox } from '../custom/flex-box';
+import { FormInput } from '../form/form-input';
 
 export const CreateProjectModal = () => {
   const { isOpen, setIsOpen, close } = useCreateProjectModalController();
+  const [mounted, setMounted] = useState(false);
   const workspaceId = useWorkspaceId();
   const { mutateAsync } = useCreateProject();
   const inputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
     register,
     reset,
     control,
-    watch,
   } = useForm<z.infer<typeof createProjectSchema>>({
     defaultValues: {
       name: '',
@@ -60,6 +62,8 @@ export const CreateProjectModal = () => {
     reset();
     close();
   };
+
+  if (!mounted) return null;
   return (
     <Dialog.Root
       placement="center"
