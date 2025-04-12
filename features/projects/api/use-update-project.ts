@@ -6,31 +6,34 @@ import { client } from '@/lib/rpc';
 import { useTransitionRouter } from 'next-view-transitions';
 
 type ResponseType = InferResponseType<
-  (typeof client.api.projects)['$post'],
+  (typeof client.api.projects)[':projectId']['$patch'],
   200
 >;
-type RequestType = InferRequestType<(typeof client.api.projects)['$post']>;
+type RequestType = InferRequestType<
+  (typeof client.api.projects)[':projectId']['$patch']
+>;
 
-export const useCreateProject = () => {
+export const useUpdateProject = () => {
   const queryClient = useQueryClient();
   const router = useTransitionRouter();
   const mutation = useMutation<ResponseType, Error, RequestType>({
-    mutationFn: async ({ form }) => {
-      const res = await client.api.projects.$post({ form });
+    mutationFn: async ({ form, param }) => {
+      const res = await client.api.projects[':projectId'].$patch({
+        form,
+        param,
+      });
       if (!res.ok) {
-        throw new Error('Failed to create project');
+        throw new Error('Failed to update project');
       }
       return await res.json();
     },
-    onSuccess: (res) => {
-      const {
-        data: { $id, workspaceId },
-      } = res;
+    onSuccess: ({}) => {
+      router.refresh();
       queryClient.invalidateQueries({ queryKey: ['projects'] });
-      router.push(`/workspaces/${workspaceId}/projects/${$id}`);
+
       toaster.create({
         title: 'Success',
-        description: 'Your project has been created',
+        description: 'Your project has been updated',
         type: 'success',
       });
     },
