@@ -203,6 +203,29 @@ const app = new Hono()
         });
       }
     }
-  );
+  )
+  .delete('/:projectId', sessionMiddleware, async (c) => {
+    const { projectId } = c.req.param();
+    const databases = c.get('databases');
+    const user = c.get('user');
+    const project = await databases.getDocument<Project>(
+      DATABASE_ID,
+      PROJECT_ID,
+      projectId
+    );
+    const member = await getMember({
+      databases,
+      userId: user.$id,
+      workspaceId: project.workspaceId,
+    });
+    if (!member) {
+      return c.json({ error: 'Unauthorized' }, 401);
+    }
+
+    // ! do delete tasks linked to project
+    await databases.deleteDocument(DATABASE_ID, PROJECT_ID, projectId);
+
+    return c.json({ data: { $id: projectId } });
+  });
 
 export default app;

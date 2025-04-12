@@ -3,44 +3,43 @@ import { InferRequestType, InferResponseType } from 'hono';
 
 import { toaster } from '@/components/ui/toaster';
 import { client } from '@/lib/rpc';
-import { useTransitionRouter } from 'next-view-transitions';
+import { useRouter } from 'next/navigation';
 
 type ResponseType = InferResponseType<
-  (typeof client.api.projects)[':projectId']['$patch'],
+  (typeof client.api.projects)[':projectId']['$delete'],
   200
 >;
 type RequestType = InferRequestType<
-  (typeof client.api.projects)[':projectId']['$patch']
+  (typeof client.api.projects)[':projectId']['$delete']
 >;
 
-export const useUpdateProject = () => {
+export const useDeleteProject = () => {
   const queryClient = useQueryClient();
-  const router = useTransitionRouter();
+  const router = useRouter();
   const mutation = useMutation<ResponseType, Error, RequestType>({
-    mutationFn: async ({ form, param }) => {
-      const res = await client.api.projects[':projectId'].$patch({
-        form,
+    mutationFn: async ({ param }) => {
+      const res = await client.api.projects[':projectId'].$delete({
         param,
       });
       if (!res.ok) {
-        throw new Error('Failed to update project');
+        throw new Error('Failed to delete project');
       }
       return await res.json();
     },
-    onSuccess: ({}) => {
-      router.refresh();
+    onSuccess: ({ data }) => {
       queryClient.invalidateQueries({ queryKey: ['projects'] });
-
+      queryClient.invalidateQueries({ queryKey: ['project', data.$id] });
+      router.replace('/');
       toaster.create({
         title: 'Success',
-        description: 'Project has been updated',
+        description: 'Project has been deleted',
         type: 'success',
       });
     },
     onError: () => {
       toaster.create({
         title: 'Something went wrong',
-        description: 'Please try again',
+        description: 'Failed to delete project',
         type: 'error',
       });
     },
