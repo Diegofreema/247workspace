@@ -1,9 +1,12 @@
 import { FlexBox } from '@/components/custom/flex-box';
+import { CustomText } from '@/components/custom/title';
+import { colors } from '@/constants';
+import { TaskViewSwitcher } from '@/features/tasks/components/tasks-view-switcher';
 import { Project } from '@/types';
-import React from 'react';
+import { Stack } from '@chakra-ui/react';
+import { EditActionMenu } from './edit-action-menu';
 import { ProjectInnerItem } from './project-item';
-import { Link } from 'next-view-transitions';
-import { IconPencil } from '@tabler/icons-react';
+import { Suspense } from 'react';
 
 type Props = {
   project: Project;
@@ -12,25 +15,29 @@ type Props = {
 export const ProjectDisplay = ({ project }: Props) => {
   const link = `/workspace/${project.workspaceId}/project/settings/${project.$id}`;
   return (
-    <div className="min-h-screen bg-white p-5">
+    <div>
       <FlexBox alignItems={'center'} justifyContent={'space-between'}>
-        <ProjectInnerItem
-          name={project.name}
-          image={project.imageUrl}
-          size="sm"
-        />
-        <Link href={link}>
-          <FlexBox
-            alignItems={'center'}
-            p={2}
-            className="bg-purple p-3 rounded-sm hover:opacity-50 transition text-white flex items-center gap-2"
-            borderRadius={'sm'}
+        <Stack>
+          <ProjectInnerItem
+            name={project.name}
+            image={project.imageUrl}
+            size="sm"
+            className="text-black"
+          />
+          <CustomText
+            color={colors.grey}
+            fontSize={'sm'}
+            fontWeight={'bold'}
+            ml={2}
           >
-            <IconPencil size={24} color="white" />
-            Edit
-          </FlexBox>
-        </Link>
+            Manage your projects
+          </CustomText>
+        </Stack>
+        <Suspense fallback={null}>
+          <EditActionMenu link={link} />
+        </Suspense>
       </FlexBox>
+      <TaskViewSwitcher />
     </div>
   );
 };

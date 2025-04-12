@@ -5,6 +5,13 @@ export enum MemberRole {
   MEMBER = 'MEMBER',
   CHIEF_ADMIN = 'CHIEF_ADMIN',
 }
+export enum StatusEnum {
+  TODO = 'TODO',
+  IN_PROGRESS = 'IN_PROGRESS',
+  DONE = 'DONE',
+  IN_REVIEW = 'IN_REVIEW',
+  BACKLOG = 'BACKLOG',
+}
 
 export type Workspace = Models.Document & {
   name: string;

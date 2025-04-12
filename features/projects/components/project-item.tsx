@@ -14,7 +14,9 @@ type Props = {
   isActive: boolean;
 };
 
-type ProjectItemProps = Omit<Props, 'href' | 'isActive'>;
+type ProjectItemProps = Omit<Props, 'href' | 'isActive'> & {
+  className?: string;
+};
 
 export const ProjectItem = ({
   name,
@@ -49,18 +51,25 @@ export const ProjectItem = ({
   );
 };
 
-export const ProjectInnerItem = ({ name, image, size }: ProjectItemProps) => {
+export const ProjectInnerItem = ({
+  name,
+  image,
+  size,
+  className,
+}: ProjectItemProps) => {
   return (
     <FlexBox
       alignItems={'center'}
       gap={3}
       p={2}
-      ml={5}
       className={cn(' duration-300 ease-in-out p-2')}
     >
       <WorkspaceAvatar name={name} image={image} size={size} />
       <CustomText
-        className={cn('truncate text-xs font-bold group-hover:text-white')}
+        className={cn(
+          'truncate text-xs font-bold group-hover:text-white',
+          className
+        )}
       >
         {name}
       </CustomText>

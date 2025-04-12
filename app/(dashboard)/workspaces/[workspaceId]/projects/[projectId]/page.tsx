@@ -1,3 +1,4 @@
+import { WrapperWithPadding } from '@/components/ui/wrapper-padding';
 import { getLoggedInUser } from '@/features/auth/queries';
 import { ProjectDisplay } from '@/features/projects/components/project-display';
 import { getProject } from '@/features/projects/queries';
@@ -15,9 +16,9 @@ const page = async ({ params }: Props) => {
   const project = await getProject({ projectId: params.projectId });
 
   return (
-    <div className="text-black p-6">
+    <WrapperWithPadding className="bg-lightGrey">
       <ProjectDisplay project={project} />
-    </div>
+    </WrapperWithPadding>
   );
 };
 

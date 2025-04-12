@@ -16,6 +16,8 @@ const config: Config = {
         purple: colors.purple,
         divider: colors.divider,
         iconGrey: colors.iconGrey,
+        lightGrey: colors.lightGrey,
+        milk: colors.milk,
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',

@@ -5,6 +5,7 @@ export const colors = {
   black: '#000000',
   white: '#ffffff',
   milk: '#F6F6F6',
+  lightGrey: '#f5f5f5',
   divider: '#686677',
   iconGrey: '#565656',
   red: '#D70040',
