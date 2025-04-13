@@ -7,12 +7,12 @@ import { z } from 'zod';
 import { Button } from '../custom/custom-button';
 import { FormInput } from './form-input';
 
+import { colors } from '@/constants';
 import { onboardSchema } from '@/utils/validators';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useOnboard } from '../../features/auth/api/use-login';
 import { toaster } from '../ui/toaster';
-import { useQueryClient } from '@tanstack/react-query';
-import { colors } from '@/constants';
 
 type Props = {
   initialValue: {

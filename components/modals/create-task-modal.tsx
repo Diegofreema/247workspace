@@ -4,7 +4,7 @@ import { colors } from '@/constants';
 
 import { CloseButton, Dialog, IconButton, Portal } from '@chakra-ui/react';
 
-import { CreateTaskWrapper } from '@/features/tasks/components/create-task-wrapper';
+import { CreateTaskFormWrapper } from '@/features/tasks/components/create-task-form-wrapper';
 import { useCreateTaskModalController } from '@/lib/nuqs/use-create-task';
 import { FlexBox } from '../custom/flex-box';
 import { useEffect, useState } from 'react';
@@ -33,7 +33,7 @@ export const CreateTaskModal = () => {
                 width="100%"
                 alignItems={'center'}
               >
-                <Dialog.Title color={colors.black} fontSize={30}>
+                <Dialog.Title color={colors.black} fontSize={25}>
                   Create a new task
                 </Dialog.Title>
                 <IconButton onClick={close} borderRadius={72}>
@@ -42,7 +42,7 @@ export const CreateTaskModal = () => {
               </FlexBox>
             </Dialog.Header>
             <Dialog.Body>
-              <CreateTaskWrapper />
+              <CreateTaskFormWrapper />
             </Dialog.Body>
           </Dialog.Content>
         </Dialog.Positioner>

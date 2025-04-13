@@ -6,6 +6,8 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import {
+  Control,
+  Controller,
   FieldErrors,
   FieldValues,
   Path,
@@ -14,6 +16,7 @@ import {
 
 import { colors } from '@/constants';
 import { CustomSelect } from './custom-select';
+import { DatePicker } from '../ui/date-picker';
 type FormInputProps<TFormValues extends FieldValues> = {
   errors: FieldErrors<TFormValues>;
   register: UseFormRegister<TFormValues>;
@@ -27,7 +30,7 @@ type FormInputProps<TFormValues extends FieldValues> = {
   required?: boolean;
   helperText?: string;
   select?: boolean;
-  variant?: 'text' | 'select' | 'textarea';
+  variant?: 'text' | 'select' | 'textarea' | 'date';
   data?: ListCollection<{
     label: string;
     value: string;
@@ -102,6 +105,52 @@ export const FormInput = <TFormValues extends FieldValues>({
           css={{ '--error-color': 'red' }}
         />
       )}
+
+      {helperText && <Field.HelperText>{helperText}</Field.HelperText>}
+      <Field.ErrorText>{errors[name]?.message as string}</Field.ErrorText>
+    </Field.Root>
+  );
+};
+
+type FormInputDateProps<TFormValues extends FieldValues> = {
+  errors: FieldErrors<TFormValues>;
+  control: Control<TFormValues>;
+  name: Path<TFormValues>;
+  label: string;
+  placeholder?: string;
+  disabled?: boolean;
+  required?: boolean;
+  helperText?: string;
+  variant?: 'date';
+};
+
+export const FormInputDate = <TFormValues extends FieldValues>({
+  errors,
+  control,
+  name,
+  label,
+  placeholder,
+  disabled,
+  required,
+  helperText,
+}: FormInputDateProps<TFormValues>) => {
+  return (
+    <Field.Root invalid={!!errors[name]} width="100%" required={required}>
+      <Field.Label color={colors.black}>
+        {label} <Field.RequiredIndicator />
+      </Field.Label>
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => (
+          <DatePicker
+            {...field}
+            placeholder={placeholder}
+            disabled={disabled}
+          />
+        )}
+      />
+
       {helperText && <Field.HelperText>{helperText}</Field.HelperText>}
       <Field.ErrorText>{errors[name]?.message as string}</Field.ErrorText>
     </Field.Root>
