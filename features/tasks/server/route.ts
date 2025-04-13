@@ -87,87 +87,95 @@ const app = new Hono()
       const { workspaceId, projectId, assigneeId, status, search, dueDate } =
         c.req.valid('query');
 
-      const member = await getMember({
-        databases,
-        userId: user.$id,
-        workspaceId,
-      });
-      if (!member) {
-        return c.json({ error: 'You are not a member of this workspace' }, 401);
-      }
+      try {
+        const member = await getMember({
+          databases,
+          userId: user.$id,
+          workspaceId,
+        });
+        if (!member) {
+          return c.json(
+            { error: 'You are not a member of this workspace' },
+            401
+          );
+        }
 
-      const query = [
-        Query.equal('workspaceId', workspaceId),
-        Query.orderDesc('$createdAt'),
-      ];
+        const query = [
+          Query.equal('workspaceId', workspaceId),
+          Query.orderDesc('$createdAt'),
+        ];
 
-      if (projectId) {
-        query.push(Query.equal('projectId', projectId));
-      }
-      if (assigneeId) {
-        query.push(Query.equal('assigneeId', assigneeId));
-      }
-      if (status) {
-        query.push(Query.equal('status', status));
-      }
-      if (search) {
-        query.push(Query.search('name', search));
-      }
+        if (projectId) {
+          query.push(Query.equal('projectId', projectId));
+        }
+        if (assigneeId) {
+          query.push(Query.equal('assigneeId', assigneeId));
+        }
+        if (status) {
+          query.push(Query.equal('status', status));
+        }
+        if (search) {
+          query.push(Query.search('name', search));
+        }
 
-      if (dueDate) {
-        query.push(Query.equal('dueDate', dueDate));
-      }
+        if (dueDate) {
+          query.push(Query.equal('dueDate', dueDate));
+        }
 
-      const tasks = await databases.listDocuments<TaskType>(
-        DATABASE_ID,
-        TASK_ID,
-        query
-      );
+        const tasks = await databases.listDocuments<TaskType>(
+          DATABASE_ID,
+          TASK_ID,
+          query
+        );
 
-      const projectIds = tasks.documents.map((task) => task.projectId);
-      const assigneeIds = tasks.documents.map((task) => task.assigneeId);
-      const projects = await databases.listDocuments<Project>(
-        DATABASE_ID,
-        PROJECT_ID,
-        projectIds.length > 0 ? [Query.contains('$id', projectIds)] : []
-      );
-      const members = await databases.listDocuments(
-        DATABASE_ID,
-        MEMBERS_ID,
-        assigneeIds.length > 0 ? [Query.contains('$id', assigneeIds)] : []
-      );
+        const projectIds = tasks.documents.map((task) => task.projectId);
+        const assigneeIds = tasks.documents.map((task) => task.assigneeId);
+        const projects = await databases.listDocuments<Project>(
+          DATABASE_ID,
+          PROJECT_ID,
+          projectIds.length > 0 ? [Query.contains('$id', projectIds)] : []
+        );
+        const members = await databases.listDocuments(
+          DATABASE_ID,
+          MEMBERS_ID,
+          assigneeIds.length > 0 ? [Query.contains('$id', assigneeIds)] : []
+        );
 
-      const assignees = await Promise.all(
-        members.documents.map(async (member) => {
-          const user = await getProfile(member.$id);
+        const assignees = await Promise.all(
+          members.documents.map(async (member) => {
+            const user = await getProfile(member.$id);
+            return {
+              ...member,
+              name: user?.name,
+              email: user?.email,
+            };
+          })
+        );
+
+        const populatedTasks = tasks.documents.map((task) => {
+          const project = projects.documents.find(
+            (project) => project.$id === task.projectId
+          );
+          const assignee = assignees.find(
+            (assignee) => assignee.$id === task.assigneeId
+          );
+
           return {
-            ...member,
-            name: user?.name,
-            email: user?.email,
+            ...task,
+            project,
+            assignee,
           };
-        })
-      );
-
-      const populatedTasks = tasks.documents.map((task) => {
-        const project = projects.documents.find(
-          (project) => project.$id === task.projectId
-        );
-        const assignee = assignees.find(
-          (assignee) => assignee.$id === task.assigneeId
-        );
-
-        return {
-          ...task,
-          project,
-          assignee,
-        };
-      });
-      return c.json({
-        data: {
-          ...tasks,
-          documents: populatedTasks,
-        },
-      });
+        });
+        return c.json({
+          data: {
+            ...tasks,
+            documents: populatedTasks,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+        throw new Error('Failed to get tasks');
+      }
     }
   );
 

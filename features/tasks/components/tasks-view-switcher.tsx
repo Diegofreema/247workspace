@@ -8,9 +8,11 @@ import { useProjectId } from '@/hooks/useProjectId';
 import { useGetTasks } from '@/features/tasks/api/use-get-task';
 import { Loading } from '@/components/ui/loading';
 
-type Props = {};
+type Props = {
+  userId: string;
+};
 
-export const TaskViewSwitcher = ({}: Props) => {
+export const TaskViewSwitcher = ({ userId }: Props) => {
   const workspaceId = useWorkspaceId();
   const projectId = useProjectId();
   const { data, isPending, isError } = useGetTasks({ workspaceId, projectId });
@@ -27,7 +29,7 @@ export const TaskViewSwitcher = ({}: Props) => {
 
   return (
     <Stack gap={4}>
-      <TasksInfo tasks={documents} />
+      <TasksInfo tasks={documents} userId={userId} />
       <TaskTabs />
     </Stack>
   );

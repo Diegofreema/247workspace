@@ -28,9 +28,8 @@ export const getWorkspaces = async () => {
   }
 };
 export const getProfile = async (id: string) => {
+  const { databases } = await createSessionClient();
   try {
-    const { databases } = await createSessionClient();
-
     const profiles = await databases.listDocuments<Profile>(
       DATABASE_ID,
       PROFILE_ID,
@@ -40,9 +39,12 @@ export const getProfile = async (id: string) => {
     if (!profile) {
       return null;
     }
+    console.log(profile);
+
     return profile;
   } catch (error) {
-    return null;
+    console.log(error);
+    throw new Error('Failed to fetch profile');
   }
 };
 export const getWorkspace = async ({
