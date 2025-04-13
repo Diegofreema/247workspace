@@ -1,16 +1,16 @@
-import { colors } from "@/constants";
-import { useCreateTask } from "@/features/tasks/api/use-create-task";
-import { createTaskSchema } from "@/features/tasks/schema";
-import { useWorkspaceId } from "@/hooks/useWorkspaceId";
-import { useCreateTaskModalController } from "@/lib/nuqs/use-create-task";
-import { Stack } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Button } from "../custom/custom-button";
-import { FlexBox } from "../custom/flex-box";
-import { FormInput, FormInputDate } from "./form-input";
-import { PriorityEnum, StatusEnum } from "@/types";
+import { colors } from '@/constants';
+import { useCreateTask } from '@/features/tasks/api/use-create-task';
+import { createTaskSchema } from '@/features/tasks/schema';
+import { useWorkspaceId } from '@/hooks/useWorkspaceId';
+import { useCreateTaskModalController } from '@/lib/nuqs/use-create-task';
+import { Stack } from '@chakra-ui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { Button } from '../custom/custom-button';
+import { FlexBox } from '../custom/flex-box';
+import { FormInput, FormInputDate } from './form-input';
+import { PriorityEnum, StatusEnum } from '@/types';
 
 type Props = {
   projectOptions: {
@@ -85,7 +85,7 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
         placeholder="Select Assignee"
         required
         disabled={isSubmitting}
-        variant={"select"}
+        variant={'select'}
         data={assigneeItem}
       />
       <FormInput
@@ -96,7 +96,7 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
         placeholder="Select status"
         required
         disabled={isSubmitting}
-        variant={"select"}
+        variant={'select'}
         data={statusData}
       />
       <FormInput
@@ -107,7 +107,7 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
         placeholder="Select Project"
         required
         disabled={isSubmitting}
-        variant={"select"}
+        variant={'select'}
         data={projectItem}
       />
       <FormInput
@@ -118,13 +118,23 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
         placeholder="Select Priority"
         required
         disabled={isSubmitting}
-        variant={"select"}
+        variant={'select'}
         data={priorityData}
+      />
+      <FormInput
+        register={register}
+        name="description"
+        label="Description"
+        errors={errors}
+        placeholder="About this task..."
+        required
+        disabled={isSubmitting}
+        variant="textarea"
       />
       <FlexBox>
         <Button
           variant="outline"
-          width={"fit-content"}
+          width={'fit-content'}
           disabled={isSubmitting}
           color={colors.black}
           onClick={close}
@@ -137,7 +147,7 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
           onClick={handleSubmit(onSubmit)}
           disabled={isSubmitting}
           loading={isSubmitting}
-          width={"fit-content"}
+          width={'fit-content'}
         >
           Create
         </Button>
@@ -147,17 +157,17 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
 };
 
 const statusData = [
-  { label: "Backlog", value: StatusEnum.BACKLOG },
-  { label: "In Progress", value: StatusEnum.IN_PROGRESS },
-  { label: "In Review", value: StatusEnum.IN_REVIEW },
-  { label: "Todo", value: StatusEnum.TODO },
-  { label: "Done", value: StatusEnum.DONE },
+  { label: 'Backlog', value: StatusEnum.BACKLOG },
+  { label: 'In Progress', value: StatusEnum.IN_PROGRESS },
+  { label: 'In Review', value: StatusEnum.IN_REVIEW },
+  { label: 'Todo', value: StatusEnum.TODO },
+  { label: 'Done', value: StatusEnum.DONE },
 ];
 
 const priorityData = [
-  { label: "Urgent", value: PriorityEnum.URGENT },
-  { label: "Important", value: PriorityEnum.IMPORTANT },
-  { label: "Moderate", value: PriorityEnum.MODERATE },
-  { label: "Low", value: PriorityEnum.LOW },
-  { label: "Minimal", value: PriorityEnum.MINIMAL },
+  { label: 'Urgent', value: PriorityEnum.URGENT },
+  { label: 'Important', value: PriorityEnum.IMPORTANT },
+  { label: 'Moderate', value: PriorityEnum.MODERATE },
+  { label: 'Low', value: PriorityEnum.LOW },
+  { label: 'Minimal', value: PriorityEnum.MINIMAL },
 ];

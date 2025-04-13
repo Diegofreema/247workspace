@@ -38,7 +38,6 @@ export const ProjectDisplay = ({ project }: Props) => {
         </Suspense>
       </FlexBox>
       <TaskViewSwitcher />
-      {/*<DatePickerDemo />*/}
     </div>
   );
 };

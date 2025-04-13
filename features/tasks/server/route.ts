@@ -6,7 +6,7 @@ import { getMember } from '@/features/members/utils';
 import { DATABASE_ID, MEMBERS_ID, PROJECT_ID, TASK_ID } from '@/config';
 import { ID, Query } from 'node-appwrite';
 import { z } from 'zod';
-import { Project, StatusEnum } from '@/types';
+import { Project, StatusEnum, TaskType } from '@/types';
 import { getProfile } from '@/features/workspaces/queries';
 
 const app = new Hono()
@@ -118,7 +118,11 @@ const app = new Hono()
         query.push(Query.equal('dueDate', dueDate));
       }
 
-      const tasks = await databases.listDocuments(DATABASE_ID, TASK_ID, query);
+      const tasks = await databases.listDocuments<TaskType>(
+        DATABASE_ID,
+        TASK_ID,
+        query
+      );
 
       const projectIds = tasks.documents.map((task) => task.projectId);
       const assigneeIds = tasks.documents.map((task) => task.assigneeId);
