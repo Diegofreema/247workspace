@@ -1,16 +1,16 @@
-'use client';
-import { Button } from '@/components/custom/custom-button';
-import { FlexBox } from '@/components/custom/flex-box';
-import { CustomText, Title } from '@/components/custom/title';
-import { colors } from '@/constants';
-import { useCreateTaskModalController } from '@/lib/nuqs/use-create-task';
-import { Stack, Tabs } from '@chakra-ui/react';
-import { useState } from 'react';
+"use client";
+import { Button } from "@/components/custom/custom-button";
+import { FlexBox } from "@/components/custom/flex-box";
+import { CustomText, Title } from "@/components/custom/title";
+import { colors } from "@/constants";
+import { useCreateTaskModalController } from "@/lib/nuqs/use-create-task";
+import { Stack, Tabs } from "@chakra-ui/react";
+import { useState } from "react";
 
 type Props = {};
-const tabs = ['table', 'kanban', 'calender'];
+const tabs = ["table", "kanban", "calender"];
 export const TaskViewSwitcher = ({}: Props) => {
-  const [value, setValue] = useState<string | null>('table');
+  const [value, setValue] = useState<string | null>("table");
   const { open } = useCreateTaskModalController();
   return (
     <Stack bg={colors.white} borderRadius={10} p={4} mt={5}>
@@ -18,7 +18,7 @@ export const TaskViewSwitcher = ({}: Props) => {
         <Title
           color={colors.black}
           lineHeight={1.2}
-          fontSize={{ base: 'md', md: 'lg' }}
+          fontSize={{ base: "md", md: "lg" }}
         >
           Tasks
         </Title>
@@ -27,12 +27,13 @@ export const TaskViewSwitcher = ({}: Props) => {
       <Tabs.Root
         value={value}
         onValueChange={(e) => setValue(e.value)}
-        variant={'subtle'}
+        variant={"subtle"}
       >
         <FlexBox
-          justifyContent={'space-between'}
-          alignItems={'center'}
-          flexDir={{ base: 'column', md: 'row' }}
+          justifyContent={{ base: "start", md: "space-between" }}
+          alignItems={"center"}
+          flexDir={{ base: "column", md: "row" }}
+          gap={3}
         >
           <Tabs.List gap={2}>
             {tabs.map((tab) => (
@@ -40,7 +41,7 @@ export const TaskViewSwitcher = ({}: Props) => {
                 key={tab}
                 value={tab}
                 bg={tab === value ? colors.purple : colors.lightGrey}
-                textTransform={'capitalize'}
+                textTransform={"capitalize"}
                 color={tab === value ? colors.white : colors.grey}
                 px={3}
               >
@@ -51,9 +52,9 @@ export const TaskViewSwitcher = ({}: Props) => {
           <Button
             color={colors.white}
             bg={colors.purple}
-            variant={'solid'}
+            variant={"solid"}
             px={2}
-            width="fit"
+            width={{ base: "100%", md: "fit" }}
             onClick={open}
           >
             New task

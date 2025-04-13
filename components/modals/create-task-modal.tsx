@@ -1,52 +1,39 @@
-'use client';
+"use client";
 
-import { colors } from '@/constants';
+import { colors } from "@/constants";
 
-import { CloseButton, Dialog, IconButton, Portal } from '@chakra-ui/react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
-import { CreateTaskFormWrapper } from '@/features/tasks/components/create-task-form-wrapper';
-import { useCreateTaskModalController } from '@/lib/nuqs/use-create-task';
-import { FlexBox } from '../custom/flex-box';
-import { useEffect, useState } from 'react';
+import { CreateTaskFormWrapper } from "@/features/tasks/components/create-task-form-wrapper";
+import { useCreateTaskModalController } from "@/lib/nuqs/use-create-task";
+import { useEffect, useState } from "react";
 
 export const CreateTaskModal = () => {
-  const { isOpen, setIsOpen, close } = useCreateTaskModalController();
+  const { isOpen, setIsOpen } = useCreateTaskModalController();
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
   }, []);
   if (!mounted) return null;
   return (
-    <Dialog.Root
-      placement="center"
-      motionPreset={'slide-in-bottom'}
-      open={isOpen}
-      onOpenChange={(e) => setIsOpen(e.open)}
-    >
-      <Portal>
-        <Dialog.Backdrop />
-        <Dialog.Positioner>
-          <Dialog.Content bg={colors.white}>
-            <Dialog.Header>
-              <FlexBox
-                justifyContent={'space-between'}
-                width="100%"
-                alignItems={'center'}
-              >
-                <Dialog.Title color={colors.black} fontSize={25}>
-                  Create a new task
-                </Dialog.Title>
-                <IconButton onClick={close} borderRadius={72}>
-                  <CloseButton bg={colors.white} color={colors.black} />
-                </IconButton>
-              </FlexBox>
-            </Dialog.Header>
-            <Dialog.Body>
-              <CreateTaskFormWrapper />
-            </Dialog.Body>
-          </Dialog.Content>
-        </Dialog.Positioner>
-      </Portal>
-    </Dialog.Root>
+    <Dialog open={isOpen} onOpenChange={(e) => setIsOpen(e)}>
+      <DialogContent className={"bg-white"}>
+        <DialogHeader>
+          <DialogTitle
+            color={colors.black}
+            className={"text-black text-[25px]"}
+          >
+            Create a new task
+          </DialogTitle>
+
+          <CreateTaskFormWrapper />
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
   );
 };

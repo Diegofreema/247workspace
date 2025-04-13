@@ -1,17 +1,14 @@
-'use client';
+"use client";
 
-import { colors } from '@/constants';
-import { ListCollection, Portal, Select } from '@chakra-ui/react';
-import { FieldValues, Path, UseFormRegister } from 'react-hook-form';
+import { NativeSelect } from "@chakra-ui/react";
+import { FieldValues, Path, UseFormRegister } from "react-hook-form";
+import { SelectData } from "@/types";
 
 type Props<TFormValues extends FieldValues> = {
   placeholder: string;
   register: UseFormRegister<TFormValues>;
   name: Path<TFormValues>;
-  data: ListCollection<{
-    label: string;
-    value: string;
-  }>;
+  data: SelectData[];
 };
 export const CustomSelect = <TFormValues extends FieldValues>({
   placeholder,
@@ -20,42 +17,27 @@ export const CustomSelect = <TFormValues extends FieldValues>({
   register,
 }: Props<TFormValues>) => {
   return (
-    <Select.Root collection={data} {...register(name)}>
-      <Select.HiddenSelect />
-      {/* <Select.Label></Select.Label> */}
-      <Select.Control>
-        <Select.Trigger
-          w="full"
-          maxW="100%"
-          borderWidth={1}
-          borderStyle={'solid'}
-          borderColor={colors.grey}
-          borderRadius={5}
-          p={2.5}
-          _placeholder={{ color: colors.black, fontStyle: 'italic' }}
-        >
-          <Select.ValueText placeholder={placeholder} color={colors.black} />
-        </Select.Trigger>
-        <Select.IndicatorGroup>
-          <Select.Indicator />
-        </Select.IndicatorGroup>
-      </Select.Control>
-      <Portal>
-        <Select.Positioner>
-          <Select.Content bg={colors.white}>
-            {data.items.map((framework) => (
-              <Select.Item
-                item={framework}
-                key={framework.value}
-                color={colors.black}
-              >
-                {framework.label}
-                <Select.ItemIndicator />
-              </Select.Item>
-            ))}
-          </Select.Content>
-        </Select.Positioner>
-      </Portal>
-    </Select.Root>
+    <NativeSelect.Root
+      size="md"
+      width="100%"
+      colorPalette={"black"}
+      borderColor={"black"}
+    >
+      <NativeSelect.Field
+        placeholder={placeholder}
+        {...register(name)}
+        color={"black"}
+        border={"1px solid black"}
+        height={"44px"}
+        p={2}
+      >
+        {data.map((d) => (
+          <option value={d.value} key={d.value}>
+            {d.label}
+          </option>
+        ))}
+      </NativeSelect.Field>
+      <NativeSelect.Indicator />
+    </NativeSelect.Root>
   );
 };

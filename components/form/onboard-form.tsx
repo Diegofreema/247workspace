@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { createListCollection, Stack } from '@chakra-ui/react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { Button } from '../custom/custom-button';
-import { FormInput } from './form-input';
+import { Stack } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "../custom/custom-button";
+import { FormInput } from "./form-input";
 
-import { colors } from '@/constants';
-import { onboardSchema } from '@/utils/validators';
-import { useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import { useOnboard } from '../../features/auth/api/use-login';
-import { toaster } from '../ui/toaster';
+import { colors } from "@/constants";
+import { onboardSchema } from "@/utils/validators";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useOnboard } from "@/features/auth/api/use-login";
+import { toaster } from "../ui/toaster";
 
 type Props = {
   initialValue: {
@@ -37,9 +37,9 @@ export const OnboardForm = ({ initialValue }: Props) => {
     resolver: zodResolver(onboardSchema),
     defaultValues: {
       email: initialValue.email,
-      bio: '',
+      bio: "",
       fullName: initialValue.name,
-      role: '',
+      role: "",
     },
   });
   const onSubmit = async (values: z.infer<typeof onboardSchema>) => {
@@ -48,27 +48,27 @@ export const OnboardForm = ({ initialValue }: Props) => {
       {
         onSuccess: ({ data }) => {
           toaster.create({
-            title: 'Success',
-            description: 'You have successfully onboarded',
-            type: 'success',
+            title: "Success",
+            description: "You have successfully onboarded",
+            type: "success",
           });
           reset();
-          router.push('/workspace/create-workspace');
+          router.push("/workspace/create-workspace");
           router.refresh();
-          queryClient.invalidateQueries({ queryKey: ['current'] });
-          queryClient.invalidateQueries({ queryKey: ['projects'] });
+          queryClient.invalidateQueries({ queryKey: ["current"] });
+          queryClient.invalidateQueries({ queryKey: ["projects"] });
           queryClient.invalidateQueries({
-            queryKey: ['profile', data.profileId],
+            queryKey: ["profile", data.profileId],
           });
         },
         onError: () => {
           toaster.create({
-            title: 'Error',
-            description: 'Something went wrong, please try again',
-            type: 'error',
+            title: "Error",
+            description: "Something went wrong, please try again",
+            type: "error",
           });
         },
-      }
+      },
     );
   };
   const { bio } = watch();
@@ -136,18 +136,16 @@ export const OnboardForm = ({ initialValue }: Props) => {
   );
 };
 
-const data = createListCollection({
-  items: [
-    { label: 'CTO', value: 'CTO' },
-    { label: 'Project manager', value: 'Project manager' },
-    { label: 'Senior Developer', value: 'Senior Developer' },
-    { label: 'Frontend Developer', value: 'Frontend Developer' },
-    { label: 'Backend Developer', value: 'Backend Developer' },
-    { label: 'Fullstack Developer', value: 'Fullstack Developer' },
-    { label: 'Junior Developer', value: 'Junior Developer' },
-    { label: 'Intern', value: 'Intern' },
-    { label: 'UI/UX Designer', value: 'UI/UX Designer' },
-    { label: 'Customer Support', value: 'Customer support' },
-    { label: 'Others', value: 'others' },
-  ],
-});
+const data = [
+  { label: "CTO", value: "CTO" },
+  { label: "Project manager", value: "Project manager" },
+  { label: "Senior Developer", value: "Senior Developer" },
+  { label: "Frontend Developer", value: "Frontend Developer" },
+  { label: "Backend Developer", value: "Backend Developer" },
+  { label: "Fullstack Developer", value: "Fullstack Developer" },
+  { label: "Junior Developer", value: "Junior Developer" },
+  { label: "Intern", value: "Intern" },
+  { label: "UI/UX Designer", value: "UI/UX Designer" },
+  { label: "Customer Support", value: "Customer support" },
+  { label: "Others", value: "others" },
+];

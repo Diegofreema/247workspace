@@ -1,12 +1,12 @@
-import { FlexBox } from '@/components/custom/flex-box';
-import { CustomText } from '@/components/custom/title';
-import { colors } from '@/constants';
-import { TaskViewSwitcher } from '@/features/tasks/components/tasks-view-switcher';
-import { Project } from '@/types';
-import { Stack } from '@chakra-ui/react';
-import { EditActionMenu } from './edit-action-menu';
-import { ProjectInnerItem } from './project-item';
-import { Suspense } from 'react';
+import { FlexBox } from "@/components/custom/flex-box";
+import { CustomText } from "@/components/custom/title";
+import { colors } from "@/constants";
+import { TaskViewSwitcher } from "@/features/tasks/components/tasks-view-switcher";
+import { Project } from "@/types";
+import { Stack } from "@chakra-ui/react";
+import { EditActionMenu } from "./edit-action-menu";
+import { ProjectInnerItem } from "./project-item";
+import { Suspense } from "react";
 
 type Props = {
   project: Project;
@@ -16,7 +16,7 @@ export const ProjectDisplay = ({ project }: Props) => {
   const link = `/workspace/${project.workspaceId}/project/settings/${project.$id}`;
   return (
     <div>
-      <FlexBox alignItems={'center'} justifyContent={'space-between'}>
+      <FlexBox alignItems={"center"} justifyContent={"space-between"}>
         <Stack>
           <ProjectInnerItem
             name={project.name}
@@ -26,8 +26,8 @@ export const ProjectDisplay = ({ project }: Props) => {
           />
           <CustomText
             color={colors.grey}
-            fontSize={'sm'}
-            fontWeight={'bold'}
+            fontSize={"sm"}
+            fontWeight={"bold"}
             ml={2}
           >
             Manage your projects
@@ -38,6 +38,7 @@ export const ProjectDisplay = ({ project }: Props) => {
         </Suspense>
       </FlexBox>
       <TaskViewSwitcher />
+      {/*<DatePickerDemo />*/}
     </div>
   );
 };
