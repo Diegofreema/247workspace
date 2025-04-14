@@ -13,7 +13,13 @@ type Props = {
 
 export const ErrorComponent = ({ message, reset }: Props) => {
   return (
-    <Stack gap={4}>
+    <Stack
+      gap={4}
+      align="center"
+      justify="center"
+      display={'flex'}
+      flexDir={'column'}
+    >
       <IconExclamationCircle size={50} color={colors.purple} />
       <Title color={colors.black}>Something went wrong!</Title>
       <CustomText color={colors.grey}>{message}</CustomText>

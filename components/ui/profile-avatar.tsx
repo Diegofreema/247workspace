@@ -12,7 +12,7 @@ export const ProfileAvatar = ({ name, imageUrl }: Props) => {
   return (
     <Avatar className="bg-purple">
       <AvatarImage src={imageUrl} alt="profile image" />
-      <AvatarFallback className="bg-purple">{prefix}</AvatarFallback>
+      <AvatarFallback className="bg-purple text-white">{prefix}</AvatarFallback>
     </Avatar>
   );
 };

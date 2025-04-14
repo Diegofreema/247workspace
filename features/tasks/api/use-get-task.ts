@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { client } from "@/lib/rpc";
-import { StatusEnum } from "@/types";
+import { client } from '@/lib/rpc';
+import { StatusEnum } from '@/types';
 
 type GetTasks = {
   workspaceId: string;
@@ -20,9 +20,10 @@ export const useGetTasks = ({
   dueDate,
   search,
 }: GetTasks) => {
+  const queryClient = useQueryClient();
   return useQuery({
     queryKey: [
-      "tasks",
+      'tasks',
       workspaceId,
       projectId,
       assigneeId,
@@ -42,10 +43,21 @@ export const useGetTasks = ({
         },
       });
       if (!response.ok) {
-        throw new Error("Failed to get tasks");
+        throw new Error('Failed to get tasks');
       }
-
+      ``;
       return await response.json();
+    },
+    placeholderData: () => {
+      return queryClient.getQueryData([
+        'tasks',
+        workspaceId,
+        projectId,
+        assigneeId,
+        status,
+        dueDate,
+        search,
+      ]);
     },
   });
 };

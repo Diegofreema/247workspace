@@ -1,3 +1,4 @@
+'use server';
 import { createSessionClient } from '@/lib/appwrite';
 import { getMember } from '../members/utils';
 import { redirect } from 'next/navigation';

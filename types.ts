@@ -79,6 +79,7 @@ export type TaskType = Models.Document & {
 type Assignee = {
   name: string | undefined;
   email: string | undefined;
+  avatarUrl?: string;
   $id: string;
   $collectionId: string;
   $databaseId: string;

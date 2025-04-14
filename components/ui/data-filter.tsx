@@ -9,6 +9,7 @@ import { StatusEnum } from '@/types';
 import { IconBriefcase, IconListCheck, IconUser } from '@tabler/icons-react';
 import { useDataFilters } from '@/lib/nuqs/use-data-filter';
 import { ReusableSkeleton } from '../skeletons/link-skeleton';
+import { DatePicker } from './date-picker';
 
 type Props = {
   hideProjectFilter?: boolean;
@@ -45,8 +46,8 @@ export const DataFilter = ({ hideProjectFilter }: Props) => {
   if (isLoading) {
     return (
       <FlexBox gap={2} flexDir={{ base: 'column', md: 'row' }}>
-        {[...Array(3)].map((_, index) => (
-          <ReusableSkeleton key={index} width="200px" />
+        {[...Array(4)].map((_, index) => (
+          <ReusableSkeleton key={index} width={{ base: '100%', md: '150px' }} />
         ))}
       </FlexBox>
     );
@@ -104,6 +105,14 @@ export const DataFilter = ({ hideProjectFilter }: Props) => {
         value={projectId ?? undefined}
         disabled={false}
         icon={IconBriefcase}
+      />
+      <DatePicker
+        className="h-9 w-full lg:w-auto"
+        placeholder="Due date"
+        value={dueDate ? new Date(dueDate) : undefined}
+        onChange={(date) => {
+          setFilters({ dueDate: date ? date.toISOString() : null });
+        }}
       />
     </FlexBox>
   );

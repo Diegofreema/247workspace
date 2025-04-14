@@ -1,9 +1,7 @@
 'use client';
 
-import { SmallerLoader } from '@/components/ui/small-loader';
 import { useGetTasks } from '@/features/tasks/api/use-get-task';
 import { TaskTabs } from '@/features/tasks/components/task-tabs';
-import { TasksInfo } from '@/features/tasks/components/tasks-info';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { useDataFilters } from '@/lib/nuqs/use-data-filter';
 import { Stack } from '@chakra-ui/react';
@@ -24,15 +22,9 @@ export const TaskViewSwitcher = () => {
     throw new Error('Failed to get tasks');
   }
 
-  if (isPending) {
-    return <SmallerLoader />;
-  }
-
-  const { documents } = data.data;
-
   return (
     <Stack gap={2}>
-      <TaskTabs tasks={documents} />
+      <TaskTabs tasks={data?.data?.documents ?? []} isPending={isPending} />
     </Stack>
   );
 };

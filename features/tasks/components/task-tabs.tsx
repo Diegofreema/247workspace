@@ -10,14 +10,19 @@ import { Stack, Tabs } from '@chakra-ui/react';
 import { ProjectCalendar } from './project-calendar';
 import { ProjectKanban } from './project-kanban';
 import { ProjectTable } from './project-table';
+import { SmallerLoader } from '@/components/ui/small-loader';
+import { columns } from './column';
 
 type Props = {
   tasks: TaskWithProjectAndAssignee[];
+  isPending: boolean;
 };
 const tabs = ['table', 'kanban', 'calender'];
-export const TaskTabs = ({ tasks }: Props) => {
+export const TaskTabs = ({ tasks, isPending }: Props) => {
   const { tab: value, setTab: setValue } = useSwitchTabs();
   const { open } = useCreateTaskModalController();
+  console.log(tasks);
+
   return (
     <Stack bg={colors.white} borderRadius={10} p={4} mt={5}>
       <Stack mb={3}>
@@ -68,15 +73,21 @@ export const TaskTabs = ({ tasks }: Props) => {
             New task
           </Button>
         </FlexBox>
-        <Tabs.Content value="table" width={'100%'}>
-          <ProjectTable tasks={tasks} />
-        </Tabs.Content>
-        <Tabs.Content value="kanban">
-          <ProjectKanban tasks={tasks} />
-        </Tabs.Content>
-        <Tabs.Content value="calender">
-          <ProjectCalendar tasks={tasks} />
-        </Tabs.Content>
+        {isPending ? (
+          <SmallerLoader />
+        ) : (
+          <>
+            <Tabs.Content value="table" width={'100%'} overflowX={'scroll'}>
+              <ProjectTable data={tasks} columns={columns} />
+            </Tabs.Content>
+            <Tabs.Content value="kanban" overflowX={'scroll'}>
+              <ProjectKanban tasks={tasks} />
+            </Tabs.Content>
+            <Tabs.Content value="calender" overflowX={'scroll'}>
+              <ProjectCalendar tasks={tasks} />
+            </Tabs.Content>
+          </>
+        )}
       </Tabs.Root>
     </Stack>
   );
