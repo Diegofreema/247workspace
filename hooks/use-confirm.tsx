@@ -1,16 +1,7 @@
-import { colors } from '@/constants';
-import {
-  ActionBar,
-  Button,
-  CloseButton,
-  ConditionalValue,
-  Dialog,
-  Portal,
-} from '@chakra-ui/react';
+import { ActionBar, Button, ConditionalValue, Portal } from '@chakra-ui/react';
 import { IconX } from '@tabler/icons-react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { IconType } from 'react-icons/lib';
-import { LuShare, LuTrash2 } from 'react-icons/lu';
 
 type Props = {
   title: string;

@@ -21,7 +21,6 @@ const tabs = ['table', 'kanban', 'calender'];
 export const TaskTabs = ({ tasks, isPending }: Props) => {
   const { tab: value, setTab: setValue } = useSwitchTabs();
   const { open } = useCreateTaskModalController();
-  console.log(tasks);
 
   return (
     <Stack bg={colors.white} borderRadius={10} p={4} mt={5}>

@@ -60,7 +60,6 @@ export const Projects = () => {
         {projects.map((project) => {
           const href = `/workspaces/${workspaceId}/projects/${project.$id}`;
           const isActive = pathname === href;
-          console.log(isActive);
 
           return (
             <ProjectItem

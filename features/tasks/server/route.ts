@@ -10,6 +10,26 @@ import { Project, StatusEnum, TaskType } from '@/types';
 import { getProfile } from '@/features/workspaces/queries';
 
 const app = new Hono()
+  .delete('/:taskId', sessionMiddleware, async (c) => {
+    const user = c.get('user');
+    const databases = c.get('databases');
+    const { taskId } = c.req.param();
+    const task = await databases.getDocument<TaskType>(
+      DATABASE_ID,
+      TASK_ID,
+      taskId
+    );
+    const member = await getMember({
+      databases,
+      userId: user.$id,
+      workspaceId: task.workspaceId,
+    });
+    if (!member) {
+      return c.json({ error: 'You are not a member of this workspace' }, 401);
+    }
+    await databases.deleteDocument(DATABASE_ID, TASK_ID, taskId);
+    return c.json({ data: { $id: task.$id } });
+  })
   .post(
     '/',
     sessionMiddleware,
