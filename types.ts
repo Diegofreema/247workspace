@@ -59,8 +59,8 @@ export type Project = Models.Document & {
 export type SizeType = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export type SelectData = {
-  label: string | number;
-  value: string | number;
+  label: string;
+  value: string;
   imageUrl?: string;
 };
 

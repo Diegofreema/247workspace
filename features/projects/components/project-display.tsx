@@ -7,14 +7,18 @@ import { Stack } from '@chakra-ui/react';
 import { EditActionMenu } from './edit-action-menu';
 import { ProjectInnerItem } from './project-item';
 import { Suspense } from 'react';
+import { TasksInfo } from '@/features/tasks/components/tasks-info';
+import { getTasks } from '@/features/tasks/queries';
 
 type Props = {
   project: Project;
   userId: string;
 };
 
-export const ProjectDisplay = ({ project, userId }: Props) => {
+export const ProjectDisplay = async ({ project, userId }: Props) => {
+  const data = await getTasks(project.workspaceId, project.$id);
   const link = `/workspace/${project.workspaceId}/project/settings/${project.$id}`;
+
   return (
     <div>
       <FlexBox alignItems={'center'} justifyContent={'space-between'}>
@@ -38,7 +42,8 @@ export const ProjectDisplay = ({ project, userId }: Props) => {
           <EditActionMenu link={link} />
         </Suspense>
       </FlexBox>
-      <TaskViewSwitcher userId={userId} />
+      <TasksInfo tasks={data.documents} userId={userId} />
+      <TaskViewSwitcher />
     </div>
   );
 };

@@ -1,35 +1,38 @@
 'use client';
 
-import { Stack } from '@chakra-ui/react';
+import { SmallerLoader } from '@/components/ui/small-loader';
+import { useGetTasks } from '@/features/tasks/api/use-get-task';
 import { TaskTabs } from '@/features/tasks/components/task-tabs';
 import { TasksInfo } from '@/features/tasks/components/tasks-info';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
-import { useProjectId } from '@/hooks/useProjectId';
-import { useGetTasks } from '@/features/tasks/api/use-get-task';
-import { Loading } from '@/components/ui/loading';
+import { useDataFilters } from '@/lib/nuqs/use-data-filter';
+import { Stack } from '@chakra-ui/react';
 
-type Props = {
-  userId: string;
-};
-
-export const TaskViewSwitcher = ({ userId }: Props) => {
+export const TaskViewSwitcher = () => {
   const workspaceId = useWorkspaceId();
-  const projectId = useProjectId();
-  const { data, isPending, isError } = useGetTasks({ workspaceId, projectId });
+
+  const [{ assigneeId, dueDate, projectId, status, search }] = useDataFilters();
+  const { data, isPending, isError } = useGetTasks({
+    workspaceId,
+    assigneeId,
+    dueDate,
+    projectId,
+    status,
+    search,
+  });
   if (isError) {
     throw new Error('Failed to get tasks');
   }
 
   if (isPending) {
-    return <Loading />;
+    return <SmallerLoader />;
   }
 
   const { documents } = data.data;
 
   return (
     <Stack gap={2}>
-      <TasksInfo tasks={documents} userId={userId} />
-      <TaskTabs />
+      <TaskTabs tasks={documents} />
     </Stack>
   );
 };

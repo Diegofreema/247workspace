@@ -34,7 +34,6 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
     register,
     reset,
     control,
-    watch,
   } = useForm<z.infer<typeof createTaskSchema>>({
     defaultValues: {
       workspaceId,
@@ -42,8 +41,6 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
     resolver: zodResolver(createTaskSchema),
   });
 
-  const data = watch();
-  console.log(data);
   const onSubmit = async (data: z.infer<typeof createTaskSchema>) => {
     await mutateAsync({ json: { ...data, workspaceId } });
     reset();
@@ -57,7 +54,7 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
     label: project.name,
     value: project.id,
   }));
-  console.log({ errors });
+
   return (
     <Stack gap={4}>
       <FormInput
@@ -127,7 +124,6 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
         label="Description"
         errors={errors}
         placeholder="About this task..."
-        required
         disabled={isSubmitting}
         variant="textarea"
       />

@@ -3,13 +3,14 @@ import { InferRequestType, InferResponseType } from 'hono';
 
 import { toaster } from '@/components/ui/toaster';
 import { client } from '@/lib/rpc';
+import { useRouter } from 'next/navigation';
 
 type ResponseType = InferResponseType<(typeof client.api.tasks)['$post'], 200>;
 type RequestType = InferRequestType<(typeof client.api.tasks)['$post']>;
 
 export const useCreateTask = () => {
   const queryClient = useQueryClient();
-
+  const router = useRouter();
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ json }) => {
       const res = await client.api.tasks.$post({ json });
@@ -23,6 +24,7 @@ export const useCreateTask = () => {
         data: { $id, workspaceId },
       } = res;
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      router.refresh();
       //   router.push(`/workspaces/${workspaceId}/projects/${$id}`);
       toaster.create({
         title: 'Success',

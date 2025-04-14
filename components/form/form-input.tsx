@@ -1,4 +1,4 @@
-import { Field, Group, Input, Textarea } from "@chakra-ui/react";
+import { Field, Group, Input, Textarea } from '@chakra-ui/react';
 import {
   Control,
   Controller,
@@ -6,13 +6,12 @@ import {
   FieldValues,
   Path,
   UseFormRegister,
-} from "react-hook-form";
+} from 'react-hook-form';
 
-import { colors } from "@/constants";
-import { CustomSelect } from "./custom-select";
-import { DatePicker } from "../ui/date-picker";
-import { SelectData } from "@/types";
-import { ShadCnSelect } from "@/components/form/ShandCnSelect";
+import { colors } from '@/constants';
+import { SelectData } from '@/types';
+import { DatePicker } from '../ui/date-picker';
+import { CustomSelect } from './custom-select';
 
 type FormInputProps<TFormValues extends FieldValues> = {
   errors: FieldErrors<TFormValues>;
@@ -20,14 +19,14 @@ type FormInputProps<TFormValues extends FieldValues> = {
   name: Path<TFormValues>;
   label: string;
   placeholder: string;
-  type?: "text" | "password";
+  type?: 'text' | 'password';
   togglePassword?: () => void;
   password?: boolean;
   disabled?: boolean;
   required?: boolean;
   helperText?: string;
   select?: boolean;
-  variant?: "text" | "select" | "textarea" | "date";
+  variant?: 'text' | 'select' | 'textarea' | 'date';
   data?: SelectData[];
 };
 
@@ -37,21 +36,21 @@ export const FormInput = <TFormValues extends FieldValues>({
   name,
   label,
   placeholder,
-  type = "text",
+  type = 'text',
 
   disabled,
   required,
   helperText,
 
   data,
-  variant = "text",
+  variant = 'text',
 }: FormInputProps<TFormValues>) => {
   return (
     <Field.Root invalid={!!errors[name]} width="100%" required={required}>
       <Field.Label color={colors.black}>
         {label} <Field.RequiredIndicator />
       </Field.Label>
-      {variant === "select" && data && (
+      {variant === 'select' && data && (
         <CustomSelect
           data={data}
           placeholder={placeholder}
@@ -59,13 +58,13 @@ export const FormInput = <TFormValues extends FieldValues>({
           name={name}
         />
       )}
-      {variant === "text" && (
+      {variant === 'text' && (
         <Group
           attached
           w="full"
           maxW="100%"
           borderWidth={1}
-          borderStyle={"solid"}
+          borderStyle={'solid'}
           borderColor={colors.grey}
           borderRadius={5}
         >
@@ -78,11 +77,11 @@ export const FormInput = <TFormValues extends FieldValues>({
             disabled={disabled}
             p={3}
             color={colors.black}
-            css={{ "--error-color": "red" }}
+            css={{ '--error-color': 'red' }}
           />
         </Group>
       )}
-      {variant === "textarea" && (
+      {variant === 'textarea' && (
         <Textarea
           flex="1"
           {...register(name)}
@@ -91,12 +90,12 @@ export const FormInput = <TFormValues extends FieldValues>({
           w="full"
           maxW="100%"
           borderWidth={1}
-          borderStyle={"solid"}
+          borderStyle={'solid'}
           borderColor={colors.grey}
           borderRadius={5}
           p={3}
           color={colors.black}
-          css={{ "--error-color": "red" }}
+          css={{ '--error-color': 'red' }}
         />
       )}
 
@@ -115,7 +114,7 @@ type FormInputDateProps<TFormValues extends FieldValues> = {
   disabled: boolean;
   required?: boolean;
   helperText?: string;
-  variant?: "date";
+  variant?: 'date';
   data?: SelectData[];
 };
 
@@ -151,38 +150,38 @@ export const FormInputDate = <TFormValues extends FieldValues>({
     </Field.Root>
   );
 };
-export const FormInputShadCnSelect = <TFormValues extends FieldValues>({
-  errors,
-  control,
-  name,
-  label,
-  placeholder,
-  disabled,
-  required,
-  helperText,
-  data,
-}: FormInputDateProps<TFormValues>) => {
-  return (
-    <Field.Root invalid={!!errors[name]} width="100%" required={required}>
-      <Field.Label color={colors.black}>
-        {label} <Field.RequiredIndicator />
-      </Field.Label>
-      <Controller
-        name={name}
-        control={control}
-        render={({ field }) => (
-          <ShadCnSelect
-            data={data || []}
-            placeholder={placeholder || "Select a item"}
-            value={field.value}
-            onValueChange={field.onChange}
-            disabled={disabled}
-          />
-        )}
-      />
+// export const FormInputShadCnSelect = <TFormValues extends FieldValues>({
+//   errors,
+//   control,
+//   name,
+//   label,
+//   placeholder,
+//   disabled,
+//   required,
+//   helperText,
+//   data,
+// }: FormInputDateProps<TFormValues>) => {
+//   return (
+//     <Field.Root invalid={!!errors[name]} width="100%" required={required}>
+//       <Field.Label color={colors.black}>
+//         {label} <Field.RequiredIndicator />
+//       </Field.Label>
+//       <Controller
+//         name={name}
+//         control={control}
+//         render={({ field }) => (
+//           <ShadCnSelect
+//             data={data || []}
+//             placeholder={placeholder || "Select a item"}
+//             value={field.value}
+//             onValueChange={field.onChange}
+//             disabled={disabled}
+//           />
+//         )}
+//       />
 
-      {helperText && <Field.HelperText>{helperText}</Field.HelperText>}
-      <Field.ErrorText>{errors[name]?.message as string}</Field.ErrorText>
-    </Field.Root>
-  );
-};
+//       {helperText && <Field.HelperText>{helperText}</Field.HelperText>}
+//       <Field.ErrorText>{errors[name]?.message as string}</Field.ErrorText>
+//     </Field.Root>
+//   );
+// };

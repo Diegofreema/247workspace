@@ -6,7 +6,7 @@ type GetMemberProps = {
   memberId: string;
 };
 
-export const useGetMembers = ({ memberId }: GetMemberProps) => {
+export const useGetMember = ({ memberId }: GetMemberProps) => {
   return useQuery({
     queryKey: ['member', memberId],
     queryFn: async () => {
