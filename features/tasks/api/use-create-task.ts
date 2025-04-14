@@ -23,8 +23,8 @@ export const useCreateTask = () => {
       const {
         data: { $id, workspaceId },
       } = res;
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
       router.refresh();
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
       //   router.push(`/workspaces/${workspaceId}/projects/${$id}`);
       toaster.create({
         title: 'Success',

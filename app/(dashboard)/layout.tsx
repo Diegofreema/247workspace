@@ -28,6 +28,7 @@ const DashboardLayout = ({ children }: Props) => {
         transitionProperty="top, bottom, width"
         transitionTimingFunction="linear, linear, ease"
         hideBelow={'md'}
+        zIndex={5}
       >
         <DashboardSidebar />
       </Box>

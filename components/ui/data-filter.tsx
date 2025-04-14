@@ -6,8 +6,9 @@ import { ErrorComponent } from './error-component';
 import { FlexBox } from '../custom/flex-box';
 import { ShadCnSelect } from '../form/ShandCnSelect';
 import { StatusEnum } from '@/types';
-import { IconListCheck } from '@tabler/icons-react';
+import { IconBriefcase, IconListCheck, IconUser } from '@tabler/icons-react';
 import { useDataFilters } from '@/lib/nuqs/use-data-filter';
+import { ReusableSkeleton } from '../skeletons/link-skeleton';
 
 type Props = {
   hideProjectFilter?: boolean;
@@ -42,7 +43,13 @@ export const DataFilter = ({ hideProjectFilter }: Props) => {
   }
 
   if (isLoading) {
-    return null;
+    return (
+      <FlexBox gap={2} flexDir={{ base: 'column', md: 'row' }}>
+        {[...Array(3)].map((_, index) => (
+          <ReusableSkeleton key={index} width="200px" />
+        ))}
+      </FlexBox>
+    );
   }
 
   const membersOptions =
@@ -61,9 +68,19 @@ export const DataFilter = ({ hideProjectFilter }: Props) => {
       status: value === 'all' ? null : (value as StatusEnum),
     });
   };
+  const onAssigneeChange = (value: string) => {
+    setFilters({
+      assigneeId: value === 'all' ? null : value,
+    });
+  };
+  const onProjectChange = (value: string) => {
+    setFilters({
+      projectId: value === 'all' ? null : value,
+    });
+  };
 
   return (
-    <FlexBox>
+    <FlexBox gap={2} flexDir={{ base: 'column', md: 'row' }}>
       <ShadCnSelect
         placeholder="Select status"
         onValueChange={onStatusChange}
@@ -71,6 +88,22 @@ export const DataFilter = ({ hideProjectFilter }: Props) => {
         value={status ?? undefined}
         disabled={false}
         icon={IconListCheck}
+      />
+      <ShadCnSelect
+        placeholder="All assignees"
+        onValueChange={onAssigneeChange}
+        data={[{ label: 'All assignees', value: 'all' }, ...membersOptions]}
+        value={assigneeId ?? undefined}
+        disabled={false}
+        icon={IconUser}
+      />
+      <ShadCnSelect
+        placeholder="All projects"
+        onValueChange={onProjectChange}
+        data={[{ label: 'All Projects', value: 'all' }, ...projectsOptions]}
+        value={projectId ?? undefined}
+        disabled={false}
+        icon={IconBriefcase}
       />
     </FlexBox>
   );

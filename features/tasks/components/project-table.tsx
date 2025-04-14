@@ -1,4 +1,5 @@
 import { TaskWithProjectAndAssignee } from '@/types';
+import { Box } from '@chakra-ui/react';
 import React from 'react';
 
 type Props = {
@@ -6,5 +7,5 @@ type Props = {
 };
 
 export const ProjectTable = ({ tasks }: Props) => {
-  return <div className="text-black">{JSON.stringify(tasks)}</div>;
+  return <Box maxW={'100%'}>{JSON.stringify(tasks)}</Box>;
 };

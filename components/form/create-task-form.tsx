@@ -11,6 +11,7 @@ import { Button } from '../custom/custom-button';
 import { FlexBox } from '../custom/flex-box';
 import { FormInput, FormInputDate } from './form-input';
 import { PriorityEnum, StatusEnum } from '@/types';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   projectOptions: {
@@ -28,6 +29,7 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
   const { mutateAsync } = useCreateTask();
   const workspaceId = useWorkspaceId();
   const { close } = useCreateTaskModalController();
+  const router = useRouter();
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -42,7 +44,14 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
   });
 
   const onSubmit = async (data: z.infer<typeof createTaskSchema>) => {
-    await mutateAsync({ json: { ...data, workspaceId } });
+    await mutateAsync(
+      { json: { ...data, workspaceId } },
+      {
+        onSuccess: () => {
+          router.refresh();
+        },
+      }
+    );
     reset();
     await close();
   };
