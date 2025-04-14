@@ -4,16 +4,15 @@ import { colors } from '@/constants';
 import { Button, Menu, Portal } from '@chakra-ui/react';
 import { LogoutBtn } from '../buttons/logout-button';
 import { CustomText } from '../custom/title';
+import { AvatarItem } from './workpsace-item';
+import { ProfileAvatar } from '../ui/profile-avatar';
 
 type Props = {
   name: string;
   email: string;
+  imageUrl?: string;
 };
-export const AvatarMenu = ({ name, email }: Props) => {
-  const firstLetter = name?.charAt(0)?.toUpperCase();
-  const secondLetter = name?.split(' ')[1]?.charAt(0)?.toUpperCase() ?? '';
-  const prefix = `${firstLetter}${secondLetter}`;
-
+export const AvatarMenu = ({ name, email, imageUrl }: Props) => {
   return (
     <Menu.Root>
       <Menu.Trigger asChild mr={2}>
@@ -24,7 +23,7 @@ export const AvatarMenu = ({ name, email }: Props) => {
           bg={colors.purple}
           color={colors.white}
         >
-          {prefix}
+          <ProfileAvatar name={name} imageUrl={imageUrl} />
         </Button>
       </Menu.Trigger>
       <Portal>
@@ -45,7 +44,7 @@ export const AvatarMenu = ({ name, email }: Props) => {
               bg={colors.purple}
               alignSelf={'center'}
             >
-              {prefix}
+              <ProfileAvatar name={name} imageUrl={imageUrl} />
             </Button>
             <CustomText
               fontWeight={'bold'}

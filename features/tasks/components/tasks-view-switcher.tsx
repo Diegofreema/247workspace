@@ -28,7 +28,7 @@ export const TaskViewSwitcher = ({ userId }: Props) => {
   const { documents } = data.data;
 
   return (
-    <Stack gap={4}>
+    <Stack gap={2}>
       <TasksInfo tasks={documents} userId={userId} />
       <TaskTabs />
     </Stack>

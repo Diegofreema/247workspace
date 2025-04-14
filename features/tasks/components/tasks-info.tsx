@@ -43,7 +43,11 @@ export const TasksInfo = ({ tasks, userId }: Props) => {
     },
   ];
   return (
-    <SimpleGrid gap={{ base: 4, md: 8 }} columns={{ base: 1, md: 3, lg: 5 }}>
+    <SimpleGrid
+      gap={{ base: 4, md: 8 }}
+      columns={{ base: 1, md: 2, lg: 5 }}
+      mt={4}
+    >
       {data.map((item) => (
         <TaskInfoCard key={item.label} label={item.label} value={item.value} />
       ))}
