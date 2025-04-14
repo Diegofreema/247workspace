@@ -1,10 +1,10 @@
-import { CreateTaskForm } from "@/components/form/create-task-form";
-import { ReusableSkeleton } from "@/components/skeletons/link-skeleton";
-import { useGetMembers } from "@/features/members/api/use-get-members";
-import { useGetProjects } from "@/features/projects/api/use-get-projects";
-import { useWorkspaceId } from "@/hooks/useWorkspaceId";
-import { Stack } from "@chakra-ui/react";
-import React from "react";
+import { CreateTaskForm } from '@/components/form/create-task-form';
+import { ReusableSkeleton } from '@/components/skeletons/link-skeleton';
+import { useGetMembers } from '@/features/members/api/use-get-members';
+import { useGetProjects } from '@/features/projects/api/use-get-projects';
+import { useWorkspaceId } from '@/hooks/useWorkspaceId';
+import { Stack } from '@chakra-ui/react';
+import React from 'react';
 
 type Props = {};
 
@@ -29,15 +29,15 @@ export const CreateTaskFormWrapper = ({}: Props) => {
   const isError = isErrorProjects || isErrorMembers;
 
   if (isError) {
-    throw new Error("Error getting projects and members");
+    throw new Error('Error getting projects and members');
   }
   if (isLoading) {
     return (
       <Stack gap={4}>
-        {Array(5)
+        {Array(7)
           .fill(0)
           .map((_, i) => (
-            <ReusableSkeleton key={i} />
+            <ReusableSkeleton key={i} height={i === 6 ? '30' : '10'} />
           ))}
       </Stack>
     );

@@ -23,7 +23,6 @@ export const TaskViewSwitcher = ({ userId }: Props) => {
   if (isPending) {
     return <Loading />;
   }
-  console.log(data);
 
   const { documents } = data.data;
 
