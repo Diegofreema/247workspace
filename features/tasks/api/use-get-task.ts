@@ -1,63 +1,25 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { client } from '@/lib/rpc';
-import { StatusEnum } from '@/types';
 
-type GetTasks = {
-  workspaceId: string;
-  projectId?: string | null;
-  status?: StatusEnum | null;
-  assigneeId?: string | null;
-  dueDate?: string | null;
-  search?: string | null;
+type GetTask = {
+  taskId: string;
 };
 
-export const useGetTasks = ({
-  workspaceId,
-  projectId,
-  assigneeId,
-  status,
-  dueDate,
-  search,
-}: GetTasks) => {
-  const queryClient = useQueryClient();
+export const useGetTask = ({ taskId }: GetTask) => {
   return useQuery({
-    queryKey: [
-      'tasks',
-      workspaceId,
-      projectId,
-      assigneeId,
-      status,
-      dueDate,
-      search,
-    ],
+    queryKey: ['task', taskId],
     queryFn: async () => {
-      const response = await client.api.tasks.$get({
-        query: {
-          workspaceId,
-          projectId: projectId ?? undefined,
-          assigneeId: assigneeId ?? undefined,
-          status: status ?? undefined,
-          dueDate: dueDate ?? undefined,
-          search: search ?? undefined,
+      const response = await client.api.tasks[':taskId'].$get({
+        param: {
+          taskId,
         },
       });
       if (!response.ok) {
-        throw new Error('Failed to get tasks');
+        throw new Error('Failed to get task');
       }
       ``;
       return await response.json();
-    },
-    placeholderData: () => {
-      return queryClient.getQueryData([
-        'tasks',
-        workspaceId,
-        projectId,
-        assigneeId,
-        status,
-        dueDate,
-        search,
-      ]);
     },
   });
 };

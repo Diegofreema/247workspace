@@ -1,17 +1,16 @@
 import { colors } from '@/constants';
-import { useCreateTask } from '@/features/tasks/api/use-create-task';
-import { createTaskSchema } from '@/features/tasks/schema';
-import { useWorkspaceId } from '@/hooks/useWorkspaceId';
-import { useCreateTaskModalController } from '@/lib/nuqs/use-create-task';
+import { useUpdateTask } from '@/features/tasks/api/use-update-task';
+import { editTaskSchema } from '@/features/tasks/schema';
+import { useEditTaskModalController } from '@/lib/nuqs/use-editi-task-modal-contoller';
+import { PriorityEnum, StatusEnum, TaskWithProjectAndAssignee } from '@/types';
 import { Stack } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '../custom/custom-button';
 import { FlexBox } from '../custom/flex-box';
 import { FormInput, FormInputDate } from './form-input';
-import { PriorityEnum, StatusEnum } from '@/types';
-import { useRouter } from 'next/navigation';
 
 type Props = {
   projectOptions: {
@@ -23,12 +22,17 @@ type Props = {
     id: string;
     name: string;
   }[];
+  initialValues: TaskWithProjectAndAssignee;
 };
 
-export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
-  const { mutateAsync } = useCreateTask();
-  const workspaceId = useWorkspaceId();
-  const { close } = useCreateTaskModalController();
+export const EditTaskForm = ({
+  memberOptions,
+  projectOptions,
+  initialValues,
+}: Props) => {
+  const { mutateAsync } = useUpdateTask();
+
+  const { close } = useEditTaskModalController();
   const router = useRouter();
   const {
     handleSubmit,
@@ -36,19 +40,19 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
     register,
     reset,
     control,
-    watch,
-  } = useForm<z.infer<typeof createTaskSchema>>({
+  } = useForm<z.infer<typeof editTaskSchema>>({
     defaultValues: {
-      workspaceId,
+      ...initialValues,
+      dueDate: initialValues.dueDate
+        ? new Date(initialValues.dueDate)
+        : undefined,
     },
-    resolver: zodResolver(createTaskSchema),
+    resolver: zodResolver(editTaskSchema),
   });
-  const { assigneeId } = watch();
-  console.log(assigneeId);
 
-  const onSubmit = async (data: z.infer<typeof createTaskSchema>) => {
+  const onSubmit = async (data: z.infer<typeof editTaskSchema>) => {
     await mutateAsync(
-      { json: { ...data, workspaceId } },
+      { json: data, param: { taskId: initialValues.$id } },
       {
         onSuccess: () => {
           router.refresh();
@@ -157,7 +161,7 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
           loading={isSubmitting}
           width={'fit-content'}
         >
-          Create
+          Update
         </Button>
       </FlexBox>
     </Stack>

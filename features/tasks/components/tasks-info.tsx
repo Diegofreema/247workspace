@@ -7,19 +7,22 @@ type Props = {
   userId: string;
 };
 export const TasksInfo = ({ tasks, userId }: Props) => {
+  console.log({ tasks, userId });
+
   const underReviewLength =
     tasks.filter(
-      (t) => t.assigneeId === userId && t.status === StatusEnum.IN_REVIEW
+      (t) => t.assignee?.userId === userId && t.status === StatusEnum.IN_REVIEW
     ).length ?? 0;
   const assignedToLength =
-    tasks.filter((t) => t.assigneeId === userId).length ?? 0;
+    tasks.filter((t) => t.assignee?.userId === userId).length ?? 0;
   const completedTaskLength =
     tasks.filter(
-      (t) => (t.assigneeId === userId && t.status) === StatusEnum.DONE
+      (t) => (t.assignee?.userId === userId && t.status) === StatusEnum.DONE
     ).length ?? 0;
   const todoTasksLength =
-    tasks.filter((t) => t.assigneeId === userId && t.status === StatusEnum.TODO)
-      .length ?? 0;
+    tasks.filter(
+      (t) => t.assignee?.userId === userId && t.status === StatusEnum.TODO
+    ).length ?? 0;
   const data = [
     {
       label: 'Total tasks',

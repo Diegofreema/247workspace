@@ -6,7 +6,7 @@ import { getMember } from '@/features/members/utils';
 import { DATABASE_ID, MEMBERS_ID, PROJECT_ID, TASK_ID } from '@/config';
 import { ID, Query } from 'node-appwrite';
 import { z } from 'zod';
-import { Project, StatusEnum, TaskType } from '@/types';
+import { Member, Project, StatusEnum, TaskType } from '@/types';
 import { getProfile } from '@/features/workspaces/queries';
 
 const app = new Hono()
@@ -82,6 +82,60 @@ const app = new Hono()
           priority,
           dueDate,
           position: newPosition,
+        }
+      );
+      return c.json({ data: task });
+    }
+  )
+  .patch(
+    '/:taskId',
+    sessionMiddleware,
+    zValidator('json', createTaskSchema.partial()),
+    async (c) => {
+      const user = c.get('user');
+      const databases = c.get('databases');
+      const {
+        name,
+        description,
+        projectId,
+        workspaceId,
+        assigneeId,
+        status,
+        priority,
+        dueDate,
+      } = c.req.valid('json');
+      const { taskId } = c.req.param();
+      const existingTask = await databases.getDocument<TaskType>(
+        DATABASE_ID,
+        TASK_ID,
+        taskId
+      );
+      if (!existingTask) {
+        return c.json({ error: 'Task not found' }, 404);
+      }
+
+      const member = await getMember({
+        databases,
+        userId: user.$id,
+        workspaceId: existingTask.workspaceId,
+      });
+
+      if (!member) {
+        return c.json({ error: 'You are not a member of this workspace' }, 401);
+      }
+
+      const task = await databases.updateDocument<TaskType>(
+        DATABASE_ID,
+        TASK_ID,
+        taskId,
+        {
+          name,
+          description,
+          projectId,
+          assigneeId,
+          status,
+          priority,
+          dueDate,
         }
       );
       return c.json({ data: task });
@@ -197,6 +251,52 @@ const app = new Hono()
         throw new Error('Failed to get tasks');
       }
     }
-  );
+  )
+  .get('/:taskId', sessionMiddleware, async (c) => {
+    const currentUser = c.get('user');
+    const databases = c.get('databases');
+    const { taskId } = c.req.param();
+    const task = await databases.getDocument<TaskType>(
+      DATABASE_ID,
+      TASK_ID,
+      taskId
+    );
+
+    const currentMember = await getMember({
+      databases,
+      workspaceId: task.workspaceId,
+      userId: currentUser.$id,
+    });
+    if (!currentMember) {
+      return c.json({ error: 'Unauthorized' }, 401);
+    }
+
+    const project = await databases.getDocument<Project>(
+      DATABASE_ID,
+      PROJECT_ID,
+      task.projectId
+    );
+
+    const member = await databases.getDocument<Member>(
+      DATABASE_ID,
+      MEMBERS_ID,
+      task.assigneeId
+    );
+    const user = await getProfile(member.userId);
+
+    const assignee = {
+      ...member,
+      name: user?.name,
+      email: user?.email,
+    };
+
+    return c.json({
+      data: {
+        ...task,
+        project,
+        assignee,
+      },
+    });
+  });
 
 export default app;

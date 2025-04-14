@@ -5,9 +5,19 @@ import { useGetProjects } from '@/features/projects/api/use-get-projects';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { Stack } from '@chakra-ui/react';
 import React from 'react';
+import { useGetTask } from '../api/use-get-task';
+import { EditTaskForm } from '@/components/form/edit-task-form';
 
-export const CreateTaskFormWrapper = () => {
+type Props = {
+  taskId: string;
+};
+export const EditTaskWrapper = ({ taskId }: Props) => {
   const workspaceId = useWorkspaceId();
+  const {
+    data: initialValue,
+    isPending: isPendingTask,
+    isError: isErrorTask,
+  } = useGetTask({ taskId });
   const {
     data: projects,
     isPending: isPendingProjects,
@@ -23,8 +33,8 @@ export const CreateTaskFormWrapper = () => {
     workspaceId,
   });
 
-  const isLoading = isPendingProjects || isPendingMembers;
-  const isError = isErrorProjects || isErrorMembers;
+  const isLoading = isPendingProjects || isPendingMembers || isPendingTask;
+  const isError = isErrorProjects || isErrorMembers || isErrorTask;
 
   if (isError) {
     throw new Error('Error getting projects and members');
@@ -52,10 +62,12 @@ export const CreateTaskFormWrapper = () => {
     id: member.$id,
     imageUrl: member?.avatarUrl,
   }));
+
   return (
-    <CreateTaskForm
+    <EditTaskForm
       projectOptions={projectOptions}
       memberOptions={memberOptions}
+      initialValues={initialValue.data}
     />
   );
 };

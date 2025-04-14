@@ -11,6 +11,7 @@ import { ExternalLinkIcon, Pencil, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useDeleteTask } from '../api/use-delete-task';
+import { useEditTaskModalController } from '@/lib/nuqs/use-editi-task-modal-contoller';
 
 type Props = {
   projectId: string;
@@ -20,6 +21,7 @@ type Props = {
 
 export const TaskAction = ({ children, projectId, taskId }: Props) => {
   const { mutateAsync, isPending } = useDeleteTask();
+  const { open } = useEditTaskModalController();
   const [isOpen, setOpen] = useState(false);
   const workspaceId = useWorkspaceId();
   const router = useRouter();
@@ -76,7 +78,7 @@ export const TaskAction = ({ children, projectId, taskId }: Props) => {
               Open Project
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => {}}
+              onClick={() => open(taskId)}
               disabled={isLoading}
               className="font-medium p-[10px]"
             >

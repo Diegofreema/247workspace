@@ -42,6 +42,7 @@ export const ProjectDisplay = async ({ project, userId }: Props) => {
           <EditActionMenu link={link} />
         </Suspense>
       </FlexBox>
+      {/* @ts-ignore */}
       <TasksInfo tasks={data.documents} userId={userId} />
       <TaskViewSwitcher />
     </div>

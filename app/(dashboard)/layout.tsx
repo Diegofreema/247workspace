@@ -1,6 +1,7 @@
 import { CreateWorkspaceForm } from '@/components/form/create-workspace-form';
 import { CreateProjectModal } from '@/components/modals/create-project-modal';
 import { CreateTaskModal } from '@/components/modals/create-task-modal';
+import { EditTaskModal } from '@/components/modals/edit-task-modal';
 import { DashboardSidebar } from '@/components/navigation/dashboard-sidebar';
 import { MobileSidebar } from '@/components/navigation/mobile-sidebar';
 import { NavigationHeader } from '@/components/navigation/navigation-header';
@@ -16,6 +17,7 @@ const DashboardLayout = ({ children }: Props) => {
       <CreateWorkspaceForm />
       <CreateProjectModal />
       <CreateTaskModal />
+      <EditTaskModal />
       <Box
         position="fixed"
         left={0}

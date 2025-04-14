@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetTasks } from '@/features/tasks/api/use-get-task';
+import { useGetTasks } from '@/features/tasks/api/use-get-tasks';
 import { TaskTabs } from '@/features/tasks/components/task-tabs';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { useDataFilters } from '@/lib/nuqs/use-data-filter';
@@ -24,6 +24,7 @@ export const TaskViewSwitcher = () => {
 
   return (
     <Stack gap={2}>
+      {/* @ts-ignore */}
       <TaskTabs tasks={data?.data?.documents ?? []} isPending={isPending} />
     </Stack>
   );
