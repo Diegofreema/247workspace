@@ -297,6 +297,68 @@ const app = new Hono()
         assignee,
       },
     });
-  });
+  })
+  .post(
+    '/bulk-update',
+    sessionMiddleware,
+    zValidator(
+      'json',
+      z.object({
+        tasks: z.array(
+          z.object({
+            $id: z.string(),
+            position: z.number().int().positive().min(1000).max(1_000_000),
+            status: z.nativeEnum(StatusEnum),
+          })
+        ),
+      })
+    ),
+    async (c) => {
+      const databases = c.get('databases');
+      const user = c.get('user');
+      const { tasks } = c.req.valid('json');
+
+      const taskToUpdate = await databases.listDocuments<TaskType>(
+        DATABASE_ID,
+        TASK_ID,
+        [
+          Query.contains(
+            '$id',
+            tasks.map((task) => task.$id)
+          ),
+        ]
+      );
+
+      const workspaceIds = new Set(
+        taskToUpdate.documents.map((task) => task.workspaceId)
+      );
+      if (workspaceIds.size !== 1) {
+        return c.json(
+          { error: 'You cannot update tasks from different workspaces' },
+          401
+        );
+      }
+      const workspaceId = workspaceIds.values().next().value;
+      const member = await getMember({
+        databases,
+        userId: user.$id,
+        workspaceId: workspaceId!,
+      });
+
+      if (!member) {
+        return c.json({ error: 'You are not a member of this workspace' }, 401);
+      }
+
+      const updatedTasks = await Promise.all(
+        tasks.map((task) =>
+          databases.updateDocument(DATABASE_ID, TASK_ID, task.$id, {
+            status: task.status,
+            position: task.position,
+          })
+        )
+      );
+      return c.json({ data: updatedTasks });
+    }
+  );
 
 export default app;
