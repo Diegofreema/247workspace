@@ -11,6 +11,8 @@ import { EditTaskForm } from '@/components/form/edit-task-form';
 type Props = {
   taskId: string;
 };
+
+const array = Array(7).fill(0);
 export const EditTaskWrapper = ({ taskId }: Props) => {
   const workspaceId = useWorkspaceId();
   const {
@@ -41,12 +43,13 @@ export const EditTaskWrapper = ({ taskId }: Props) => {
   }
   if (isLoading) {
     return (
-      <Stack gap={4}>
-        {Array(7)
-          .fill(0)
-          .map((_, i) => (
-            <ReusableSkeleton key={i} height={i === 6 ? '30' : '10'} />
-          ))}
+      <Stack gap={7}>
+        {array.map((_, i) => (
+          <ReusableSkeleton
+            key={i}
+            height={i === array.at(-1) ? '30px' : '10px'}
+          />
+        ))}
       </Stack>
     );
   }

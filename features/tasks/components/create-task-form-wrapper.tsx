@@ -6,6 +6,7 @@ import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { Stack } from '@chakra-ui/react';
 import React from 'react';
 
+const array = Array(7).fill(0);
 export const CreateTaskFormWrapper = () => {
   const workspaceId = useWorkspaceId();
   const {
@@ -32,11 +33,12 @@ export const CreateTaskFormWrapper = () => {
   if (isLoading) {
     return (
       <Stack gap={4}>
-        {Array(7)
-          .fill(0)
-          .map((_, i) => (
-            <ReusableSkeleton key={i} height={i === 6 ? '30' : '10'} />
-          ))}
+        {array.map((_, i) => (
+          <ReusableSkeleton
+            key={i}
+            height={i === array.at(-1) ? '30px' : '10px'}
+          />
+        ))}
       </Stack>
     );
   }
