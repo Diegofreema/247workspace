@@ -2,16 +2,19 @@ import { colors } from '@/constants';
 import { useCreateTask } from '@/features/tasks/api/use-create-task';
 import { createTaskSchema } from '@/features/tasks/schema';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
-import { useCreateTaskModalController } from '@/lib/nuqs/use-create-task';
+import {
+  useCreateTaskModalController,
+  useSetTask,
+} from '@/lib/nuqs/use-create-task';
+import { PriorityEnum, StatusEnum } from '@/types';
 import { Stack } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '../custom/custom-button';
 import { FlexBox } from '../custom/flex-box';
 import { FormInput, FormInputDate } from './form-input';
-import { PriorityEnum, StatusEnum } from '@/types';
-import { useRouter } from 'next/navigation';
 
 type Props = {
   projectOptions: {
@@ -29,6 +32,7 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
   const { mutateAsync } = useCreateTask();
   const workspaceId = useWorkspaceId();
   const { close } = useCreateTaskModalController();
+  const { status, onRemoveStatus } = useSetTask();
   const router = useRouter();
   const {
     handleSubmit,
@@ -36,15 +40,13 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
     register,
     reset,
     control,
-    watch,
   } = useForm<z.infer<typeof createTaskSchema>>({
     defaultValues: {
       workspaceId,
+      status: status ? status : StatusEnum.BACKLOG,
     },
     resolver: zodResolver(createTaskSchema),
   });
-  const { assigneeId } = watch();
-  console.log(assigneeId);
 
   const onSubmit = async (data: z.infer<typeof createTaskSchema>) => {
     await mutateAsync(
@@ -52,10 +54,12 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
       {
         onSuccess: () => {
           router.refresh();
+          reset();
         },
       }
     );
-    reset();
+
+    onRemoveStatus();
     await close();
   };
   const assigneeItem = memberOptions.map((member) => ({

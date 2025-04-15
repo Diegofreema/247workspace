@@ -5,13 +5,14 @@ import { DataFilter } from '@/components/ui/data-filter';
 import { colors } from '@/constants';
 import { useCreateTaskModalController } from '@/lib/nuqs/use-create-task';
 import { useSwitchTabs } from '@/lib/nuqs/use-switch-tabs';
-import { TaskWithProjectAndAssignee } from '@/types';
+import { StatusEnum, TaskWithProjectAndAssignee } from '@/types';
 import { Stack, Tabs } from '@chakra-ui/react';
 import { ProjectCalendar } from './project-calendar';
 import { ProjectKanban } from './project-kanban';
 import { ProjectTable } from './project-table';
 import { SmallerLoader } from '@/components/ui/small-loader';
 import { columns } from './column';
+import { useCallback } from 'react';
 
 type Props = {
   tasks: TaskWithProjectAndAssignee[];
@@ -21,7 +22,10 @@ const tabs = ['table', 'kanban', 'calender'];
 export const TaskTabs = ({ tasks, isPending }: Props) => {
   const { tab: value, setTab: setValue } = useSwitchTabs();
   const { open } = useCreateTaskModalController();
-
+  const onKanbanChange = useCallback(
+    (tasks: { $id: string; status: StatusEnum; position: number }[]) => {},
+    []
+  );
   return (
     <Stack bg={colors.white} borderRadius={10} p={4} mt={5}>
       <Stack mb={3}>
@@ -80,7 +84,7 @@ export const TaskTabs = ({ tasks, isPending }: Props) => {
               <ProjectTable data={tasks} columns={columns} />
             </Tabs.Content>
             <Tabs.Content value="kanban" overflowX={'scroll'}>
-              <ProjectKanban tasks={tasks} />
+              <ProjectKanban onChange={onKanbanChange} tasks={tasks} />
             </Tabs.Content>
             <Tabs.Content value="calender" overflowX={'scroll'}>
               <ProjectCalendar tasks={tasks} />

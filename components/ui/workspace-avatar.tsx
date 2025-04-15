@@ -1,5 +1,5 @@
 import { SizeType } from '@/types';
-import { Avatar } from '@chakra-ui/react';
+import { Avatar, AvatarFallback, AvatarImage } from './avatar';
 
 type Props = {
   image?: string;
@@ -9,9 +9,11 @@ type Props = {
 
 export const WorkspaceAvatar = ({ name, image, size = 'md' }: Props) => {
   return (
-    <Avatar.Root colorPalette={'purple'} size={size}>
-      <Avatar.Fallback name={name[0]?.toUpperCase()} />
-      <Avatar.Image src={image} />
-    </Avatar.Root>
+    <Avatar className="bg-purple">
+      <AvatarImage src={image} alt="profile image" />
+      <AvatarFallback className="bg-purple text-white">
+        {name[0]?.toUpperCase()}
+      </AvatarFallback>
+    </Avatar>
   );
 };

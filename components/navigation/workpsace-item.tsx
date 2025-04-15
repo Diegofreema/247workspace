@@ -11,7 +11,7 @@ type AvatarProps = {
 
 export const AvatarItem = ({ name, image, size = 'md' }: AvatarProps) => {
   return (
-    <FlexBox alignItems={'center'} gap={3} p={2}>
+    <FlexBox alignItems={'center'} gap={3}>
       <WorkspaceAvatar name={name} image={image} size={size} />
       <CustomText className="truncate text-black text-xs font-bold group-hover:text-white">
         {name}
