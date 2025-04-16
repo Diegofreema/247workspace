@@ -3,7 +3,6 @@ import { InferRequestType, InferResponseType } from 'hono';
 
 import { toaster } from '@/components/ui/toaster';
 import { client } from '@/lib/rpc';
-import { useRouter } from 'next/navigation';
 
 type ResponseType = InferResponseType<
   (typeof client.api.tasks)[':taskId']['$delete'],
@@ -15,7 +14,7 @@ type RequestType = InferRequestType<
 
 export const useDeleteTask = () => {
   const queryClient = useQueryClient();
-  const router = useRouter();
+
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ param }) => {
       const res = await client.api.tasks[':taskId'].$delete({ param });
@@ -28,10 +27,10 @@ export const useDeleteTask = () => {
       const {
         data: { $id },
       } = res;
-      router.refresh();
+
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       queryClient.invalidateQueries({ queryKey: ['task', $id] });
-      router.refresh();
+
       //   router.push(`/workspaces/${workspaceId}/projects/${$id}`);
       toaster.create({
         title: 'Success',

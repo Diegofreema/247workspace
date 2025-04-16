@@ -17,6 +17,7 @@ type Props = {
 
 export const DataFilter = ({ hideProjectFilter }: Props) => {
   const workspaceId = useWorkspaceId();
+  const numberToMap = hideProjectFilter ? 3 : 4;
   const [{ assigneeId, dueDate, projectId, status }, setFilters] =
     useDataFilters();
   const {
@@ -46,7 +47,7 @@ export const DataFilter = ({ hideProjectFilter }: Props) => {
   if (isLoading) {
     return (
       <FlexBox gap={2} flexDir={{ base: 'column', md: 'row' }}>
-        {[...Array(4)].map((_, index) => (
+        {[...Array(numberToMap)].map((_, index) => (
           <ReusableSkeleton key={index} width={{ base: '100%', md: '150px' }} />
         ))}
       </FlexBox>
@@ -98,14 +99,17 @@ export const DataFilter = ({ hideProjectFilter }: Props) => {
         disabled={false}
         icon={IconUser}
       />
-      <ShadCnSelect
-        placeholder="All projects"
-        onValueChange={onProjectChange}
-        data={[{ label: 'All Projects', value: 'all' }, ...projectsOptions]}
-        value={projectId ?? undefined}
-        disabled={false}
-        icon={IconBriefcase}
-      />
+      {!hideProjectFilter && (
+        <ShadCnSelect
+          placeholder="All projects"
+          onValueChange={onProjectChange}
+          data={[{ label: 'All Projects', value: 'all' }, ...projectsOptions]}
+          value={projectId ?? undefined}
+          disabled={false}
+          icon={IconBriefcase}
+        />
+      )}
+
       <DatePicker
         className="h-9 w-full lg:w-auto"
         placeholder="Due date"

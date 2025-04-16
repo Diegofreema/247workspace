@@ -47,7 +47,7 @@ export const FormInput = <TFormValues extends FieldValues>({
 }: FormInputProps<TFormValues>) => {
   return (
     <Field.Root invalid={!!errors[name]} width="100%" required={required}>
-      <Field.Label color={colors.black}>
+      <Field.Label color={colors.grey}>
         {label} <Field.RequiredIndicator />
       </Field.Label>
       {variant === 'select' && data && (
@@ -96,6 +96,7 @@ export const FormInput = <TFormValues extends FieldValues>({
           p={3}
           color={colors.black}
           css={{ '--error-color': 'red' }}
+          rows={5}
         />
       )}
 

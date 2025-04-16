@@ -7,7 +7,7 @@ import { useCreateTaskModalController } from '@/lib/nuqs/use-create-task';
 import { useSwitchTabs } from '@/lib/nuqs/use-switch-tabs';
 import { StatusEnum, TaskWithProjectAndAssignee } from '@/types';
 import { Stack, Tabs } from '@chakra-ui/react';
-import { ProjectCalendar } from './project-calendar';
+// import { ProjectCalendar } from './project-calendar';
 import { ProjectKanban } from './project-kanban';
 import { ProjectTable } from './project-table';
 import { SmallerLoader } from '@/components/ui/small-loader';
@@ -19,9 +19,10 @@ import { LoadingModal } from '@/components/modals/loading-modal';
 type Props = {
   tasks: TaskWithProjectAndAssignee[];
   isPending: boolean;
+  hideProjectFilter?: boolean;
 };
 const tabs = ['table', 'kanban'];
-export const TaskTabs = ({ tasks, isPending }: Props) => {
+export const TaskTabs = ({ tasks, isPending, hideProjectFilter }: Props) => {
   const { tab: value, setTab: setValue } = useSwitchTabs();
   const { open } = useCreateTaskModalController();
   const { mutateAsync, isPending: isPendingTasks } = useUpdateBulkTask();
@@ -72,7 +73,7 @@ export const TaskTabs = ({ tasks, isPending }: Props) => {
             flexDir={{ base: 'column', md: 'row' }}
             mt={3}
           >
-            <DataFilter />
+            <DataFilter hideProjectFilter={hideProjectFilter} />
             <Button
               color={colors.white}
               bg={colors.purple}

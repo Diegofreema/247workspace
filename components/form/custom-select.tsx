@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { NativeSelect } from "@chakra-ui/react";
-import { FieldValues, Path, UseFormRegister } from "react-hook-form";
-import { SelectData } from "@/types";
+import { NativeSelect } from '@chakra-ui/react';
+import { FieldValues, Path, UseFormRegister } from 'react-hook-form';
+import { SelectData } from '@/types';
 
 type Props<TFormValues extends FieldValues> = {
   placeholder: string;
@@ -20,15 +20,16 @@ export const CustomSelect = <TFormValues extends FieldValues>({
     <NativeSelect.Root
       size="md"
       width="100%"
-      colorPalette={"black"}
-      borderColor={"black"}
+      colorPalette={'black'}
+      borderColor={'black'}
     >
       <NativeSelect.Field
         placeholder={placeholder}
+        className="placeholder:text-[#645D5D]"
         {...register(name)}
-        color={"black"}
-        border={"1px solid black"}
-        height={"44px"}
+        color={'black'}
+        border={'1px solid black'}
+        height={'44px'}
         p={2}
       >
         {data.map((d) => (

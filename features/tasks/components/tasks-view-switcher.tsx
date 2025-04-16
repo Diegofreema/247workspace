@@ -6,7 +6,10 @@ import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { useDataFilters } from '@/lib/nuqs/use-data-filter';
 import { Stack } from '@chakra-ui/react';
 
-export const TaskViewSwitcher = () => {
+type Props = {
+  hideProjectFilter?: boolean;
+};
+export const TaskViewSwitcher = ({ hideProjectFilter }: Props) => {
   const workspaceId = useWorkspaceId();
 
   const [{ assigneeId, dueDate, projectId, status, search }] = useDataFilters();
@@ -25,7 +28,11 @@ export const TaskViewSwitcher = () => {
   return (
     <Stack gap={2}>
       {/* @ts-ignore */}
-      <TaskTabs tasks={data?.data?.documents ?? []} isPending={isPending} />
+      <TaskTabs
+        tasks={data?.data?.documents ?? []}
+        isPending={isPending}
+        hideProjectFilter={hideProjectFilter}
+      />
     </Stack>
   );
 };

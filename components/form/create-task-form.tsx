@@ -82,29 +82,36 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
         required
         disabled={isSubmitting}
       />
-      <FormInputDate
-        control={control}
-        name="dueDate"
-        label="Due date"
-        errors={errors}
-        required
-        disabled={isSubmitting}
-      />
-      <FormInput
-        register={register}
-        name="assigneeId"
-        label="Assignee"
-        errors={errors}
-        placeholder="Select Assignee"
-        required
-        disabled={isSubmitting}
-        variant={'select'}
-        data={assigneeItem}
-      />
+      <FlexBox
+        alignItems={{ base: 'start', md: 'center' }}
+        flexDir={{ base: 'column', md: 'row' }}
+        gap={3}
+      >
+        <FormInput
+          register={register}
+          name="assigneeId"
+          label="Assignee"
+          errors={errors}
+          placeholder="Choose Assignee"
+          required
+          disabled={isSubmitting}
+          variant={'select'}
+          data={assigneeItem}
+        />
+        <FormInputDate
+          control={control}
+          name="dueDate"
+          label="Due date"
+          errors={errors}
+          required
+          disabled={isSubmitting}
+        />
+      </FlexBox>
+
       <FormInput
         register={register}
         name="status"
-        label="Status"
+        label="Choose status"
         errors={errors}
         placeholder="Select status"
         required
@@ -137,7 +144,7 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
       <FormInput
         register={register}
         name="description"
-        label="Description"
+        label="Task Description"
         errors={errors}
         placeholder="About this task..."
         disabled={isSubmitting}

@@ -14,7 +14,7 @@ const page = async () => {
   return (
     <WrapperWithPadding className="bg-lightGrey">
       <TasksInfo userId={profile?.userId} />
-      <TaskViewSwitcher />
+      <TaskViewSwitcher hideProjectFilter />
     </WrapperWithPadding>
   );
 };
