@@ -28,12 +28,12 @@ export const TaskBreadcrumb = ({ project, taskName, taskId }: Props) => {
       {
         onSuccess: () => {
           setIsOpen(false);
-          router.back();
+          router.push(`/workspaces/${workspaceId}/tasks`);
         },
       }
     );
   };
-  const link = `/workspace/${workspaceId}/projects/${project.$id}`;
+  const link = `/workspaces/${workspaceId}/projects/${project.$id}`;
   return (
     <>
       <ConfirmDialog
@@ -63,6 +63,7 @@ export const TaskBreadcrumb = ({ project, taskName, taskId }: Props) => {
           className="ml-auto"
           variant={'destructive'}
           size={'sm'}
+          disabled={isPending}
         >
           <Trash className="size-4 lg:mr-2" />
           <span className="hidden lg:block">Delete Task</span>
