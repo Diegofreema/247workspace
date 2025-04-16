@@ -16,10 +16,17 @@ export const TaskDescription = ({ task }: Props) => {
   const { mutateAsync, isPending } = useUpdateTask();
 
   const handleSave = () => {
-    mutateAsync({
-      json: { description: value },
-      param: { taskId: task.$id },
-    });
+    mutateAsync(
+      {
+        json: { description: value },
+        param: { taskId: task.$id },
+      },
+      {
+        onSuccess: () => {
+          setIsEditing(false);
+        },
+      }
+    );
   };
   return (
     <div className="p-4 rounded-lg bg-white shadow-sm">
