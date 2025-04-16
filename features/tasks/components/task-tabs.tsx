@@ -20,7 +20,7 @@ type Props = {
   tasks: TaskWithProjectAndAssignee[];
   isPending: boolean;
 };
-const tabs = ['table', 'kanban', 'calender'];
+const tabs = ['table', 'kanban'];
 export const TaskTabs = ({ tasks, isPending }: Props) => {
   const { tab: value, setTab: setValue } = useSwitchTabs();
   const { open } = useCreateTaskModalController();
@@ -94,9 +94,9 @@ export const TaskTabs = ({ tasks, isPending }: Props) => {
               <Tabs.Content value="kanban" overflowX={'scroll'}>
                 <ProjectKanban onChange={onKanbanChange} tasks={tasks} />
               </Tabs.Content>
-              <Tabs.Content value="calender" overflowX={'scroll'}>
+              {/* <Tabs.Content value="calender" overflowX={'scroll'}>
                 <ProjectCalendar tasks={tasks} />
-              </Tabs.Content>
+              </Tabs.Content> */}
             </>
           )}
         </Tabs.Root>

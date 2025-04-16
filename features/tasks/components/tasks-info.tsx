@@ -1,14 +1,42 @@
-import { StatusEnum, TaskWithProjectAndAssignee } from '@/types';
+'use client';
+
+import { StatusEnum } from '@/types';
 import { SimpleGrid } from '@chakra-ui/react';
+
+import { useWorkspaceId } from '@/hooks/useWorkspaceId';
+import { useGetTasks } from '../api/use-get-tasks';
 import { TaskInfoCard } from './task-info-card';
+import { CardSkeleton } from '@/components/skeletons/card-skeleton';
 
 type Props = {
-  tasks: TaskWithProjectAndAssignee[];
   userId: string;
 };
-export const TasksInfo = ({ tasks, userId }: Props) => {
-  console.log({ tasks, userId });
+export const TasksInfo = ({ userId }: Props) => {
+  const workspaceId = useWorkspaceId();
 
+  const { data: dataTasks, isPending, isError } = useGetTasks({ workspaceId });
+
+  if (isError) {
+    throw new Error('Error fetching tasks');
+  }
+
+  if (isPending) {
+    return (
+      <SimpleGrid
+        gap={{ base: 4, md: 8 }}
+        columns={{ base: 1, md: 2, lg: 5 }}
+        mt={4}
+      >
+        {Array.from({ length: 5 }).map((_, i) => (
+          <CardSkeleton key={i} />
+        ))}
+      </SimpleGrid>
+    );
+  }
+
+  const {
+    data: { documents: tasks },
+  } = dataTasks;
   const underReviewLength =
     tasks.filter(
       (t) => t.assignee?.userId === userId && t.status === StatusEnum.IN_REVIEW
