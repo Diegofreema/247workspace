@@ -6,6 +6,7 @@ import { SmallerLoader } from '@/components/ui/small-loader';
 import { WrapperWithPadding } from '@/components/ui/wrapper-padding';
 import { useGetTask } from '@/features/tasks/api/use-get-task';
 import { TaskBreadcrumb } from '@/features/tasks/components/task-breadcrumb';
+import { TaskDescription } from '@/features/tasks/components/task-description';
 import { TaskOverview } from '@/features/tasks/components/task-overview';
 import { useTaskId } from '@/hooks/use-task-id';
 import { SimpleGrid } from '@chakra-ui/react';
@@ -39,6 +40,7 @@ export const TaskIdClient = () => {
       <Separator className="my-6" />
       <SimpleGrid columns={{ base: 1, lg: 2 }} gap={4}>
         <TaskOverview task={data} />
+        <TaskDescription task={data} />
       </SimpleGrid>
     </WrapperWithPadding>
   );
