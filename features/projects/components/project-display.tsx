@@ -8,6 +8,7 @@ import { Stack } from '@chakra-ui/react';
 import { Suspense } from 'react';
 import { EditActionMenu } from './edit-action-menu';
 import { ProjectInnerItem } from './project-item';
+import { ProjectClient } from '@/app/(dashboard)/workspaces/[workspaceId]/projects/[projectId]/client';
 
 type Props = {
   project: Project;
@@ -41,8 +42,13 @@ export const ProjectDisplay = async ({ project, userId }: Props) => {
         </Suspense>
       </FlexBox>
 
-      <TasksInfo userId={userId} />
-      <TaskViewSwitcher />
+      <Suspense fallback={null}>
+        <ProjectClient />
+      </Suspense>
+
+      <Suspense fallback={null}>
+        <TaskViewSwitcher />
+      </Suspense>
     </div>
   );
 };

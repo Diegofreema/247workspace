@@ -93,3 +93,18 @@ export type TaskWithProjectAndAssignee = TaskType & {
   project: Project | undefined;
   assignee: Assignee | undefined;
 };
+
+export type AnalyticsType = {
+  taskCount: number;
+  taskDifference: number;
+  assignedTaskCount: number;
+  assignedTaskDifference: number;
+  incompleteTaskCount?: number;
+  incompleteTaskDifference?: number;
+  completedTaskCount: number;
+  completedTaskDifference: number;
+  overdueTaskCount: number;
+  overdueTaskDifference: number;
+  projectCount?: number;
+  projectDifference?: number;
+};

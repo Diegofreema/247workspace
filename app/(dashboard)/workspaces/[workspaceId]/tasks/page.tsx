@@ -4,6 +4,7 @@ import { TasksInfo } from '@/features/tasks/components/tasks-info';
 import { TaskViewSwitcher } from '@/features/tasks/components/tasks-view-switcher';
 import { getProfile } from '@/features/workspaces/queries';
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 
 const page = async () => {
   const user = await getLoggedInUser();
@@ -13,8 +14,13 @@ const page = async () => {
 
   return (
     <WrapperWithPadding className="bg-lightGrey">
-      <TasksInfo userId={profile?.userId} />
-      <TaskViewSwitcher hideProjectFilter />
+      <Suspense fallback={null}>
+        <TasksInfo userId={profile?.userId} />
+      </Suspense>
+
+      <Suspense fallback={null}>
+        <TaskViewSwitcher hideProjectFilter />
+      </Suspense>
     </WrapperWithPadding>
   );
 };
