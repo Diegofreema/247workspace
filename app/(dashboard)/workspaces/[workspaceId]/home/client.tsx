@@ -14,9 +14,9 @@ import { useGetWorkspaceAnalytics } from '@/features/workspaces/api/use-create-w
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { useCreateProjectModalController } from '@/lib/nuqs/use-create-project';
 import { useCreateTaskModalController } from '@/lib/nuqs/use-create-task';
-import { Member, Project, TaskWithProjectAndAssignee } from '@/types';
+import { Member, Profile, Project, TaskWithProjectAndAssignee } from '@/types';
 import { formatDistanceToNow } from 'date-fns';
-import { CalendarCheckIcon, PlusIcon } from 'lucide-react';
+import { CalendarCheckIcon, PlusIcon, Settings } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 
 export const HomeClient = () => {
@@ -64,6 +64,7 @@ export const HomeClient = () => {
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <TaskList tasks={tasks.documents} total={tasks.total} />
         <ProjectList projects={projects.documents} total={projects.total} />
+        <MemberList members={members.documents} total={members.total} />
       </div>
     </div>
   );
@@ -80,7 +81,7 @@ type ProjectProps = {
 };
 
 type MemberProps = {
-  members: Member[];
+  members: Profile[];
   total: number;
 };
 
@@ -93,8 +94,13 @@ export const TaskList = ({ tasks, total }: Props) => {
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">Tasks ({total})</p>
           <Tooltip content="Create a new task">
-            <Button variant={'ghost'} size={'icon'} onClick={createTask}>
-              <PlusIcon className="size-4 text-neutral-400" />
+            <Button
+              variant={'ghost'}
+              size={'icon'}
+              onClick={createTask}
+              className="hover:bg-purple transition group"
+            >
+              <PlusIcon className="size-4 text-neutral-400 group-hover:text-white" />
             </Button>
           </Tooltip>
         </div>
@@ -146,8 +152,13 @@ export const ProjectList = ({ projects, total }: ProjectProps) => {
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">Projects ({total})</p>
           <Tooltip content="Create a new project">
-            <Button variant={'ghost'} size={'icon'} onClick={createProject}>
-              <PlusIcon className="size-4 text-neutral-400" />
+            <Button
+              variant={'ghost'}
+              size={'icon'}
+              onClick={createProject}
+              className="hover:bg-purple transition group"
+            >
+              <PlusIcon className="size-4 text-neutral-400 group-hover:text-white" />
             </Button>
           </Tooltip>
         </div>
@@ -179,40 +190,47 @@ export const ProjectList = ({ projects, total }: ProjectProps) => {
   );
 };
 export const MemberList = ({ members, total }: MemberProps) => {
-  const { open: createProject } = useCreateProjectModalController();
   const workspaceId = useWorkspaceId();
   return (
     <div className="flex flex-col gap-y-4 col-span-1">
       <div className="bg-white text-black rounded-lg p-4">
         <div className="flex items-center justify-between">
-          <p className="text-lg font-semibold">Projects ({total})</p>
+          <p className="text-lg font-semibold">Members ({total})</p>
           <Tooltip content="Create a new project">
-            <Button variant={'ghost'} size={'icon'} onClick={createProject}>
-              <PlusIcon className="size-4 text-neutral-400" />
+            <Button
+              variant={'ghost'}
+              size={'icon'}
+              asChild
+              className="hover:bg-purple transition group"
+            >
+              <Link href={`/workspaces/${workspaceId}/team`}>
+                <Settings className="size-4 text-neutral-400 group-hover:text-white" />
+              </Link>
             </Button>
           </Tooltip>
         </div>
         <Separator className="my-4" />
-        <ul className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {members.slice(0, 4).map((member) => (
             <li key={member.$id}>
-              <Link href={`/workspaces/${workspaceId}/projects/${member.$id}`}>
-                <Card className="shadow-none rounded-lg group transition bg-white text-black hover:bg-purple hover:text-white">
-                  <CardContent className="p-4 flex items-center gap-x-2.5">
-                    <ProfileAvatar
-                      name={member.name}
-                      imageUrl={member.imageUrl}
-                    />
-                    <p className="text-lg font-medium truncate">
-                      {member.name}
+              <Card className="shadow-none rounded-lg group transition bg-white text-black hover:bg-purple hover:text-white overflow-hidden">
+                <CardContent className="p-3 flex flex-col items-center gap-x-2.5">
+                  <ProfileAvatar
+                    name={member.name}
+                    imageUrl={member.avatarUrl}
+                  />
+                  <div className="flex flex-col items-center overflow-hidden">
+                    <p className="font-medium line-clamp-1">{member.name}</p>
+                    <p className="text-sm text-muted-foreground line-clamp-1">
+                      {member.email}
                     </p>
-                  </CardContent>
-                </Card>
-              </Link>
+                  </div>
+                </CardContent>
+              </Card>
             </li>
           ))}
           <li className="text-sm text-muted-foreground text-center hidden first-of-type:block">
-            No projects found
+            No member found
           </li>
         </ul>
       </div>
