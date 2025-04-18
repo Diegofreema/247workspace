@@ -1,5 +1,5 @@
 'use client';
-import { Stack } from '@chakra-ui/react';
+import { Image, Stack } from '@chakra-ui/react';
 import React from 'react';
 import { CustomText, Title } from '../custom/title';
 import { colors } from '@/constants';
@@ -20,7 +20,13 @@ export const ErrorComponent = ({ message, reset }: Props) => {
       display={'flex'}
       flexDir={'column'}
     >
-      <IconExclamationCircle size={50} color={colors.purple} />
+      <Image
+        src="/warning.png"
+        alt="Error image"
+        width={'auto'}
+        height={'auto'}
+        objectFit="cover"
+      />
       <Title color={colors.black}>Something went wrong!</Title>
       <CustomText color={colors.grey}>{message}</CustomText>
       <Button onClick={reset} px={2} bg={colors.purple} width={'fit'}>

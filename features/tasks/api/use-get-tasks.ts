@@ -45,8 +45,8 @@ export const useGetTasks = ({
       if (!response.ok) {
         throw new Error('Failed to get tasks');
       }
-      ``;
-      return await response.json();
+      const { data } = await response.json();
+      return data;
     },
     placeholderData: () => {
       return queryClient.getQueryData([

@@ -10,7 +10,6 @@ import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { useCreateProjectModalController } from '@/lib/nuqs/use-create-project';
 import { Box, Stack } from '@chakra-ui/react';
 import { IconPlus } from '@tabler/icons-react';
-import { useTransitionRouter } from 'next-view-transitions';
 import { usePathname } from 'next/navigation';
 import { useGetProjects } from '../api/use-get-projects';
 import { ProjectItem } from './project-item';
@@ -20,8 +19,6 @@ export const Projects = () => {
   const pathname = usePathname();
   const { open } = useCreateProjectModalController();
   const { data, isPending, isError } = useGetProjects({ workspaceId });
-
-  const router = useTransitionRouter();
 
   if (isError) {
     return (
@@ -34,9 +31,9 @@ export const Projects = () => {
     return <ReusableSkeleton />;
   }
 
-  const projects = data.data.documents;
+  const projects = data.documents;
 
-  const isEmpty = data?.data.total === 0;
+  const isEmpty = data.total === 0;
   return (
     <Box>
       <FlexBox justifyContent={'space-between'} alignItems={'center'} px={4}>

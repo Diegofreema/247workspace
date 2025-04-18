@@ -1,21 +1,20 @@
+import { ProjectClient } from '@/app/(dashboard)/workspaces/[workspaceId]/projects/[projectId]/client';
 import { FlexBox } from '@/components/custom/flex-box';
 import { CustomText } from '@/components/custom/title';
 import { colors } from '@/constants';
-import { TasksInfo } from '@/features/tasks/components/tasks-info';
 import { TaskViewSwitcher } from '@/features/tasks/components/tasks-view-switcher';
 import { Project } from '@/types';
 import { Stack } from '@chakra-ui/react';
 import { Suspense } from 'react';
 import { EditActionMenu } from './edit-action-menu';
 import { ProjectInnerItem } from './project-item';
-import { ProjectClient } from '@/app/(dashboard)/workspaces/[workspaceId]/projects/[projectId]/client';
 
 type Props = {
   project: Project;
   userId: string;
 };
 
-export const ProjectDisplay = async ({ project, userId }: Props) => {
+export const ProjectDisplay = async ({ project }: Props) => {
   const link = `/workspace/${project.workspaceId}/project/settings/${project.$id}`;
 
   return (

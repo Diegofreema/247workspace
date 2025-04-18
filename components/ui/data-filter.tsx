@@ -60,7 +60,7 @@ export const DataFilter = ({ hideProjectFilter }: Props) => {
       value: member.$id,
     })) || [];
   const projectsOptions =
-    projects?.data.documents.map((project) => ({
+    projects?.documents.map((project) => ({
       label: project.name,
       value: project.$id,
     })) || [];

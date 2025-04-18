@@ -34,9 +34,7 @@ export const TasksInfo = ({ userId }: Props) => {
     );
   }
 
-  const {
-    data: { documents: tasks },
-  } = dataTasks;
+  const { documents: tasks } = dataTasks;
   const underReviewLength =
     tasks.filter(
       (t) => t.assignee?.userId === userId && t.status === StatusEnum.IN_REVIEW

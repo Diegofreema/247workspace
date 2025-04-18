@@ -16,9 +16,9 @@ export const useGetProjects = ({ workspaceId }: GetProjects) => {
       if (!response.ok) {
         throw new Error('Failed to get projects');
       }
-      const projects = await response.json();
+      const { data } = await response.json();
 
-      return projects;
+      return data;
     },
   });
 };

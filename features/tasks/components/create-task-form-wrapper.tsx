@@ -43,7 +43,7 @@ export const CreateTaskFormWrapper = () => {
     );
   }
 
-  const projectOptions = projects?.data.documents.map((project) => ({
+  const projectOptions = projects?.documents.map((project) => ({
     name: project.name,
     id: project.$id,
     imageUrl: project?.imageUrl,

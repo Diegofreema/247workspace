@@ -29,7 +29,7 @@ export const TaskViewSwitcher = ({ hideProjectFilter }: Props) => {
     <Stack gap={2}>
       {/* @ts-ignore */}
       <TaskTabs
-        tasks={data?.data?.documents ?? []}
+        tasks={data?.documents ?? []}
         isPending={isPending}
         hideProjectFilter={hideProjectFilter}
       />
