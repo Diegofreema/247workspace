@@ -14,6 +14,7 @@ export async function GET(request: NextRequest) {
   }
   const { account } = await createAdminClient();
   const session = await account.createSession(userId, secret);
+  console.log(request);
 
   cookies().set(AUTH_COOKIE, session.secret, {
     path: '/',

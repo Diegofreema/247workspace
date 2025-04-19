@@ -91,6 +91,8 @@ export const getWorkspaceInfo = async ({
     );
     return { name: workspace.name, inviteCode: workspace.inviteCode };
   } catch (error) {
+    console.log(error);
+
     return null;
   }
 };

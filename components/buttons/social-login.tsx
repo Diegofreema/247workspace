@@ -1,49 +1,29 @@
-import { signUpWithGithub, signUpWithGoogle } from '@/lib/oauth';
+import { useAuthLogin } from '@/features/auth/api/use-auth-login';
 import { Button, Image, Stack } from '@chakra-ui/react';
-import { useState } from 'react';
 import { toaster } from '../ui/toaster';
 
 export const SocialLogin = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { mutateAsync, isPending } = useAuthLogin();
 
-  const onGitLogin = async () => {
-    setIsSubmitting(true);
-    try {
-      await signUpWithGithub();
-    } catch (error) {
-      console.log(error);
-      toaster.create({
-        title: 'Error',
-        description: 'Failed to login, please try again',
-        type: 'error',
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-  const onGoogleLogin = async () => {
-    setIsSubmitting(true);
-    try {
-      await signUpWithGoogle();
-    } catch (error) {
-      console.log(error);
-      toaster.create({
-        title: 'Error',
-        description: 'Failed to login, please try again',
-        type: 'error',
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+  const onLogin = async (provider: 'Google' | 'Github') => {
+    await mutateAsync(provider, {
+      onError: () => {
+        toaster.create({
+          title: 'Something went wrong',
+          description: 'Failed to sign in, please try again',
+          type: 'error',
+        });
+      },
+    });
   };
   return (
     <Stack gap={4} width={'100%'}>
       <Button
         variant={'outline'}
         border={'1px solid #ccc'}
-        disabled={isSubmitting}
+        disabled={isPending}
         color="black"
-        onClick={onGoogleLogin}
+        onClick={() => onLogin('Google')}
       >
         <Image
           alt="google image"
@@ -59,8 +39,8 @@ export const SocialLogin = () => {
         color="black"
         border={'1px solid #ccc'}
         type="submit"
-        onClick={onGitLogin}
-        disabled={isSubmitting}
+        onClick={() => onLogin('Github')}
+        disabled={isPending}
       >
         <Image
           alt="github image"

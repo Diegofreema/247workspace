@@ -21,6 +21,7 @@ import { Link } from 'next-view-transitions';
 
 export const HomeClient = () => {
   const workspaceId = useWorkspaceId();
+
   const {
     data: analytics,
     isPending: isPendingAnalytics,

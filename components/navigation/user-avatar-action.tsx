@@ -8,7 +8,7 @@ export const UserAvatarAction = async () => {
   const user = await getLoggedInUser();
   const profile = await getProfile(user?.$id);
 
-  if (!user) return <SkeletonCircle size="12" />;
+  if (!user) return null;
   return (
     <Suspense fallback={<SkeletonCircle size="12" />}>
       <AvatarMenu

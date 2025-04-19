@@ -8,22 +8,33 @@ import { useTransitionRouter } from 'next-view-transitions';
 import { Button } from '../custom/custom-button';
 import { Loading } from '../ui/loading';
 import { APP_URL } from '@/config';
+import { toaster } from '../ui/toaster';
 
 type Props = {
-  initialValue: { name: string; inviteCode: string };
+  name?: string;
+  inviteCode?: string;
 };
 
-export const JoinCard = ({ initialValue: { inviteCode, name } }: Props) => {
+export const JoinCard = ({ inviteCode, name }: Props) => {
   const { data, isError, isPending: isPendingUser } = useCurrentUser();
+
   const { mutateAsync, isPending } = useJoinWorkspace();
   const workspaceId = useWorkspaceId();
   const router = useTransitionRouter();
   const onSubmit = async () => {
-    await mutateAsync({ param: { workspaceId }, json: { code: inviteCode } });
+    if (!inviteCode) return;
+    await mutateAsync(
+      { param: { workspaceId }, json: { code: inviteCode } },
+      {
+        onSuccess: () => {
+          localStorage.removeItem('redirectUrl');
+        },
+      }
+    );
   };
 
   if (isError) {
-    return <div>Error</div>;
+    throw new Error('Something went wrong');
   }
   if (isPendingUser) {
     return <Loading />;
@@ -35,7 +46,12 @@ export const JoinCard = ({ initialValue: { inviteCode, name } }: Props) => {
         'redirectUrl',
         `${APP_URL}/workspace/${workspaceId}/join/${inviteCode}`
       );
-      router.replace('/');
+      toaster.create({
+        title: 'Please sign in to join a workspace',
+        type: 'info',
+        duration: 3000,
+      });
+      router.replace('/sign-in');
     }
   }
   return (
@@ -51,8 +67,8 @@ export const JoinCard = ({ initialValue: { inviteCode, name } }: Props) => {
             Join workspace
           </Card.Title>
           <Card.Description>
-            You have been invited to join{' '}
-            <span className="text-black font-bold">{name}</span> workspace.
+            You have been invited to join
+            <span className="text-black font-bold"> {name}</span> workspace.
           </Card.Description>
         </Card.Body>
         <Card.Footer justifyContent="flex-end">
