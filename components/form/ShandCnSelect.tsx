@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/select';
 import { colors } from '@/constants';
 import { SelectData } from '@/types';
-import { Icon, IconListCheck } from '@tabler/icons-react';
+import { Icon } from '@tabler/icons-react';
 
 type Props = {
   data: SelectData[];

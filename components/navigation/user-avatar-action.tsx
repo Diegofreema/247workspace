@@ -6,14 +6,14 @@ import { getProfile } from '@/features/workspaces/queries';
 
 export const UserAvatarAction = async () => {
   const user = await getLoggedInUser();
-  const profile = await getProfile(user?.$id!);
+  const profile = await getProfile(user?.$id);
 
   if (!user) return <SkeletonCircle size="12" />;
   return (
     <Suspense fallback={<SkeletonCircle size="12" />}>
       <AvatarMenu
-        name={profile?.name!}
-        email={profile?.email!}
+        name={profile?.name || ''}
+        email={profile?.email || ''}
         imageUrl={profile?.avatarUrl}
       />
     </Suspense>

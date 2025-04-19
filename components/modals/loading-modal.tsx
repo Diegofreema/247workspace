@@ -1,7 +1,7 @@
 'use client';
 
 import { colors } from '@/constants';
-import { Dialog, Portal, Spinner } from '@chakra-ui/react';
+import { Dialog, Portal } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { Circles } from 'react-loader-spinner';
 

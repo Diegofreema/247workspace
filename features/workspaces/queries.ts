@@ -27,7 +27,8 @@ export const getWorkspaces = async () => {
     return { documents: [] as any[], total: 0 };
   }
 };
-export const getProfile = async (id: string) => {
+export const getProfile = async (id?: string) => {
+  if (!id) return null;
   const { databases } = await createSessionClient();
   try {
     const profiles = await databases.listDocuments<Profile>(

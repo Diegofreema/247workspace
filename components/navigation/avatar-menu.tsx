@@ -4,7 +4,6 @@ import { colors } from '@/constants';
 import { Button, Menu, Portal } from '@chakra-ui/react';
 import { LogoutBtn } from '../buttons/logout-button';
 import { CustomText } from '../custom/title';
-import { AvatarItem } from './workpsace-item';
 import { ProfileAvatar } from '../ui/profile-avatar';
 
 type Props = {

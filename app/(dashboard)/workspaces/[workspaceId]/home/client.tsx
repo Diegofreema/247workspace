@@ -14,7 +14,7 @@ import { useGetWorkspaceAnalytics } from '@/features/workspaces/api/use-create-w
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { useCreateProjectModalController } from '@/lib/nuqs/use-create-project';
 import { useCreateTaskModalController } from '@/lib/nuqs/use-create-task';
-import { Member, Profile, Project, TaskWithProjectAndAssignee } from '@/types';
+import { Profile, Project, TaskWithProjectAndAssignee } from '@/types';
 import { formatDistanceToNow } from 'date-fns';
 import { CalendarCheckIcon, PlusIcon, Settings } from 'lucide-react';
 import { Link } from 'next-view-transitions';

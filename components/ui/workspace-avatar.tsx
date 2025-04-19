@@ -7,7 +7,7 @@ type Props = {
   size?: SizeType;
 };
 
-export const WorkspaceAvatar = ({ name, image, size = 'md' }: Props) => {
+export const WorkspaceAvatar = ({ name, image }: Props) => {
   return (
     <Avatar className="bg-purple">
       <AvatarImage src={image} alt="profile image" />

@@ -87,7 +87,7 @@ export const SignUpForm = () => {
           name="role"
           disabled={isSubmitting}
           select
-          data={data}
+          data={items}
           required
         />
 
@@ -133,13 +133,11 @@ export const SignUpForm = () => {
   );
 };
 
-const data = createListCollection({
-  items: [
-    { label: 'CTO', value: 'CTO' },
-    { label: 'Project manager', value: 'Project manager' },
-    { label: 'Developer', value: 'Developer' },
-    { label: 'UI/UX Designer', value: 'UI/UX Designer' },
-    { label: 'Customer Support', value: 'Customer support' },
-    { label: 'Others', value: 'others' },
-  ],
-});
+const items = [
+  { label: 'CTO', value: 'CTO' },
+  { label: 'Project manager', value: 'Project manager' },
+  { label: 'Developer', value: 'Developer' },
+  { label: 'UI/UX Designer', value: 'UI/UX Designer' },
+  { label: 'Customer Support', value: 'Customer support' },
+  { label: 'Others', value: 'others' },
+];

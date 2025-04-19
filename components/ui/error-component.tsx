@@ -1,10 +1,8 @@
 'use client';
-import { Image, Stack } from '@chakra-ui/react';
-import React from 'react';
-import { CustomText, Title } from '../custom/title';
 import { colors } from '@/constants';
+import { Image, Stack } from '@chakra-ui/react';
 import { Button } from '../custom/custom-button';
-import { IconExclamationCircle } from '@tabler/icons-react';
+import { CustomText, Title } from '../custom/title';
 
 type Props = {
   message: string;

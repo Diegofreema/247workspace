@@ -19,7 +19,7 @@ const page = async ({ params }: Props) => {
 
   return (
     <WrapperWithPadding className="bg-lightGrey">
-      <ProjectDisplay project={project} userId={profile?.userId!} />
+      <ProjectDisplay project={project} userId={profile?.userId || ''} />
     </WrapperWithPadding>
   );
 };

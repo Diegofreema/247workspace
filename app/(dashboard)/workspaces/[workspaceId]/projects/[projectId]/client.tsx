@@ -1,7 +1,6 @@
 'use client';
 
 import { CardSkeleton } from '@/components/skeletons/card-skeleton';
-import { ReusableSkeleton } from '@/components/skeletons/link-skeleton';
 import { Analytics } from '@/components/ui/analytics';
 import { useGetProjectAnalytics } from '@/features/projects/api/use-get-project-analytics';
 import { useProjectId } from '@/hooks/useProjectId';
