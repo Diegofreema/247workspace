@@ -77,9 +77,11 @@ export type TaskType = Models.Document & {
 };
 
 export type ProjectsWithTasks = Project & {
-  tasks: TaskType[];
+  tasks: TaskWithProfile[];
 };
-
+export type TaskWithProfile = TaskType & {
+  assignee: Profile | null;
+};
 type Assignee = {
   name: string | undefined;
   email: string | undefined;

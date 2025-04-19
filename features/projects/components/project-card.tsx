@@ -1,11 +1,11 @@
 import { FlexBox } from '@/components/custom/flex-box';
+import { EmptyUi } from '@/components/ui/empty-ui';
 import { colors } from '@/constants';
 import { ProjectsWithTasks, StatusEnum } from '@/types';
-import { Card, For, Stack, Status } from '@chakra-ui/react';
+import { AvatarGroup, Card, For, Stack, Status } from '@chakra-ui/react';
 import { EllipsisVertical } from 'lucide-react';
 import { ProjectAction } from './project-action';
-import { EmptyUi } from '@/components/ui/empty-ui';
-import { Badge } from '@/components/ui/badge';
+import { ProfileAvatar } from '@/components/ui/profile-avatar';
 
 type Props = {
   project: ProjectsWithTasks;
@@ -51,6 +51,7 @@ export const ProjectCard = ({ project }: Props) => {
   const max = tasks.find(
     (item) => item.value === Math.max(...tasks.map((item) => item.value))
   );
+  const assignees = project.tasks.map((task) => task.assignee);
 
   return (
     <Card.Root bg="white">
@@ -66,7 +67,7 @@ export const ProjectCard = ({ project }: Props) => {
             {project.name}
           </Card.Title>
           <ProjectAction projectId={project.$id}>
-            <EllipsisVertical className="size-5 text-black cursor-pointer" />
+            <EllipsisVertical className="size-5 text-black cursor-pointer -mr-2" />
           </ProjectAction>
         </FlexBox>
       </Card.Body>
@@ -90,6 +91,15 @@ export const ProjectCard = ({ project }: Props) => {
               </FlexBox>
             )}
           </For>
+          <AvatarGroup gap="0" spaceX="-3" size="lg" mt={3}>
+            {assignees.map((assignee, index) => (
+              <ProfileAvatar
+                key={index}
+                name={assignee?.name!}
+                imageUrl={assignee?.avatarUrl}
+              />
+            ))}
+          </AvatarGroup>
         </Stack>
       </Card.Footer>
     </Card.Root>

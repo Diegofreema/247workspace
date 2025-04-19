@@ -11,6 +11,7 @@ export const AllProjectPage = () => {
   const { data, isError, isPending } = useGetProjectsWithTasks({ workspaceId });
   if (isError) throw new Error('Failed to get projects');
   if (isPending) return <Loading />;
+  console.log(data);
 
   return (
     <div className="h-full">

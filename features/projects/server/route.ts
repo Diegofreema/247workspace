@@ -1,4 +1,11 @@
-import { DATABASE_ID, IMAGES_BUCKET_ID, PROJECT_ID, TASK_ID } from '@/config';
+import {
+  DATABASE_ID,
+  IMAGES_BUCKET_ID,
+  MEMBERS_ID,
+  PROFILE_ID,
+  PROJECT_ID,
+  TASK_ID,
+} from '@/config';
 import { getMember } from '@/features/members/utils';
 import { sessionMiddleware } from '@/lib/session-middleware';
 import { zValidator } from '@hono/zod-validator';
@@ -6,8 +13,9 @@ import { Hono } from 'hono';
 import { AppwriteException, ID, Query } from 'node-appwrite';
 import { z } from 'zod';
 import { createProjectSchema, editProjectSchema } from '../schema';
-import { Project, StatusEnum, TaskType } from '@/types';
+import { Member, Profile, Project, StatusEnum, TaskType } from '@/types';
 import { endOfMonth, startOfMonth, subMonths } from 'date-fns';
+import { getProfile } from '@/features/workspaces/queries';
 
 const app = new Hono()
   .get(
@@ -78,12 +86,35 @@ const app = new Hono()
             TASK_ID,
             [Query.equal('projectId', project.$id)]
           );
+
+          const tasksWithAssignee = await Promise.all(
+            tasks.documents.map(async (task) => {
+              const member = await databases.getDocument<Member>(
+                DATABASE_ID,
+                MEMBERS_ID,
+                task.assigneeId
+              );
+              const user = await getProfile(member.userId);
+              const assignee = await getMember({
+                databases,
+                userId: task.assigneeId,
+                workspaceId,
+              });
+
+              return {
+                ...task,
+                assignee: user,
+              };
+            })
+          );
+
           return {
             ...project,
-            tasks: tasks.documents,
+            tasks: tasksWithAssignee,
           };
         })
       );
+
       return c.json({
         data: {
           ...projects,
