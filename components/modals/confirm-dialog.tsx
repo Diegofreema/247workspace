@@ -29,7 +29,7 @@ export const ConfirmDialog = ({
   subtitle,
   title,
   isSubmitting,
-  btnColor = colors.purple,
+  btnColor = colors.red,
 }: Props) => {
   const [mounted, setMounted] = useState(false);
 

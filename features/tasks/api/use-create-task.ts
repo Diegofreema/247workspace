@@ -31,6 +31,9 @@ export const useCreateTask = () => {
       queryClient.invalidateQueries({
         queryKey: ['workspace-analytics', workspaceId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ['project-with-tasks', workspaceId],
+      });
       //   router.push(`/workspaces/${workspaceId}/projects/${$id}`);
       toaster.create({
         title: 'Success',

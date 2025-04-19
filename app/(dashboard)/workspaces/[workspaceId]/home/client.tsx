@@ -1,5 +1,6 @@
 'use client';
 
+import { FlexBox } from '@/components/custom/flex-box';
 import { Analytics } from '@/components/ui/analytics';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -132,13 +133,15 @@ export const TaskList = ({ tasks, total }: Props) => {
             No tasks found
           </li>
         </ul>
-        <Button
-          variant={'ghost'}
-          className="mt-4 w-full hover:bg-purple"
-          asChild
-        >
-          <Link href={`/workspaces/${workspaceId}/tasks`}>Show all</Link>
-        </Button>
+        {tasks.length > 3 && (
+          <Button
+            variant={'ghost'}
+            className="mt-4 w-full hover:bg-purple"
+            asChild
+          >
+            <Link href={`/workspaces/${workspaceId}/tasks`}>Show all</Link>
+          </Button>
+        )}
       </div>
     </div>
   );
@@ -182,10 +185,13 @@ export const ProjectList = ({ projects, total }: ProjectProps) => {
               </Link>
             </li>
           ))}
-          <li className="text-sm text-muted-foreground text-center hidden first-of-type:block">
-            No projects found
-          </li>
         </ul>
+
+        {total === 0 && (
+          <p className="text-sm text-muted-foreground text-center  w-full">
+            No projects found
+          </p>
+        )}
       </div>
     </div>
   );

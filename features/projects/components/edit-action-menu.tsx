@@ -1,5 +1,7 @@
 'use client';
+import { ConfirmDialog } from '@/components/modals/confirm-dialog';
 import { colors } from '@/constants';
+import { useProjectId } from '@/hooks/useProjectId';
 import { Button, Menu, Portal } from '@chakra-ui/react';
 import {
   IconDotsVertical,
@@ -8,10 +10,8 @@ import {
   IconUsers,
 } from '@tabler/icons-react';
 import { useTransitionRouter } from 'next-view-transitions';
+import { useState } from 'react';
 import { useDeleteProject } from '../api/use-delete-project';
-import { useConfirm } from '@/hooks/use-confirm';
-import { useProjectId } from '@/hooks/useProjectId';
-import { LoadingModal } from '@/components/modals/loading-modal';
 
 type Props = {
   link: string;
@@ -19,27 +19,36 @@ type Props = {
 
 export const EditActionMenu = ({ link }: Props) => {
   const router = useTransitionRouter();
+  const [isOpen, setIsOpen] = useState(false);
   const projectId = useProjectId();
   const { mutateAsync, isPending } = useDeleteProject();
-  const [DeleteAction, confirm] = useConfirm({
-    title: 'Delete Project',
-    isPending,
-    icon: IconTrash,
-  });
+
   const onNavigate = () => {
     router.push(link);
   };
 
   const onDelete = async () => {
-    const ok = await confirm();
-    if (ok) {
-      mutateAsync({ param: { projectId } });
-    }
+    mutateAsync(
+      { param: { projectId } },
+      {
+        onSuccess: () => {
+          setIsOpen(false);
+        },
+      }
+    );
   };
   return (
     <>
-      <LoadingModal isPending={isPending} />
-      <DeleteAction />
+      <ConfirmDialog
+        confirmButtonText="Delete"
+        isSubmitting={isPending}
+        onCancel={() => setIsOpen(false)}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        onConfirm={onDelete}
+        title="Delete Project"
+        subtitle="Are you sure you want to delete this project?, this action cannot be undone"
+      />
       <Menu.Root>
         <Menu.Trigger asChild>
           <Button variant="outline" size="md" disabled={isPending}>
@@ -68,7 +77,7 @@ export const EditActionMenu = ({ link }: Props) => {
                 value="delete"
                 color={colors.red}
                 disabled={isPending}
-                onClick={onDelete}
+                onClick={() => setIsOpen(true)}
               >
                 <IconTrash /> Delete Project
               </Menu.Item>

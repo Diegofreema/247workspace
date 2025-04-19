@@ -13,6 +13,7 @@ import { IconPlus } from '@tabler/icons-react';
 import { usePathname } from 'next/navigation';
 import { useGetProjects } from '../api/use-get-projects';
 import { ProjectItem } from './project-item';
+import { Link } from 'next-view-transitions';
 
 export const Projects = () => {
   const workspaceId = useWorkspaceId();
@@ -34,20 +35,34 @@ export const Projects = () => {
   const projects = data.documents;
 
   const isEmpty = data.total === 0;
+
+  const isActive = pathname === `/workspaces/${workspaceId}/projects`;
   return (
     <Box>
-      <FlexBox justifyContent={'space-between'} alignItems={'center'} px={4}>
-        <CustomText
-          color={colors.grey}
-          fontWeight={'bold'}
-          fontSize={{ base: 'sm', md: 'md' }}
-        >
-          Projects
-        </CustomText>
+      <FlexBox
+        justifyContent={'space-between'}
+        alignItems={'center'}
+        px={4}
+        bg={isActive ? colors.purple : 'transparent'}
+      >
+        <Link href={`/workspaces/${workspaceId}/projects`}>
+          <CustomText
+            color={isActive ? colors.white : colors.grey}
+            fontWeight={'bold'}
+            fontSize={{ base: 'sm', md: 'md' }}
+          >
+            Projects
+          </CustomText>
+        </Link>
         <Tooltip content="Create a project" openDelay={100} closeDelay={100}>
           <CreateButton
             width={'fit'}
-            icon={<IconPlus size={25} color={colors.iconGrey} />}
+            icon={
+              <IconPlus
+                size={25}
+                color={isActive ? colors.white : colors.iconGrey}
+              />
+            }
             bg="transparent"
             onClick={open}
           />

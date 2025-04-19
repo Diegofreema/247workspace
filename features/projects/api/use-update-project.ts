@@ -30,6 +30,9 @@ export const useUpdateProject = () => {
     onSuccess: ({}) => {
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({
+        queryKey: ['project-with-tasks'],
+      });
 
       toaster.create({
         title: 'Success',

@@ -26,6 +26,9 @@ export const useUpdateBulkTask = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({
+        queryKey: ['project-with-tasks'],
+      });
 
       //   router.push(`/workspaces/${workspaceId}/projects/${$id}`);
       toaster.create({

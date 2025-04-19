@@ -43,6 +43,55 @@ const app = new Hono()
       });
     }
   )
+  .get(
+    '/project-with-tasks',
+    sessionMiddleware,
+    zValidator('query', z.object({ workspaceId: z.string() })),
+    async (c) => {
+      const { workspaceId } = c.req.valid('query');
+      const databases = c.get('databases');
+      const user = c.get('user');
+      const member = await getMember({
+        databases,
+        userId: user.$id,
+        workspaceId,
+      });
+      if (!member) {
+        return c.json(
+          {
+            error: 'Unauthorized',
+          },
+          401
+        );
+      }
+
+      const projects = await databases.listDocuments<Project>(
+        DATABASE_ID,
+        PROJECT_ID,
+        [Query.equal('workspaceId', workspaceId), Query.orderDesc('$createdAt')]
+      );
+
+      const projectsWithTasks = await Promise.all(
+        projects.documents.map(async (project) => {
+          const tasks = await databases.listDocuments<TaskType>(
+            DATABASE_ID,
+            TASK_ID,
+            [Query.equal('projectId', project.$id)]
+          );
+          return {
+            ...project,
+            tasks: tasks.documents,
+          };
+        })
+      );
+      return c.json({
+        data: {
+          ...projects,
+          documents: projectsWithTasks,
+        },
+      });
+    }
+  )
   .get('/:projectId', sessionMiddleware, async (c) => {
     const { projectId } = c.req.param();
     const databases = c.get('databases');
@@ -250,9 +299,18 @@ const app = new Hono()
       return c.json({ error: 'Unauthorized' }, 401);
     }
 
-    // ! do delete tasks linked to project
     await databases.deleteDocument(DATABASE_ID, PROJECT_ID, projectId);
+    const tasks = await databases.listDocuments<TaskType>(
+      DATABASE_ID,
+      TASK_ID,
+      [Query.equal('projectId', projectId)]
+    );
 
+    await Promise.all(
+      tasks.documents.map(async (task) => {
+        await databases.deleteDocument(DATABASE_ID, TASK_ID, task.$id);
+      })
+    );
     return c.json({ data: { $id: projectId } });
   })
   .get('/:projectId/analytics', sessionMiddleware, async (c) => {

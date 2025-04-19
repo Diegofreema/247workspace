@@ -40,7 +40,6 @@ export const getProfile = async (id?: string) => {
     if (!profile) {
       return null;
     }
-    console.log(profile);
 
     return profile;
   } catch (error) {

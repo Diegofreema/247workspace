@@ -5,6 +5,7 @@ import {
   DATABASE_ID,
   IMAGES_BUCKET_ID,
   MEMBERS_ID,
+  PROJECT_ID,
   TASK_ID,
   WORKSPACE_ID,
 } from '@/config';
@@ -253,8 +254,24 @@ const app = new Hono()
     if (!member || member.role !== MemberRole.ADMIN) {
       return c.json({ error: 'Unauthorized' }, 401);
     }
-    await databases.deleteDocument(DATABASE_ID, WORKSPACE_ID, workspaceId);
 
+    await databases.deleteDocument(DATABASE_ID, WORKSPACE_ID, workspaceId);
+    const projects = await databases.listDocuments(DATABASE_ID, PROJECT_ID, [
+      Query.equal('workspaceId', workspaceId),
+    ]);
+
+    const tasks = await databases.listDocuments(DATABASE_ID, TASK_ID, [
+      Query.equal('workspaceId', workspaceId),
+    ]);
+
+    await Promise.all([
+      ...projects.documents.map((project) =>
+        databases.deleteDocument(DATABASE_ID, PROJECT_ID, project.$id)
+      ),
+      ...tasks.documents.map((task) =>
+        databases.deleteDocument(DATABASE_ID, TASK_ID, task.$id)
+      ),
+    ]);
     return c.json({ data: { $id: workspaceId } });
   })
   .post('/:workspaceId/reset-invite-code', sessionMiddleware, async (c) => {

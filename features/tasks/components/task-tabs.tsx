@@ -15,6 +15,7 @@ import { columns } from './column';
 import { useCallback } from 'react';
 import { useUpdateBulkTask } from '../api/use-bulk-update';
 import { LoadingModal } from '@/components/modals/loading-modal';
+import { Heading } from '@/components/ui/heading';
 
 type Props = {
   tasks: TaskWithProjectAndAssignee[];
@@ -37,16 +38,7 @@ export const TaskTabs = ({ tasks, isPending, hideProjectFilter }: Props) => {
     <>
       <LoadingModal isPending={isPendingTasks} />
       <Stack bg={colors.white} borderRadius={10} p={4} mt={5}>
-        <Stack mb={3}>
-          <Title
-            color={colors.black}
-            lineHeight={1.2}
-            fontSize={{ base: 'md', md: 'lg' }}
-          >
-            Tasks
-          </Title>
-          <CustomText color={colors.grey}>View all tasks here</CustomText>
-        </Stack>
+        <Heading />
         <Tabs.Root
           value={value}
           onValueChange={(e) => setValue(e.value)}
