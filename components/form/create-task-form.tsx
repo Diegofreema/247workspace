@@ -4,6 +4,7 @@ import { createTaskSchema } from '@/features/tasks/schema';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import {
   useCreateTaskModalController,
+  useSetProjectId,
   useSetTask,
 } from '@/lib/nuqs/use-create-task';
 import { PriorityEnum, StatusEnum } from '@/types';
@@ -32,6 +33,7 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
   const { mutateAsync } = useCreateTask();
   const workspaceId = useWorkspaceId();
   const { close } = useCreateTaskModalController();
+  const { onRemoveProjectId, projectId } = useSetProjectId();
   const { status, onRemoveStatus } = useSetTask();
   const router = useRouter();
   const {
@@ -44,6 +46,7 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
     defaultValues: {
       workspaceId,
       status: status ? status : StatusEnum.BACKLOG,
+      projectId: projectId ? projectId : '',
     },
     resolver: zodResolver(createTaskSchema),
   });
@@ -55,6 +58,7 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
         onSuccess: () => {
           router.refresh();
           reset();
+          onRemoveProjectId();
         },
       }
     );

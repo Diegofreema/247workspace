@@ -3,7 +3,6 @@ import { InferRequestType, InferResponseType } from 'hono';
 
 import { toaster } from '@/components/ui/toaster';
 import { client } from '@/lib/rpc';
-import { useRouter } from 'next/navigation';
 
 type ResponseType = InferResponseType<
   (typeof client.api.projects)[':projectId']['$delete'],
@@ -15,7 +14,7 @@ type RequestType = InferRequestType<
 
 export const useDeleteProject = () => {
   const queryClient = useQueryClient();
-  const router = useRouter();
+
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ param }) => {
       const res = await client.api.projects[':projectId'].$delete({

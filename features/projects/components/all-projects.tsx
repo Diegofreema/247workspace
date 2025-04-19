@@ -15,7 +15,7 @@ export const AllProjects = ({ projects, total }: Props) => {
       gap={{ base: 3, md: 5, lg: 10 }}
     >
       <For each={projects} fallback={<EmptyUi text="No project yet" />}>
-        {({ item, index }) => <ProjectCard key={index} />}
+        {(item, index) => <ProjectCard key={index} project={item} />}
       </For>
     </SimpleGrid>
   );

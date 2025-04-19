@@ -1,5 +1,10 @@
 import { StatusEnum } from '@/types';
-import { parseAsBoolean, parseAsStringEnum, useQueryState } from 'nuqs';
+import {
+  parseAsBoolean,
+  parseAsString,
+  parseAsStringEnum,
+  useQueryState,
+} from 'nuqs';
 
 export const useCreateTaskModalController = () => {
   const [isOpen, setIsOpen] = useQueryState(
@@ -20,4 +25,14 @@ export const useSetTask = () => {
   const onSetStatus = (status: StatusEnum) => setStatus(status);
   const onRemoveStatus = () => setStatus(null);
   return { status, onSetStatus, onRemoveStatus };
+};
+export const useSetProjectId = () => {
+  const [projectId, setProjectId] = useQueryState(
+    'create-task-project-id',
+    parseAsString
+  );
+
+  const onSetProjectId = (projectId: string) => setProjectId(projectId);
+  const onRemoveProjectId = () => setProjectId(null);
+  return { projectId, onSetProjectId, onRemoveProjectId };
 };
