@@ -54,9 +54,12 @@ const app = new Hono()
   .get(
     '/project-with-tasks',
     sessionMiddleware,
-    zValidator('query', z.object({ workspaceId: z.string() })),
+    zValidator(
+      'query',
+      z.object({ workspaceId: z.string(), offset: z.string() })
+    ),
     async (c) => {
-      const { workspaceId } = c.req.valid('query');
+      const { workspaceId, offset } = c.req.valid('query');
       const databases = c.get('databases');
       const user = c.get('user');
       const member = await getMember({
@@ -72,11 +75,16 @@ const app = new Hono()
           401
         );
       }
-
+      console.log(offset);
+      const offsetToNumber = +offset;
       const projects = await databases.listDocuments<Project>(
         DATABASE_ID,
         PROJECT_ID,
-        [Query.equal('workspaceId', workspaceId), Query.orderDesc('$createdAt')]
+        [
+          Query.equal('workspaceId', workspaceId),
+          Query.orderDesc('$createdAt'),
+          Query.limit(5 + offsetToNumber),
+        ]
       );
 
       const projectsWithTasks = await Promise.all(
@@ -95,11 +103,6 @@ const app = new Hono()
                 task.assigneeId
               );
               const user = await getProfile(member.userId);
-              const assignee = await getMember({
-                databases,
-                userId: task.assigneeId,
-                workspaceId,
-              });
 
               return {
                 ...task,

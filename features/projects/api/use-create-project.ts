@@ -11,7 +11,7 @@ type ResponseType = InferResponseType<
 >;
 type RequestType = InferRequestType<(typeof client.api.projects)['$post']>;
 
-export const useCreateProject = () => {
+export const useCreateProject = (isProjectPage?: boolean) => {
   const queryClient = useQueryClient();
   const router = useTransitionRouter();
   const mutation = useMutation<ResponseType, Error, RequestType>({
@@ -30,7 +30,9 @@ export const useCreateProject = () => {
       queryClient.invalidateQueries({
         queryKey: ['project-with-tasks', workspaceId],
       });
-      router.push(`/workspaces/${workspaceId}/projects/${$id}`);
+      if (!isProjectPage) {
+        router.push(`/workspaces/${workspaceId}/projects/${$id}`);
+      }
       toaster.create({
         title: 'Success',
         description: 'Your project has been created',

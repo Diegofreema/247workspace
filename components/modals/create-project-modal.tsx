@@ -23,12 +23,17 @@ import { z } from 'zod';
 import { Button } from '../custom/custom-button';
 import { FlexBox } from '../custom/flex-box';
 import { FormInput } from '../form/form-input';
+import { usePathname } from 'next/navigation';
 
 export const CreateProjectModal = () => {
   const { isOpen, setIsOpen, close } = useCreateProjectModalController();
   const [mounted, setMounted] = useState(false);
   const workspaceId = useWorkspaceId();
-  const { mutateAsync } = useCreateProject();
+  const pathname = usePathname();
+  const isProjectPage = pathname.split('/')[3] === 'projects';
+
+  const { mutateAsync } = useCreateProject(isProjectPage);
+
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     setMounted(true);

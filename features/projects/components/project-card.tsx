@@ -100,6 +100,7 @@ export const ProjectCard = ({ project }: Props) => {
               />
             ))}
           </AvatarGroup>
+          {assignees.length === 0 && <div className="h-6 w-6" />}
         </Stack>
       </Card.Footer>
     </Card.Root>
