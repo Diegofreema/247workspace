@@ -2,10 +2,17 @@ import { FlexBox } from '@/components/custom/flex-box';
 import { EmptyUi } from '@/components/ui/empty-ui';
 import { colors } from '@/constants';
 import { ProjectsWithTasks, StatusEnum } from '@/types';
-import { AvatarGroup, Card, For, Stack, Status } from '@chakra-ui/react';
+import { AvatarGroup, For, Stack, Status } from '@chakra-ui/react';
 import { EllipsisVertical } from 'lucide-react';
 import { ProjectAction } from './project-action';
 import { ProfileAvatar } from '@/components/ui/profile-avatar';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 
 type Props = {
   project: ProjectsWithTasks;
@@ -54,8 +61,8 @@ export const ProjectCard = ({ project }: Props) => {
   const assignees = project.tasks.map((task) => task.assignee);
 
   return (
-    <Card.Root bg="white">
-      <Card.Body className="relative">
+    <Card className="min-h-min bg-white border-0">
+      <CardHeader className="mb-5">
         <FlexBox
           justifyContent={'space-between'}
           alignItems={'center'}
@@ -63,15 +70,13 @@ export const ProjectCard = ({ project }: Props) => {
           borderLeftColor={max?.variant}
           paddingLeft={2}
         >
-          <Card.Title color={colors.black} fontWeight={'bold'}>
-            {project.name}
-          </Card.Title>
+          <CardTitle className="text-black font-bold">{project.name}</CardTitle>
           <ProjectAction projectId={project.$id}>
             <EllipsisVertical className="size-5 text-black cursor-pointer -mr-2" />
           </ProjectAction>
         </FlexBox>
-      </Card.Body>
-      <Card.Footer width={'100%'}>
+      </CardHeader>
+      <CardContent>
         <Stack gap={3} width={'100%'}>
           <For each={tasks} fallback={<EmptyUi text="No tasks yet" />}>
             {(item, index) => (
@@ -91,7 +96,11 @@ export const ProjectCard = ({ project }: Props) => {
               </FlexBox>
             )}
           </For>
-          <AvatarGroup gap="0" spaceX="-3" size="lg" mt={3}>
+        </Stack>
+      </CardContent>
+      <CardFooter>
+        {assignees.length > 0 && (
+          <AvatarGroup gap="0" spaceX="-3" size="lg">
             {assignees.map((assignee, index) => (
               <ProfileAvatar
                 key={index}
@@ -100,9 +109,9 @@ export const ProjectCard = ({ project }: Props) => {
               />
             ))}
           </AvatarGroup>
-          {assignees.length === 0 && <div className="h-6 w-6" />}
-        </Stack>
-      </Card.Footer>
-    </Card.Root>
+        )}
+        {assignees.length === 0 && <div className="h-8 w-8" />}
+      </CardFooter>
+    </Card>
   );
 };

@@ -15,15 +15,18 @@ import { FlexBox } from '@/components/custom/flex-box';
 import { CustomText } from '@/components/custom/title';
 import { FormInput } from '@/components/form/form-input';
 import { useUpdateProject } from '../api/use-update-project';
+import { useEditProjectModalController } from '@/lib/nuqs/use-edit-project-modal';
 
 type Props = {
   initialValue: Project;
   onCancel?: () => void;
+  isModal?: boolean;
 };
 
-export const EditProjectCard = ({ initialValue, onCancel }: Props) => {
+export const EditProjectCard = ({ initialValue, onCancel, isModal }: Props) => {
   const { mutateAsync } = useUpdateProject();
   const inputRef = useRef<HTMLInputElement>(null);
+  const { close } = useEditProjectModalController();
   const router = useRouter();
   const {
     handleSubmit,
@@ -44,11 +47,18 @@ export const EditProjectCard = ({ initialValue, onCancel }: Props) => {
       ...data,
       image: data.image instanceof File ? data.image : '',
     };
-    await mutateAsync({
-      form: finalValues,
-      param: { projectId: initialValue.$id },
-    });
-    reset();
+    await mutateAsync(
+      {
+        form: finalValues,
+        param: { projectId: initialValue.$id },
+      },
+      {
+        onSuccess: () => {
+          reset();
+          close();
+        },
+      }
+    );
   };
   const handleCancel = () => {
     if (onCancel) {
@@ -62,15 +72,19 @@ export const EditProjectCard = ({ initialValue, onCancel }: Props) => {
     (name.trim() === initialValue.name.trim() &&
       image === initialValue.imageUrl) ||
     (name.trim() === initialValue.name.trim() && image === '');
+  const bg = isModal ? 'transparent' : colors.white;
+  const boxShadow = isModal ? 'none' : 'md';
   return (
-    <Card.Root bg={colors.white} boxShadow={'md'}>
+    <Card.Root bg={bg} boxShadow={boxShadow}>
       <Card.Body gap="2">
-        <FlexBox alignItems={'center'} gap={2}>
-          <IconArrowLeft color={colors.black} onClick={handleCancel} />
-          <CustomText fontSize={12} color={colors.black} fontWeight={'bold'}>
-            Back
-          </CustomText>
-        </FlexBox>
+        {!isModal && (
+          <FlexBox alignItems={'center'} gap={2}>
+            <IconArrowLeft color={colors.black} onClick={handleCancel} />
+            <CustomText fontSize={12} color={colors.black} fontWeight={'bold'}>
+              Back
+            </CustomText>
+          </FlexBox>
+        )}
         <Card.Title mt="2" color={colors.black} display={'flex'}>
           {initialValue.name}
         </Card.Title>

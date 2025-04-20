@@ -27,5 +27,5 @@ export const EditProjectWrapper = () => {
       </Stack>
     );
   }
-  return <EditProjectCard initialValue={data} />;
+  return <EditProjectCard initialValue={data} isModal />;
 };

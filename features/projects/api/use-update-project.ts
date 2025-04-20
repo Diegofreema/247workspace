@@ -4,6 +4,7 @@ import { InferRequestType, InferResponseType } from 'hono';
 import { toaster } from '@/components/ui/toaster';
 import { client } from '@/lib/rpc';
 import { useTransitionRouter } from 'next-view-transitions';
+import { AppwriteException } from 'node-appwrite';
 
 type ResponseType = InferResponseType<
   (typeof client.api.projects)[':projectId']['$patch'],
@@ -27,9 +28,10 @@ export const useUpdateProject = () => {
       }
       return await res.json();
     },
-    onSuccess: ({}) => {
+    onSuccess: ({ data: { $id } }) => {
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ['project', $id] });
       queryClient.invalidateQueries({
         queryKey: ['project-with-tasks'],
       });
@@ -40,10 +42,21 @@ export const useUpdateProject = () => {
         type: 'success',
       });
     },
-    onError: () => {
+    onError: (error) => {
+      let errorMessage = error.message;
+
+      if (error instanceof AppwriteException) {
+        if (error.type === 'document_invalid_structure') {
+          errorMessage = 'Missing a required field';
+        }
+        if (error.type === 'storage_invalid_file_size') {
+          errorMessage = 'File size is too large, max 1mb';
+        }
+      }
+
       toaster.create({
         title: 'Something went wrong',
-        description: 'Please try again',
+        description: errorMessage,
         type: 'error',
       });
     },

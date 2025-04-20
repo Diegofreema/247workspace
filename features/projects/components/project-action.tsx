@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { colors } from '@/constants';
-import { Pencil, Plus, Trash } from 'lucide-react';
+import { ExternalLink, Pencil, Plus, Trash } from 'lucide-react';
 import { useState } from 'react';
 
 import { useEditProjectModalController } from '@/lib/nuqs/use-edit-project-modal';
@@ -15,6 +15,8 @@ import {
   useCreateTaskModalController,
   useSetProjectId,
 } from '@/lib/nuqs/use-create-task';
+import { useWorkspaceId } from '@/hooks/useWorkspaceId';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   projectId: string;
@@ -23,15 +25,20 @@ type Props = {
 };
 
 export const ProjectAction = ({ children, projectId }: Props) => {
+  const workspaceId = useWorkspaceId();
   const { mutateAsync, isPending } = useDeleteProject();
   const { open } = useEditProjectModalController();
   const { open: createTask } = useCreateTaskModalController();
   const { onSetProjectId } = useSetProjectId();
   const [isOpen, setOpen] = useState(false);
-
+  const router = useRouter();
   const isLoading = isPending;
   const onDelete = async () => {
     await mutateAsync({ param: { projectId } });
+  };
+
+  const onOpenProject = () => {
+    router.push(`/workspaces/${workspaceId}/projects/${projectId}`);
   };
 
   const onCreate = () => {
@@ -56,6 +63,14 @@ export const ProjectAction = ({ children, projectId }: Props) => {
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48 text-black bg-white">
+            <DropdownMenuItem
+              onClick={onOpenProject}
+              disabled={isLoading}
+              className="font-medium p-[10px]"
+            >
+              <ExternalLink className="size-4 mr-2 stroke-2" />
+              Open project
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => open(projectId)}
               disabled={isLoading}

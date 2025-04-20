@@ -9,7 +9,6 @@ import { AllProjects } from '@/features/projects/components/all-projects';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { useOffsetProject } from '@/lib/nuqs/use-project-offset';
 
-const limit = 5;
 export const AllProjectPage = () => {
   const workspaceId = useWorkspaceId();
   const { offset, setOffset } = useOffsetProject();

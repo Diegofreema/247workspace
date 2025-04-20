@@ -280,39 +280,20 @@ const app = new Hono()
       } else {
         uploadUrl = image;
       }
-      try {
-        const project = await databases.updateDocument(
-          DATABASE_ID,
-          PROJECT_ID,
-          projectId,
-          {
-            name,
-            imageUrl: uploadUrl,
-          }
-        );
 
-        return c.json({
-          data: project,
-        });
-      } catch (error) {
-        console.log(error);
-
-        if (error instanceof AppwriteException) {
-          let errorMessage = error.message;
-          if (error.type === 'document_invalid_structure') {
-            errorMessage = 'Missing a required field';
-          }
-          if (error.type === 'storage_invalid_file_size') {
-            errorMessage = 'File size is too large, max 1mb';
-          }
-          return c.json({
-            error: errorMessage,
-          });
+      const project = await databases.updateDocument<Project>(
+        DATABASE_ID,
+        PROJECT_ID,
+        projectId,
+        {
+          name,
+          imageUrl: uploadUrl,
         }
-        return c.json({
-          error: 'Something went wrong, please try again',
-        });
-      }
+      );
+
+      return c.json({
+        data: project,
+      });
     }
   )
   .delete('/:projectId', sessionMiddleware, async (c) => {
