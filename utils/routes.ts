@@ -14,11 +14,7 @@ export const routes = [
     path: '/team',
     icon: 'IconUsers',
   },
-  {
-    label: 'Documents',
-    path: '/documents',
-    icon: 'IconFolders',
-  },
+
   {
     label: 'Settings',
     path: '/settings',

@@ -114,3 +114,11 @@ export type AnalyticsType = {
   projectCount?: number;
   projectDifference?: number;
 };
+
+export type DocumentType = Models.Document & {
+  name: string;
+  documentUrl: string;
+  workspaceId: string;
+  projectId: string;
+  userId: string;
+};

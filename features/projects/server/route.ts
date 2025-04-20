@@ -2,20 +2,19 @@ import {
   DATABASE_ID,
   IMAGES_BUCKET_ID,
   MEMBERS_ID,
-  PROFILE_ID,
   PROJECT_ID,
   TASK_ID,
 } from '@/config';
 import { getMember } from '@/features/members/utils';
+import { getProfile } from '@/features/workspaces/queries';
 import { sessionMiddleware } from '@/lib/session-middleware';
+import { Member, Project, StatusEnum, TaskType } from '@/types';
 import { zValidator } from '@hono/zod-validator';
+import { endOfMonth, startOfMonth, subMonths } from 'date-fns';
 import { Hono } from 'hono';
 import { AppwriteException, ID, Query } from 'node-appwrite';
 import { z } from 'zod';
 import { createProjectSchema, editProjectSchema } from '../schema';
-import { Member, Profile, Project, StatusEnum, TaskType } from '@/types';
-import { endOfMonth, startOfMonth, subMonths } from 'date-fns';
-import { getProfile } from '@/features/workspaces/queries';
 
 const app = new Hono()
   .get(
@@ -83,7 +82,7 @@ const app = new Hono()
         [
           Query.equal('workspaceId', workspaceId),
           Query.orderDesc('$createdAt'),
-          Query.limit(5 + offsetToNumber),
+          Query.limit(10 + offsetToNumber),
         ]
       );
 

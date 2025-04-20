@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { colors } from '@/constants';
-import { ExternalLink, Pencil, Plus, Trash } from 'lucide-react';
+import { ExternalLink, File, Pencil, Plus, Trash } from 'lucide-react';
 import { useState } from 'react';
 
 import { useEditProjectModalController } from '@/lib/nuqs/use-edit-project-modal';
@@ -52,7 +52,9 @@ export const ProjectAction = ({ children, projectId }: Props) => {
     onSetProjectId(projectId);
     createTask();
   };
-
+  const onOpenDocuments = () => {
+    router.push(`/workspaces/${workspaceId}/projects/${projectId}/documents`);
+  };
   return (
     <>
       <ConfirmDialog
@@ -85,6 +87,14 @@ export const ProjectAction = ({ children, projectId }: Props) => {
             >
               <Pencil className="size-4 mr-2 stroke-2" />
               Edit project
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={onOpenDocuments}
+              disabled={isLoading}
+              className="font-medium p-[10px]"
+            >
+              <File className="size-4 mr-2 stroke-2" />
+              View documents
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={onCreate}
