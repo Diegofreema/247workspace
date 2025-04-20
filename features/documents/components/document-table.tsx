@@ -4,6 +4,7 @@ import { colors } from '@/constants';
 import { DocumentType } from '@/types';
 import {
   ButtonGroup,
+  For,
   Heading,
   IconButton,
   Pagination,
@@ -13,6 +14,8 @@ import {
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
 import { DocumentAction } from './document-actions';
 import { EllipsisVertical } from 'lucide-react';
+import { format } from 'date-fns';
+import { EmptyUi } from '@/components/ui/empty-ui';
 
 type Props = {
   documents: DocumentType[];
@@ -42,32 +45,40 @@ export const DocumentTable = ({ documents, total }: Props) => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {items.map((item) => (
-            <Table.Row key={item.id}>
-              <Table.Cell color={colors.black}>{item.name}</Table.Cell>
-              <Table.Cell color={colors.black}>{item.category}</Table.Cell>
-              <Table.Cell color={colors.black} textAlign="end">
-                {item.price}
-              </Table.Cell>
-              <DocumentAction documentId="1">
-                <EllipsisVertical />
-              </DocumentAction>
-            </Table.Row>
-          ))}
+          <For
+            each={documents}
+            fallback={<EmptyUi text="No documents found for this project" />}
+          >
+            {(item) => (
+              <Table.Row key={item.$id}>
+                <Table.Cell color={colors.black}>{item.name}</Table.Cell>
+                <Table.Cell color={colors.black}>{item.uploadedBy}</Table.Cell>
+                <Table.Cell color={colors.black}>
+                  {format(item.$createdAt, 'PPP')}
+                </Table.Cell>
+                <DocumentAction documentId="1">
+                  <EllipsisVertical className="text-black size-4" />
+                </DocumentAction>
+              </Table.Row>
+            )}
+          </For>
         </Table.Body>
       </Table.Root>
 
-      <Pagination.Root count={items.length * 5} pageSize={5} page={1}>
+      <Pagination.Root count={total * 5} pageSize={10} page={1}>
         <ButtonGroup variant="ghost" size="sm" wrap="wrap">
           <Pagination.PrevTrigger asChild>
             <IconButton>
-              <LuChevronLeft />
+              <LuChevronLeft color={colors.black} />
             </IconButton>
           </Pagination.PrevTrigger>
 
           <Pagination.Items
             render={(page) => (
-              <IconButton variant={{ base: 'ghost', _selected: 'outline' }}>
+              <IconButton
+                color={colors.black}
+                variant={{ base: 'ghost', _selected: 'outline' }}
+              >
                 {page.value}
               </IconButton>
             )}
@@ -75,7 +86,7 @@ export const DocumentTable = ({ documents, total }: Props) => {
 
           <Pagination.NextTrigger asChild>
             <IconButton>
-              <LuChevronRight />
+              <LuChevronRight color={colors.black} />
             </IconButton>
           </Pagination.NextTrigger>
         </ButtonGroup>
@@ -84,12 +95,4 @@ export const DocumentTable = ({ documents, total }: Props) => {
   );
 };
 
-const items = [
-  { id: 1, name: 'Laptop', category: 'Electronics', price: 999.99 },
-  { id: 2, name: 'Coffee Maker', category: 'Home Appliances', price: 49.99 },
-  { id: 3, name: 'Desk Chair', category: 'Furniture', price: 150.0 },
-  { id: 4, name: 'Smartphone', category: 'Electronics', price: 799.99 },
-  { id: 5, name: 'Headphones', category: 'Accessories', price: 199.99 },
-];
-
-const columns = ['Document name', 'Uploaded by', 'Date uploaded', 'Actions'];
+const columns = ['Name', 'Uploaded by', 'Date', 'Actions'];
