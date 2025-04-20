@@ -3,61 +3,68 @@
 import { colors } from '@/constants';
 
 import {
+  Box,
   CloseButton,
   Dialog,
+  FileUpload,
+  FileUploadFileRejectDetails,
+  Icon,
   IconButton,
-  Image,
   Portal,
   Stack,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { IconPhotoCirclePlus } from '@tabler/icons-react';
 
-import { useCreateProject } from '@/features/projects/api/use-create-project';
-import { createProjectSchema } from '@/features/projects/schema';
+import { useCurrentUser } from '@/features/auth/api/use-current-user';
+import { useUploadDocument } from '@/features/documents/api/use-create-document';
+import { createDocumentSchema } from '@/features/documents/schema';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
-import { useCreateProjectModalController } from '@/lib/nuqs/use-create-project';
-import { useEffect, useRef, useState } from 'react';
+import { useCreateDocumentModalController } from '@/lib/nuqs/use-create-document';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { LuUpload } from 'react-icons/lu';
 import { z } from 'zod';
 import { Button } from '../custom/custom-button';
 import { FlexBox } from '../custom/flex-box';
 import { FormInput } from '../form/form-input';
-import { usePathname } from 'next/navigation';
-import { useCreateDocumentModalController } from '@/lib/nuqs/use-create-document';
+import { ReusableSkeleton } from '../skeletons/link-skeleton';
+import { useProjectId } from '@/hooks/useProjectId';
 
 export const CreateDocumentModal = () => {
   const { projectId, close } = useCreateDocumentModalController();
+  const projectIdString = useProjectId();
+  const { data, isPending, isError } = useCurrentUser();
   const [mounted, setMounted] = useState(false);
   const workspaceId = useWorkspaceId();
-  const pathname = usePathname();
-  const isProjectPage = pathname.split('/')[3] === 'projects';
 
-  const { mutateAsync } = useCreateProject(isProjectPage);
+  const { mutateAsync } = useUploadDocument();
 
-  const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     setMounted(true);
   }, []);
+  console.log(data?.name);
+
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
     register,
     reset,
     control,
-  } = useForm<z.infer<typeof createProjectSchema>>({
+  } = useForm<z.infer<typeof createDocumentSchema>>({
     defaultValues: {
       name: '',
-      image: '',
+      documentUrl: '',
       workspaceId: workspaceId,
+      projectId: projectIdString,
+      uploadedBy: data?.name,
     },
-    resolver: zodResolver(createProjectSchema),
+    resolver: zodResolver(createDocumentSchema),
   });
 
-  const onSubmit = async (data: z.infer<typeof createProjectSchema>) => {
+  const onSubmit = async (data: z.infer<typeof createDocumentSchema>) => {
     const finalValues = {
       ...data,
-      image: data.image instanceof File ? data.image : '',
+      documentUrl: data.documentUrl instanceof File ? data.documentUrl : '',
       workspaceId,
     };
     await mutateAsync({ form: finalValues });
@@ -68,6 +75,25 @@ export const CreateDocumentModal = () => {
     reset();
     close();
   };
+  if (isError) {
+    close();
+    throw new Error('Error fetching current user');
+  }
+  if (isPending) {
+    return (
+      <Stack gap={5}>
+        {Array(5)
+          .fill(0)
+          .map((_, i) => (
+            <ReusableSkeleton key={i} />
+          ))}
+      </Stack>
+    );
+  }
+  const onFileReject = (details: FileUploadFileRejectDetails) => {
+    console.log(details);
+  };
+  console.log({ errors });
 
   if (!mounted) return null;
   return (
@@ -88,7 +114,7 @@ export const CreateDocumentModal = () => {
                 alignItems={'center'}
               >
                 <Dialog.Title color={colors.black} fontSize={30}>
-                  Create a new project
+                  Upload document(s)
                 </Dialog.Title>
                 <IconButton onClick={onCancel} borderRadius={72}>
                   <CloseButton bg={colors.white} color={colors.black} />
@@ -100,91 +126,43 @@ export const CreateDocumentModal = () => {
                 <FormInput
                   register={register}
                   name="name"
-                  label="Project name"
+                  label="File name"
                   errors={errors}
-                  placeholder="My project"
+                  placeholder="247lab..."
                   required
                   disabled={isSubmitting}
                 />
                 <Controller
-                  name="image"
+                  name="documentUrl"
                   control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <div className="flex flex-col gap-y">
-                      <div className="flex items-center gap-x-5">
-                        {value ? (
-                          <Image
-                            objectFit={'cover'}
-                            width={'72px'}
-                            height={'72px'}
-                            borderRadius={72}
-                            alt="logo"
-                            src={
-                              value instanceof File
-                                ? URL.createObjectURL(value)
-                                : value
-                            }
-                            className=" object-cover"
-                          />
-                        ) : (
-                          <IconPhotoCirclePlus
-                            className="size-[72px]"
-                            color={colors.purple}
-                          />
-                        )}
-                        <div className="flex flex-col">
-                          <p className="text-sm text-black">Project icon</p>
-                          <p className="text-sm text-[#ccc]">
-                            JPG, PNG, JPEG, SVG, up to 1MB
-                          </p>
-                          <input
-                            ref={inputRef}
-                            type="file"
-                            className="hidden"
-                            accept=".jpg, .png, .jpeg, .svg"
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) {
-                                onChange(file);
-                              }
-                            }}
-                            disabled={isSubmitting}
-                          />
-                          {value ? (
-                            <Button
-                              color={'red'}
-                              borderColor={'red'}
-                              borderWidth={1}
-                              variant={'solid'}
-                              size={'xs'}
-                              onClick={() => {
-                                onChange(null);
-                                if (inputRef.current) {
-                                  inputRef.current.value = '';
-                                }
-                              }}
-                              width={'fit-content'}
-                              mt={2}
-                            >
-                              Remove image
-                            </Button>
-                          ) : (
-                            <Button
-                              color={colors.purple}
-                              borderColor={colors.purple}
-                              borderWidth={1}
-                              variant={'solid'}
-                              size={'xs'}
-                              onClick={() => inputRef?.current?.click()}
-                              width={'fit-content'}
-                              mt={2}
-                            >
-                              Upload image
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+                  render={({ field: { onChange } }) => (
+                    <FileUpload.Root
+                      maxW="xl"
+                      alignItems="stretch"
+                      maxFiles={1}
+                      maxFileSize={5242880}
+                      accept={[
+                        'application/pdf',
+                        'application/msword',
+                        'application/docx',
+                      ]}
+                      onFileAccept={(files) => {
+                        onChange(files.files[0]);
+                      }}
+                      onFileReject={onFileReject}
+                    >
+                      <FileUpload.HiddenInput />
+                      <FileUpload.Dropzone>
+                        <Icon size="md" color="fg.muted">
+                          <LuUpload />
+                        </Icon>
+                        <FileUpload.DropzoneContent>
+                          <Box>Drag and drop files here</Box>
+                          <Box color="fg.muted">.pdf, .msword up to 5MB</Box>
+                        </FileUpload.DropzoneContent>
+                      </FileUpload.Dropzone>
+                      <FileUpload.List clearable showSize />
+                    </FileUpload.Root>
                   )}
                 />
               </Stack>
@@ -208,7 +186,7 @@ export const CreateDocumentModal = () => {
                 loading={isSubmitting}
                 width={'fit-content'}
               >
-                Create
+                Upload
               </Button>
             </Dialog.Footer>
           </Dialog.Content>

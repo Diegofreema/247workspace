@@ -57,7 +57,10 @@ export const DocumentTable = ({ documents, total }: Props) => {
                   {format(item.$createdAt, 'PPP')}
                 </Table.Cell>
                 <DocumentAction documentId="1">
-                  <EllipsisVertical className="text-black size-4" />
+                  <EllipsisVertical
+                    className="text-black size-4 cursor-pointer"
+                    size={30}
+                  />
                 </DocumentAction>
               </Table.Row>
             )}
