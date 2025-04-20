@@ -120,5 +120,5 @@ export type DocumentType = Models.Document & {
   documentUrl: string;
   workspaceId: string;
   projectId: string;
-  userId: string;
+  uploadedBy: string;
 };

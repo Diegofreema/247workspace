@@ -5,7 +5,11 @@ import { IconSearch } from '@tabler/icons-react';
 import { Input } from '@chakra-ui/react';
 import { colors } from '@/constants';
 
-export const SearchInput = () => {
+type Props = {
+  placeholder?: string;
+};
+
+export const SearchInput = ({ placeholder = 'Search...' }: Props) => {
   return (
     <FlexBox
       alignItems={'center'}
@@ -22,7 +26,7 @@ export const SearchInput = () => {
         flex={1}
         borderColor={'transparent'}
         focusRingColor={'transparent'}
-        placeholder="Search..."
+        placeholder={placeholder}
         color={colors.black}
       />
     </FlexBox>
