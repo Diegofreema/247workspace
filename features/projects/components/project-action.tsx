@@ -34,7 +34,14 @@ export const ProjectAction = ({ children, projectId }: Props) => {
   const router = useRouter();
   const isLoading = isPending;
   const onDelete = async () => {
-    await mutateAsync({ param: { projectId } });
+    await mutateAsync(
+      { param: { projectId } },
+      {
+        onSuccess: () => {
+          setOpen(false);
+        },
+      }
+    );
   };
 
   const onOpenProject = () => {

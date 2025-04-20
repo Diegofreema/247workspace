@@ -28,6 +28,9 @@ export const useDeleteProject = () => {
     onSuccess: ({ data }) => {
       queryClient.invalidateQueries({ queryKey: ['projects'] });
       queryClient.invalidateQueries({ queryKey: ['project', data.$id] });
+      queryClient.invalidateQueries({
+        queryKey: ['project-with-tasks'],
+      });
 
       toaster.create({
         title: 'Success',
