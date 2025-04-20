@@ -21,7 +21,9 @@ export const createTaskSchema = z.object({
     required_error: 'Priority is required',
     message: 'Priority is required',
   }),
-  dueDate: z.coerce.date(),
+  dueDate: z.coerce
+    .date()
+    .min(new Date(), { message: 'Date must be at least a day from now' }),
 });
 export const editTaskSchema = z.object({
   name: z

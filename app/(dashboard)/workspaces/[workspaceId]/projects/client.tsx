@@ -13,7 +13,7 @@ const limit = 5;
 export const AllProjectPage = () => {
   const workspaceId = useWorkspaceId();
   const { offset, setOffset } = useOffsetProject();
-  const { data, isError, isPending } = useGetProjectsWithTasks({
+  const { data, isError, isPending, isRefetching } = useGetProjectsWithTasks({
     workspaceId,
     offset: offset.toString(),
   });
@@ -29,7 +29,9 @@ export const AllProjectPage = () => {
       <AllProjects projects={data.documents} />
       {isNextPage && (
         <FlexBox justifyContent={'center'} width={'full'} mt={10}>
-          <Button onClick={onClick}>Load more</Button>
+          <Button onClick={onClick} disabled={isRefetching}>
+            Load more
+          </Button>
         </FlexBox>
       )}
     </div>
