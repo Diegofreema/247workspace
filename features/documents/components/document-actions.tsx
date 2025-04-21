@@ -6,7 +6,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { colors } from '@/constants';
-import { ExternalLink, File, Pencil, Plus, Trash } from 'lucide-react';
+import {
+  Download,
+  ExternalLink,
+  File,
+  Pencil,
+  Plus,
+  Trash,
+} from 'lucide-react';
 import { useState } from 'react';
 
 import { useEditProjectModalController } from '@/lib/nuqs/use-edit-project-modal';
@@ -35,16 +42,12 @@ export const DocumentAction = ({ children, documentId }: Props) => {
   const isLoading = false;
   const onDelete = async () => {};
 
-  const onOpenProject = () => {
-    router.push(`/workspaces/${workspaceId}/projects/${documentId}`);
-  };
+  const onOpenProject = () => {};
 
   const onCreate = () => {
     createTask();
   };
-  const onOpenDocuments = () => {
-    router.push(`/workspaces/${workspaceId}/projects/${documentId}/documents`);
-  };
+  const onOpenDocuments = () => {};
   return (
     <>
       <ConfirmDialog
@@ -52,8 +55,8 @@ export const DocumentAction = ({ children, documentId }: Props) => {
         setIsOpen={setOpen}
         onCancel={() => setOpen(false)}
         isSubmitting={isLoading}
-        title="Delete project"
-        subtitle="Are you sure you want to delete this project?, this action is irreversible."
+        title="Delete document"
+        subtitle="Are you sure you want to delete this document?, this action is irreversible."
         confirmButtonText="Delete"
         onConfirm={onDelete}
         btnColor={colors.red}
@@ -63,36 +66,20 @@ export const DocumentAction = ({ children, documentId }: Props) => {
           <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48 text-black bg-white">
             <DropdownMenuItem
-              onClick={onOpenProject}
-              disabled={isLoading}
-              className="font-medium p-[10px]"
-            >
-              <ExternalLink className="size-4 mr-2 stroke-2" />
-              Open project
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => open(documentId)}
-              disabled={isLoading}
-              className="font-medium p-[10px]"
-            >
-              <Pencil className="size-4 mr-2 stroke-2" />
-              Edit project
-            </DropdownMenuItem>
-            <DropdownMenuItem
               onClick={onOpenDocuments}
               disabled={isLoading}
               className="font-medium p-[10px]"
             >
               <File className="size-4 mr-2 stroke-2" />
-              View documents
+              View
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={onCreate}
               disabled={isLoading}
               className="font-medium p-[10px]"
             >
-              <Plus className="size-4 mr-2 stroke-2" />
-              Create task
+              <Download className="size-4 mr-2 stroke-2" />
+              Download
             </DropdownMenuItem>
 
             <DropdownMenuItem
@@ -101,7 +88,7 @@ export const DocumentAction = ({ children, documentId }: Props) => {
               className="text-amber-700 focus:text-amber-700 font-medium p-[10px]"
             >
               <Trash className="size-4 mr-2 stroke-2" />
-              Delete project
+              Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

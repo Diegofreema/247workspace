@@ -7,6 +7,7 @@ import {
   For,
   Heading,
   IconButton,
+  Image,
   Pagination,
   Stack,
   Table,
@@ -51,17 +52,32 @@ export const DocumentTable = ({ documents, total }: Props) => {
           >
             {(item) => (
               <Table.Row key={item.$id}>
-                <Table.Cell color={colors.black}>{item.name}</Table.Cell>
+                <Table.Cell
+                  color={colors.black}
+                  display={'flex'}
+                  alignItems={'center'}
+                >
+                  <Image
+                    alt="png"
+                    src={'/pdf.png'}
+                    width={'30px'}
+                    height={'30px'}
+                    objectFit={'contain'}
+                  />
+                  {item.name}
+                </Table.Cell>
                 <Table.Cell color={colors.black}>{item.uploadedBy}</Table.Cell>
                 <Table.Cell color={colors.black}>
                   {format(item.$createdAt, 'PPP')}
                 </Table.Cell>
-                <DocumentAction documentId="1">
-                  <EllipsisVertical
-                    className="text-black size-4 cursor-pointer"
-                    size={30}
-                  />
-                </DocumentAction>
+                <Table.Cell color={colors.black}>
+                  <DocumentAction documentId="1">
+                    <EllipsisVertical
+                      className="text-black size-4 cursor-pointer"
+                      size={30}
+                    />
+                  </DocumentAction>
+                </Table.Cell>
               </Table.Row>
             )}
           </For>
