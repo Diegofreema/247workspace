@@ -26,7 +26,6 @@ type Props = {
 export const DocumentTable = ({ documents, total }: Props) => {
   return (
     <Stack width="full" gap="5">
-      <Heading size="xl">Products</Heading>
       <Table.Root size="sm" variant="outline">
         <Table.Header>
           <Table.Row bg={colors.lightGrey}>
@@ -71,7 +70,7 @@ export const DocumentTable = ({ documents, total }: Props) => {
                   {format(item.$createdAt, 'PPP')}
                 </Table.Cell>
                 <Table.Cell color={colors.black}>
-                  <DocumentAction documentId="1">
+                  <DocumentAction documentId={item.$id} url={item.documentUrl}>
                     <EllipsisVertical
                       className="text-black size-4 cursor-pointer"
                       size={30}

@@ -4,6 +4,7 @@ import { InferRequestType, InferResponseType } from 'hono';
 import { toaster } from '@/components/ui/toaster';
 import { client } from '@/lib/rpc';
 import { useTransitionRouter } from 'next-view-transitions';
+import { AppwriteException } from 'node-appwrite';
 
 type ResponseType = InferResponseType<
   (typeof client.api.documents)['$post'],
@@ -34,7 +35,21 @@ export const useUploadDocument = () => {
     },
     onError: (error) => {
       console.log(error);
-
+      if (error instanceof AppwriteException) {
+        let errorMessage = error.message;
+        if (error.type === 'document_invalid_structure') {
+          errorMessage = 'Missing a required field';
+        }
+        if (error.type === 'storage_invalid_file_size') {
+          errorMessage = 'File size is too large, max 1mb';
+        }
+        toaster.create({
+          title: 'Error',
+          description: errorMessage,
+          type: 'error',
+        });
+        return;
+      }
       toaster.create({
         title: 'Something went wrong',
         description: 'Please try again',

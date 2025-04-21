@@ -18,9 +18,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useCurrentUser } from '@/features/auth/api/use-current-user';
 import { useUploadDocument } from '@/features/documents/api/use-create-document';
 import { createDocumentSchema } from '@/features/documents/schema';
+import { useProjectId } from '@/hooks/useProjectId';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { useCreateDocumentModalController } from '@/lib/nuqs/use-create-document';
-import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { LuUpload } from 'react-icons/lu';
 import { z } from 'zod';
@@ -28,21 +28,16 @@ import { Button } from '../custom/custom-button';
 import { FlexBox } from '../custom/flex-box';
 import { FormInput } from '../form/form-input';
 import { ReusableSkeleton } from '../skeletons/link-skeleton';
-import { useProjectId } from '@/hooks/useProjectId';
+import { useEffect } from 'react';
 
 export const CreateDocumentModal = () => {
   const { projectId, close } = useCreateDocumentModalController();
   const projectIdString = useProjectId();
   const { data, isPending, isError } = useCurrentUser();
-  const [mounted, setMounted] = useState(false);
+
   const workspaceId = useWorkspaceId();
 
   const { mutateAsync } = useUploadDocument();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  console.log(data?.name);
 
   const {
     handleSubmit,
@@ -50,6 +45,8 @@ export const CreateDocumentModal = () => {
     register,
     reset,
     control,
+
+    setValue,
   } = useForm<z.infer<typeof createDocumentSchema>>({
     defaultValues: {
       name: '',
@@ -61,6 +58,13 @@ export const CreateDocumentModal = () => {
     resolver: zodResolver(createDocumentSchema),
   });
 
+  useEffect(() => {
+    if (data && workspaceId && projectIdString) {
+      setValue('uploadedBy', data?.name);
+      setValue('workspaceId', workspaceId);
+      setValue('projectId', projectIdString);
+    }
+  }, [data, setValue, workspaceId, projectIdString]);
   const onSubmit = async (data: z.infer<typeof createDocumentSchema>) => {
     const finalValues = {
       ...data,
@@ -93,9 +97,7 @@ export const CreateDocumentModal = () => {
   const onFileReject = (details: FileUploadFileRejectDetails) => {
     console.log(details);
   };
-  console.log({ errors });
 
-  if (!mounted) return null;
   return (
     <Dialog.Root
       placement="center"
@@ -144,9 +146,13 @@ export const CreateDocumentModal = () => {
                       accept={[
                         'application/pdf',
                         'application/msword',
-                        'application/docx',
+                        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                       ]}
                       onFileAccept={(files) => {
+                        console.log(files.files[0].type);
+
                         onChange(files.files[0]);
                       }}
                       onFileReject={onFileReject}
@@ -158,7 +164,9 @@ export const CreateDocumentModal = () => {
                         </Icon>
                         <FileUpload.DropzoneContent>
                           <Box>Drag and drop files here</Box>
-                          <Box color="fg.muted">.pdf, .msword up to 5MB</Box>
+                          <Box color="fg.muted">
+                            .pdf, .msword, .docx up to 5MB
+                          </Box>
                         </FileUpload.DropzoneContent>
                       </FileUpload.Dropzone>
                       <FileUpload.List clearable showSize />

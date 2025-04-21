@@ -1,9 +1,4 @@
-import { CreateWorkspaceForm } from '@/components/form/create-workspace-form';
-import { CreateDocumentModal } from '@/components/modals/create-document-modal';
-import { CreateProjectModal } from '@/components/modals/create-project-modal';
-import { CreateTaskModal } from '@/components/modals/create-task-modal';
-import { EditProjectModal } from '@/components/modals/edit-project-modal';
-import { EditTaskModal } from '@/components/modals/edit-task-modal';
+import { AllModals } from '@/components/modals/all-modals';
 import { DashboardSidebar } from '@/components/navigation/dashboard-sidebar';
 import { MobileSidebar } from '@/components/navigation/mobile-sidebar';
 import { NavigationHeader } from '@/components/navigation/navigation-header';
@@ -16,12 +11,7 @@ type Props = {
 const DashboardLayout = ({ children }: Props) => {
   return (
     <Box className="min-h-screen bg-gray-200 flex relative">
-      <CreateWorkspaceForm />
-      <CreateProjectModal />
-      <CreateTaskModal />
-      <EditTaskModal />
-      <EditProjectModal />
-      <CreateDocumentModal />
+      <AllModals />
       <Box
         position="fixed"
         left={0}

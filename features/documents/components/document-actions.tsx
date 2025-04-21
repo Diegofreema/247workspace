@@ -6,37 +6,26 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { colors } from '@/constants';
-import {
-  Download,
-  ExternalLink,
-  File,
-  Pencil,
-  Plus,
-  Trash,
-} from 'lucide-react';
+import { Download, File, Trash } from 'lucide-react';
 import { useState } from 'react';
 
-import { useEditProjectModalController } from '@/lib/nuqs/use-edit-project-modal';
-
-import {
-  useCreateTaskModalController,
-  useSetProjectId,
-} from '@/lib/nuqs/use-create-task';
-import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { useRouter } from 'next/navigation';
+import { useWorkspaceId } from '@/hooks/useWorkspaceId';
+import { useProjectId } from '@/hooks/useProjectId';
+import { Link } from 'next-view-transitions';
 
 type Props = {
   documentId: string;
 
   children: React.ReactNode;
+  url: string;
 };
 
-export const DocumentAction = ({ children, documentId }: Props) => {
+export const DocumentAction = ({ children, documentId, url }: Props) => {
   const workspaceId = useWorkspaceId();
+  const projectId = useProjectId();
+  console.log(url);
 
-  const { open } = useEditProjectModalController();
-  const { open: createTask } = useCreateTaskModalController();
-  const { onSetProjectId } = useSetProjectId();
   const [isOpen, setOpen] = useState(false);
   const router = useRouter();
   const isLoading = false;
@@ -44,10 +33,11 @@ export const DocumentAction = ({ children, documentId }: Props) => {
 
   const onOpenProject = () => {};
 
-  const onCreate = () => {
-    createTask();
+  const onDownload = () => {};
+  const onOpenDocuments = () => {
+    router.push(url);
   };
-  const onOpenDocuments = () => {};
+
   return (
     <>
       <ConfirmDialog
@@ -66,15 +56,17 @@ export const DocumentAction = ({ children, documentId }: Props) => {
           <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48 text-black bg-white">
             <DropdownMenuItem
-              onClick={onOpenDocuments}
               disabled={isLoading}
               className="font-medium p-[10px]"
+              asChild
             >
-              <File className="size-4 mr-2 stroke-2" />
-              View
+              <Link href={url} target="_blank">
+                <File className="size-4 mr-2 stroke-2" />
+                View
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={onCreate}
+              onClick={onDownload}
               disabled={isLoading}
               className="font-medium p-[10px]"
             >

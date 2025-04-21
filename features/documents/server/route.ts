@@ -3,7 +3,7 @@ import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { createDocumentSchema } from '../schema';
 import { z } from 'zod';
-import { DATABASE_ID, DOCUMENT_ID, IMAGES_BUCKET_ID } from '@/config';
+import { DATABASE_ID, DOCUMENT_ID, IMAGES_BUCKET_ID, VIEW_URL } from '@/config';
 import { AppwriteException, ID, Query } from 'node-appwrite';
 import { DocumentType } from '@/types';
 import { getMember } from '@/features/members/utils';
@@ -37,7 +37,8 @@ const app = new Hono()
         c.req.valid('form');
 
       try {
-        let fileId: string | undefined;
+        let link: string | undefined;
+
         if (documentUrl instanceof File) {
           const file = await storage.createFile(
             IMAGES_BUCKET_ID,
@@ -45,7 +46,7 @@ const app = new Hono()
             documentUrl
           );
 
-          fileId = file.$id;
+          link = `${VIEW_URL}/${IMAGES_BUCKET_ID}/files/${file.$id}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT}&mode=admin`;
         }
 
         const member = await getMember({
@@ -69,10 +70,10 @@ const app = new Hono()
           ID.unique(),
           {
             name,
-            documentId: fileId,
             workspaceId,
             projectId,
             uploadedBy,
+            documentUrl: link,
           }
         );
 
@@ -80,7 +81,7 @@ const app = new Hono()
           data: document,
         });
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         return c.json(
           {
             error: 'Something went wrong, please try again',
@@ -88,30 +89,33 @@ const app = new Hono()
           500
         );
       }
-      // console.log(error);
-
-      // if (error instanceof AppwriteException) {
-      //   let errorMessage = error.message;
-      //   if (error.type === 'document_invalid_structure') {
-      //     errorMessage = 'Missing a required field';
-      //   }
-      //   if (error.type === 'storage_invalid_file_size') {
-      //     errorMessage = 'File size is too large, max 1mb';
-      //   }
-      //   return c.json(
-      //     {
-      //       error: errorMessage,
-      //     },
-      //     400
-      //   );
-      // }
-      // return c.json(
-      //   {
-      //     error: 'Something went wrong, please try again',
-      //   },
-      //   500
-      // );
     }
-  );
+  )
+  .get('/:documentId', sessionMiddleware, async (c) => {
+    const databases = c.get('databases');
+    const storage = c.get('storage');
+    const { documentId } = c.req.param();
+
+    const document = await databases.getDocument<DocumentType>(
+      DATABASE_ID,
+      DOCUMENT_ID,
+      documentId
+    );
+
+    const arrayBufferToBase64 = await storage.getFileView(
+      IMAGES_BUCKET_ID,
+      document.documentId
+    );
+
+    const documentFile = `data:image/png;base64,${Buffer.from(arrayBufferToBase64).toString('base64')}`;
+    console.log(documentFile);
+
+    return c.json({
+      data: {
+        ...document,
+        documentFile,
+      },
+    });
+  });
 
 export default app;

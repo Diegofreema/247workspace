@@ -17,17 +17,17 @@ import { useCreateProject } from '@/features/projects/api/use-create-project';
 import { createProjectSchema } from '@/features/projects/schema';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { useCreateProjectModalController } from '@/lib/nuqs/use-create-project';
-import { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '../custom/custom-button';
 import { FlexBox } from '../custom/flex-box';
 import { FormInput } from '../form/form-input';
-import { usePathname } from 'next/navigation';
 
 export const CreateProjectModal = () => {
   const { isOpen, setIsOpen, close } = useCreateProjectModalController();
-  const [mounted, setMounted] = useState(false);
+
   const workspaceId = useWorkspaceId();
   const pathname = usePathname();
   const isProjectPage = pathname.split('/')[3] === 'projects';
@@ -35,9 +35,7 @@ export const CreateProjectModal = () => {
   const { mutateAsync } = useCreateProject(isProjectPage);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -68,7 +66,6 @@ export const CreateProjectModal = () => {
     close();
   };
 
-  if (!mounted) return null;
   return (
     <Dialog.Root
       placement="center"
