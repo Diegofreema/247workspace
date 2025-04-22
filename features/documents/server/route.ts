@@ -38,14 +38,14 @@ const app = new Hono()
 
       try {
         let link: string | undefined;
-
+        let id: string | undefined;
         if (documentUrl instanceof File) {
           const file = await storage.createFile(
             IMAGES_BUCKET_ID,
             ID.unique(),
             documentUrl
           );
-
+          id = file.$id;
           link = `${VIEW_URL}/${IMAGES_BUCKET_ID}/files/${file.$id}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT}&mode=admin`;
         }
 
@@ -74,6 +74,7 @@ const app = new Hono()
             projectId,
             uploadedBy,
             documentUrl: link,
+            fileId: id,
           }
         );
 
@@ -93,7 +94,7 @@ const app = new Hono()
   )
   .get('/:documentId', sessionMiddleware, async (c) => {
     const databases = c.get('databases');
-    const storage = c.get('storage');
+
     const { documentId } = c.req.param();
 
     const document = await databases.getDocument<DocumentType>(
@@ -101,20 +102,57 @@ const app = new Hono()
       DOCUMENT_ID,
       documentId
     );
-
-    const arrayBufferToBase64 = await storage.getFileView(
-      IMAGES_BUCKET_ID,
-      document.documentId
-    );
-
-    const documentFile = `data:image/png;base64,${Buffer.from(arrayBufferToBase64).toString('base64')}`;
-    console.log(documentFile);
-
+    if (!document) {
+      return c.json(
+        {
+          error: 'Document not found',
+        },
+        404
+      );
+    }
     return c.json({
       data: {
-        ...document,
-        documentFile,
+        document,
       },
+    });
+  })
+  .delete('/:documentId', sessionMiddleware, async (c) => {
+    const databases = c.get('databases');
+    const storage = c.get('storage');
+    const user = c.get('user');
+    const { documentId } = c.req.param();
+    const document = await databases.getDocument<DocumentType>(
+      DATABASE_ID,
+      DOCUMENT_ID,
+      documentId
+    );
+
+    if (!document) {
+      return c.json(
+        {
+          error: 'Document not found',
+        },
+        404
+      );
+    }
+
+    const member = await getMember({
+      databases,
+      userId: user.$id,
+      workspaceId: document.workspaceId,
+    });
+    if (!member) {
+      return c.json(
+        {
+          error: 'Unauthorized',
+        },
+        401
+      );
+    }
+    await databases.deleteDocument(DATABASE_ID, DOCUMENT_ID, documentId);
+    await storage.deleteFile(IMAGES_BUCKET_ID, documentId);
+    return c.json({
+      data: documentId,
     });
   });
 

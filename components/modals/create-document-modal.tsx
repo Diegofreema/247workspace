@@ -65,6 +65,7 @@ export const CreateDocumentModal = () => {
       setValue('projectId', projectIdString);
     }
   }, [data, setValue, workspaceId, projectIdString]);
+
   const onSubmit = async (data: z.infer<typeof createDocumentSchema>) => {
     const finalValues = {
       ...data,
@@ -143,13 +144,7 @@ export const CreateDocumentModal = () => {
                       alignItems="stretch"
                       maxFiles={1}
                       maxFileSize={5242880}
-                      accept={[
-                        'application/pdf',
-                        'application/msword',
-                        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                      ]}
+                      accept={['application/pdf']}
                       onFileAccept={(files) => {
                         console.log(files.files[0].type);
 
@@ -164,9 +159,7 @@ export const CreateDocumentModal = () => {
                         </Icon>
                         <FileUpload.DropzoneContent>
                           <Box>Drag and drop files here</Box>
-                          <Box color="fg.muted">
-                            .pdf, .msword, .docx up to 5MB
-                          </Box>
+                          <Box color="fg.muted">.pdf up to 5MB</Box>
                         </FileUpload.DropzoneContent>
                       </FileUpload.Dropzone>
                       <FileUpload.List clearable showSize />

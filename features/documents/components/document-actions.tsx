@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { useProjectId } from '@/hooks/useProjectId';
 import { Link } from 'next-view-transitions';
+import { useDeleteDocument } from '../api/use-delete';
 
 type Props = {
   documentId: string;
@@ -24,18 +25,29 @@ type Props = {
 export const DocumentAction = ({ children, documentId, url }: Props) => {
   const workspaceId = useWorkspaceId();
   const projectId = useProjectId();
-  console.log(url);
-
+  //   console.log(url);
+  const { mutateAsync, isPending } = useDeleteDocument();
   const [isOpen, setOpen] = useState(false);
   const router = useRouter();
-  const isLoading = false;
-  const onDelete = async () => {};
+  const isLoading = isPending;
+  const onDelete = async () => {
+    await mutateAsync(
+      { param: { documentId } },
+      {
+        onSuccess: () => {
+          setOpen(false);
+        },
+      }
+    );
+  };
 
   const onOpenProject = () => {};
 
   const onDownload = () => {};
   const onOpenDocuments = () => {
-    router.push(url);
+    router.push(
+      `/workspaces/${workspaceId}/projects/${projectId}/documents/${documentId}`
+    );
   };
 
   return (
@@ -55,23 +67,24 @@ export const DocumentAction = ({ children, documentId, url }: Props) => {
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48 text-black bg-white">
-            <DropdownMenuItem
+            {/* <DropdownMenuItem
               disabled={isLoading}
               className="font-medium p-[10px]"
-              asChild
+              onClick={onOpenDocuments}
             >
-              <Link href={url} target="_blank">
-                <File className="size-4 mr-2 stroke-2" />
-                View
-              </Link>
-            </DropdownMenuItem>
+              
+              View
+            </DropdownMenuItem> */}
             <DropdownMenuItem
               onClick={onDownload}
               disabled={isLoading}
               className="font-medium p-[10px]"
+              asChild
             >
-              <Download className="size-4 mr-2 stroke-2" />
-              Download
+              <Link href={url} download target="_blank">
+                <File className="size-4 mr-2 stroke-2" />
+                View
+              </Link>
             </DropdownMenuItem>
 
             <DropdownMenuItem
