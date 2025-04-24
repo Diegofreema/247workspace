@@ -26,7 +26,13 @@ export const ErrorComponent = ({ message, reset }: Props) => {
         objectFit="cover"
       />
       <Title color={colors.black}>Something went wrong!</Title>
-      <CustomText color={colors.grey}>{message}</CustomText>
+      <CustomText
+        color={colors.grey}
+        width={{ base: '90%', md: '70%', lg: '50%' }}
+        textAlign={'center'}
+      >
+        {message}
+      </CustomText>
       <Button onClick={reset} px={2} bg={colors.purple} width={'fit'}>
         Try again
       </Button>
