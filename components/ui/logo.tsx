@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
 type Props = {
@@ -12,7 +13,7 @@ export const Logo = ({ isPurple = false, className }: Props) => {
       width={250}
       height={100}
       alt={'logo'}
-      className={className}
+      className={cn('object-contain', className)}
     />
   );
 };
