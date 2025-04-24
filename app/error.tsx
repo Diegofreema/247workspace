@@ -10,5 +10,9 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  return <ErrorComponent message={error.message} reset={reset} />;
+  return (
+    <div className="min-h-screen bg-white justify-center items-center">
+      <ErrorComponent message={error.message} reset={reset} />
+    </div>
+  );
 }
