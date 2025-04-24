@@ -51,7 +51,7 @@ export const JoinCard = ({ inviteCode, name }: Props) => {
         type: 'info',
         duration: 3000,
       });
-      router.replace('/sign-in');
+      router.replace('/sign-up');
     }
   }
   return (

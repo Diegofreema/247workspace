@@ -27,7 +27,7 @@ export const useLogout = () => {
         description: 'Logout Successful ',
         type: 'success',
       });
-      router.replace('/sign-in');
+      router.replace('/sign-up');
     },
     onError: () => {
       toaster.create({

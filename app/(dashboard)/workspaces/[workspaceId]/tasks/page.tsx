@@ -7,9 +7,9 @@ import { Suspense } from 'react';
 
 const page = async () => {
   const user = await getLoggedInUser();
-  if (!user) redirect('/sign-in');
+  if (!user) redirect('/sign-up');
   const profile = await getProfile(user.$id);
-  if (!profile) redirect('/sign-in');
+  if (!profile) redirect('/sign-up');
 
   return (
     <WrapperWithPadding className="bg-lightGrey">

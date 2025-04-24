@@ -12,7 +12,7 @@ type Props = {
 const WorkspaceSettingsPage = async ({ params }: Props) => {
   const user = await getLoggedInUser();
 
-  if (!user) redirect('/sign-in');
+  if (!user) redirect('/sign-up');
   const initialValues = await getWorkspace({ workspaceId: params.workspaceId });
   if (!initialValues) {
     return notFound();

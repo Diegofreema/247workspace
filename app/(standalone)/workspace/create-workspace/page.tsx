@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 const CreateWorkspacePage = async () => {
   const user = await getLoggedInUser();
 
-  if (!user) redirect('/sign-in');
+  if (!user) redirect('/sign-up');
   return (
     <div>
       <CreateWorkspaceCard />

@@ -6,7 +6,7 @@ import { TaskIdClient } from './client';
 const TaskIdPage = async () => {
   const user = await getLoggedInUser();
 
-  if (!user) redirect('/sign-in');
+  if (!user) redirect('/sign-up');
   return <TaskIdClient />;
 };
 

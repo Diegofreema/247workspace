@@ -10,7 +10,7 @@ import { getProfile } from '@/features/workspaces/queries';
 const Onboard = async () => {
   const user = await getLoggedInUser();
 
-  if (!user) redirect('/sign-in');
+  if (!user) redirect('/sign-up');
   console.log(user);
 
   const profile = await getProfile(user?.$id);
