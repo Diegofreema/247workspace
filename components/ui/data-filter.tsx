@@ -41,7 +41,11 @@ export const DataFilter = ({ hideProjectFilter }: Props) => {
     refetchMembers();
   };
   if (isError) {
-    return <ErrorComponent message="Failed to fetch data" reset={retry} />;
+    return (
+      <div className="w-full flex justify-center items-center">
+        <ErrorComponent message="Failed to fetch data" reset={retry} />
+      </div>
+    );
   }
 
   if (isLoading) {
