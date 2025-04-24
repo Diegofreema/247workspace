@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 const WorkspaceSettingsPage = async () => {
   const user = await getLoggedInUser();
 
-  if (!user) redirect('/sign-up');
+  if (!user) redirect('/signup');
 
   return <div className="text-black">settings</div>;
 };

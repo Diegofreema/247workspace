@@ -13,7 +13,7 @@ type Props = {
 const page = async ({ params }: Props) => {
   const user = await getLoggedInUser();
 
-  if (!user) redirect('/sign-up');
+  if (!user) redirect('/signup');
   const project = await getProject({ projectId: params.projectId });
   const profile = await getProfile(user.$id);
 

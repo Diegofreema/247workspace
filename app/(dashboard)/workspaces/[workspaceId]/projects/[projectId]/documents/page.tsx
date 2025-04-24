@@ -6,7 +6,7 @@ import { DocumentClient } from './client';
 
 const DocumentPage = async () => {
   const user = await getLoggedInUser();
-  if (!user) redirect('/sign-up');
+  if (!user) redirect('/signup');
   return (
     <div>
       <Suspense fallback={null}>
