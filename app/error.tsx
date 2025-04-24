@@ -11,7 +11,7 @@ export default function Error({
   reset: () => void;
 }) {
   return (
-    <div className="min-h-screen bg-white justify-center items-center">
+    <div className="min-h-screen bg-white justify-center items-center flex">
       <ErrorComponent message={error.message} reset={reset} />
     </div>
   );
