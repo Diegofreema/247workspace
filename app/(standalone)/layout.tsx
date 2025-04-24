@@ -2,7 +2,8 @@ import { FlexBox } from '@/components/custom/flex-box';
 import { UserAvatarAction } from '@/components/navigation/user-avatar-action';
 import { Logo } from '@/components/ui/logo';
 import { colors } from '@/constants';
-import React from 'react';
+import { SkeletonCircle } from '@chakra-ui/react';
+import React, { Suspense } from 'react';
 
 type Props = {
   children: React.ReactNode;
@@ -18,7 +19,9 @@ const StandaloneLayout = ({ children }: Props) => {
         p={4}
       >
         <Logo isPurple />
-        <UserAvatarAction />
+        <Suspense fallback={<SkeletonCircle />}>
+          <UserAvatarAction />
+        </Suspense>
       </FlexBox>
       <FlexBox flexDir={'column'} minH={'100Vh'} alignItems={'center'}>
         {children}

@@ -6,6 +6,7 @@ import { ReusableSkeleton } from '../skeletons/link-skeleton';
 import { SearchInput } from './search-input';
 import { SidebarBtn } from './sidebar-btn';
 import { UserAvatarAction } from './user-avatar-action';
+import { SkeletonCircle } from '@chakra-ui/react';
 
 export const NavigationHeader = () => {
   return (
@@ -28,7 +29,9 @@ export const NavigationHeader = () => {
           />
         </FlexBox>
       </Suspense>
-      <UserAvatarAction />
+      <Suspense fallback={<SkeletonCircle />}>
+        <UserAvatarAction />
+      </Suspense>
     </FlexBox>
   );
 };

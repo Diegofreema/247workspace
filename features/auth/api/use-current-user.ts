@@ -6,8 +6,8 @@ export const useCurrentUser = () => {
     queryKey: ['current-user'],
     queryFn: async () => {
       // TODO: check if user is logged in
-      const { user } = await getLoggedInUser();
-      return user;
+      const { user, profile } = await getLoggedInUser();
+      return { user, profile };
     },
   });
 };

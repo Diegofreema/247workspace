@@ -5,13 +5,20 @@ import { Button, Menu, Portal } from '@chakra-ui/react';
 import { LogoutBtn } from '../buttons/logout-button';
 import { CustomText } from '../custom/title';
 import { ProfileAvatar } from '../ui/profile-avatar';
+import { useTransitionRouter } from 'next-view-transitions';
+import { User } from 'lucide-react';
 
 type Props = {
   name: string;
   email: string;
   imageUrl?: string;
+  profileId: string;
 };
-export const AvatarMenu = ({ name, email, imageUrl }: Props) => {
+export const AvatarMenu = ({ name, email, imageUrl, profileId }: Props) => {
+  const router = useTransitionRouter();
+  const onGoToProfilePage = () => {
+    router.push(`/profile/${profileId}`);
+  };
   return (
     <Menu.Root>
       <Menu.Trigger asChild mr={2}>
@@ -54,7 +61,19 @@ export const AvatarMenu = ({ name, email, imageUrl }: Props) => {
               {name}
             </CustomText>
             <CustomText color={colors.grey}>{email}</CustomText>
-
+            <Button
+              variant="ghost"
+              size="sm"
+              width={'100%'}
+              alignSelf={'center'}
+              onClick={onGoToProfilePage}
+              className="group hover:bg-purple hover:text-white transition"
+            >
+              <User className="text-black group-hover:text-white" />{' '}
+              <CustomText className="text-black group-hover:text-white">
+                Profile
+              </CustomText>
+            </Button>
             <LogoutBtn />
           </Menu.Content>
         </Menu.Positioner>

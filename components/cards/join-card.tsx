@@ -40,7 +40,7 @@ export const JoinCard = ({ inviteCode, name }: Props) => {
     return <Loading />;
   }
 
-  if (!data) {
+  if (!data.user) {
     if (typeof window !== 'undefined') {
       localStorage.setItem(
         'redirectUrl',
