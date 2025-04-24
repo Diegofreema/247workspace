@@ -14,7 +14,7 @@ export async function signUpWithGithub() {
   const redirectUrl = await account.createOAuth2Token(
     OAuthProvider.Github,
     `${origin}/oauth`,
-    `${origin}/`
+    `${origin}/signup`
   );
 
   return redirect(redirectUrl);
@@ -27,7 +27,7 @@ export async function signUpWithGoogle() {
   const redirectUrl = await account.createOAuth2Token(
     OAuthProvider.Google,
     `${origin}/oauth`,
-    `${origin}/`
+    `${origin}/signup`
   );
 
   return redirect(redirectUrl);
