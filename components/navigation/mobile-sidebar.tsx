@@ -7,6 +7,8 @@ import { use$ } from '@legendapp/state/react';
 import { LogoutBtn } from '../buttons/logout-button';
 import { Logo } from '../ui/logo';
 import { MobileSidebarContent } from './mobile-sidebae-content';
+import { WorkspaceSwitcher } from './workspace-switcher';
+import { Projects } from '@/features/projects/components/projects';
 export const MobileSidebar = () => {
   const isOpen = use$(drawerStore$.isOpen);
   return (
@@ -23,7 +25,9 @@ export const MobileSidebar = () => {
               <Logo isPurple />
             </Drawer.Header>
             <Drawer.Body>
+              <WorkspaceSwitcher />
               <MobileSidebarContent />
+              <Projects />
             </Drawer.Body>
 
             <Drawer.CloseTrigger asChild>

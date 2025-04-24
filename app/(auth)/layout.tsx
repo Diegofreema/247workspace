@@ -1,12 +1,16 @@
 import React from 'react';
 import { Aside } from './_components/Aside';
 import { Box } from '@chakra-ui/react';
+import { getLoggedInUser } from '@/features/auth/queries';
+import { redirect } from 'next/navigation';
 
 type Props = {
   children: React.ReactNode;
 };
 
-const AuthLayout = ({ children }: Props) => {
+const AuthLayout = async ({ children }: Props) => {
+  const user = await getLoggedInUser();
+  if (user) redirect('/workspaces');
   return (
     <main className="min-h-screen bg-white">
       <Box className="mx-auto max-w-[95%] py-4 flex min-h-screen">
