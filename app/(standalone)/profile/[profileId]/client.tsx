@@ -1,3 +1,4 @@
+'use client';
 import { Loading } from '@/components/ui/loading';
 import { WrapperWithPadding } from '@/components/ui/wrapper-padding';
 import { useGetProfile } from '@/features/profile/api/use-get-profile';
