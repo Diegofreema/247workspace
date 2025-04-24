@@ -10,7 +10,7 @@ type Props = {
 
 const AuthLayout = async ({ children }: Props) => {
   const user = await getLoggedInUser();
-  if (user) redirect('/workspaces');
+  if (user) redirect('/');
   return (
     <main className="min-h-screen bg-white">
       <Box className="mx-auto max-w-[95%] py-4 flex min-h-screen">
