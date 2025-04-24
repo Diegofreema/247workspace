@@ -1,8 +1,6 @@
+import { Box } from '@chakra-ui/react';
 import React from 'react';
 import { Aside } from './_components/Aside';
-import { Box } from '@chakra-ui/react';
-import { getLoggedInUser } from '@/features/auth/queries';
-import { redirect } from 'next/navigation';
 
 type Props = {
   children: React.ReactNode;

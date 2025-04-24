@@ -2,9 +2,7 @@ import { AllModals } from '@/components/modals/all-modals';
 import { DashboardSidebar } from '@/components/navigation/dashboard-sidebar';
 import { MobileSidebar } from '@/components/navigation/mobile-sidebar';
 import { NavigationHeader } from '@/components/navigation/navigation-header';
-import { getLoggedInUser } from '@/features/auth/queries';
 import { Box } from '@chakra-ui/react';
-import { redirect } from 'next/navigation';
 
 type Props = {
   children: React.ReactNode;
