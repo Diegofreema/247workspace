@@ -11,9 +11,6 @@ type Props = {
 };
 
 const DashboardLayout = async ({ children }: Props) => {
-  const user = await getLoggedInUser();
-
-  if (!user) redirect('/signup');
   return (
     <Box className="min-h-screen bg-gray-200 flex relative">
       <AllModals />
