@@ -6,6 +6,7 @@ import members from '@/features/members/server/route';
 import projects from '@/features/projects/server/route';
 import tasks from '@/features/tasks/server/route';
 import documents from '@/features/documents/server/route';
+import profile from '@/features/profile/server/route';
 export const runtime = 'nodejs';
 
 const app = new Hono().basePath('/api');
@@ -16,7 +17,8 @@ const routes = app
   .route('/members', members)
   .route('/projects', projects)
   .route('/tasks', tasks)
-  .route('/documents', documents);
+  .route('/documents', documents)
+  .route('/profile', profile);
 
 export const GET = handle(app);
 export const POST = handle(app);
