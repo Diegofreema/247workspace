@@ -11,7 +11,7 @@ export const Loading = () => {
         justifyContent={'center'}
         alignItems={'center'}
       >
-        <LoaderCircle className="animate-spin text-purple" />
+        <LoaderCircle className="animate-spin size-10 text-purple" />
       </FlexBox>
       <Logo isPurple className="self-center mb-10" />
     </FlexBox>
