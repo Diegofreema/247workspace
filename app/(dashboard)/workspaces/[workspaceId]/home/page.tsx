@@ -5,7 +5,7 @@ import { HomeClient } from './client';
 import { WrapperWithPadding } from '@/components/ui/wrapper-padding';
 
 const WorkspacePage = async () => {
-  const user = await getLoggedInUser();
+  const { user } = await getLoggedInUser();
 
   if (!user) redirect('/signup');
   return (

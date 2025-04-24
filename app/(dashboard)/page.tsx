@@ -3,10 +3,10 @@ import { getProfile, getWorkspaces } from '@/features/workspaces/queries';
 import { redirect } from 'next/navigation';
 
 const WorkspaceHomePage = async () => {
-  const user = await getLoggedInUser();
+  const { user, profile } = await getLoggedInUser();
 
   if (!user) redirect('/signup');
-  const profile = await getProfile(user.$id);
+
   if (!profile) redirect('/onboard');
   const workspaces = await getWorkspaces();
 

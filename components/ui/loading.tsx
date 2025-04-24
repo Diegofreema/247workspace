@@ -1,7 +1,5 @@
-import React from 'react';
+import { LoaderCircle } from 'lucide-react';
 import { FlexBox } from '../custom/flex-box';
-import { Circles } from 'react-loader-spinner';
-import { colors } from '@/constants';
 import { Logo } from './logo';
 
 export const Loading = () => {
@@ -13,15 +11,7 @@ export const Loading = () => {
         justifyContent={'center'}
         alignItems={'center'}
       >
-        <Circles
-          height="80"
-          width="80"
-          color={colors.purple}
-          ariaLabel="circles-loading"
-          wrapperStyle={{}}
-          wrapperClass=""
-          visible={true}
-        />
+        <LoaderCircle className="animate-spin text-purple" />
       </FlexBox>
       <Logo isPurple className="self-center mb-10" />
     </FlexBox>

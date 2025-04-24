@@ -12,7 +12,7 @@ type Props = {
 };
 
 const page = async ({ params }: Props) => {
-  const user = await getLoggedInUser();
+  const { user } = await getLoggedInUser();
   if (!user) {
     redirect('/signup');
   }

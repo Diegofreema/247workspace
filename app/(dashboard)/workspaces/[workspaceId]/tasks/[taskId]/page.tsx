@@ -4,7 +4,7 @@ import React from 'react';
 import { TaskIdClient } from './client';
 
 const TaskIdPage = async () => {
-  const user = await getLoggedInUser();
+  const { user } = await getLoggedInUser();
 
   if (!user) redirect('/signup');
   return <TaskIdClient />;

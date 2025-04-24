@@ -8,7 +8,7 @@ import { OnboardForm } from '@/components/form/onboard-form';
 import { getProfile } from '@/features/workspaces/queries';
 
 const Onboard = async () => {
-  const user = await getLoggedInUser();
+  const { user } = await getLoggedInUser();
 
   if (!user) redirect('/signup');
   console.log(user);

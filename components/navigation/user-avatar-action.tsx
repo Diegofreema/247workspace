@@ -5,7 +5,7 @@ import { SkeletonCircle } from '@chakra-ui/react';
 import { getProfile } from '@/features/workspaces/queries';
 
 export const UserAvatarAction = async () => {
-  const user = await getLoggedInUser();
+  const { user } = await getLoggedInUser();
   const profile = await getProfile(user?.$id);
 
   if (!user) return null;
