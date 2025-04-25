@@ -38,6 +38,7 @@ export type Profile = Models.Document & {
   email: string;
   bio?: string;
   name: string;
+  phone?: string;
 };
 
 export type MemberWithProfile = Member & {

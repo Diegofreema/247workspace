@@ -12,7 +12,7 @@ export const ProfileCard = ({ data }: Props) => {
     <SimpleGrid
       columns={5}
       gap={{ base: 5, md: 10 }}
-      width={{ base: '100%', md: '80%', lg: '60%' }}
+      width={{ base: '100%', md: '75%', lg: '70%' }}
       mx={'auto'}
     >
       <ProfileDetail profile={data} />

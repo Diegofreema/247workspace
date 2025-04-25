@@ -6,14 +6,13 @@ import { Wrapper } from '@/components/ui/wrapper';
 
 export default function Error({
   reset,
-  error,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
 }) {
   return (
     <Wrapper>
-      <ErrorComponent message={error.message} reset={reset} />
+      <ErrorComponent message={'Please try again'} reset={reset} />
     </Wrapper>
   );
 }
