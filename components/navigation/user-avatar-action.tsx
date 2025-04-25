@@ -20,7 +20,7 @@ export const UserAvatarAction = () => {
       name={profile?.name || ''}
       email={profile?.email || ''}
       imageUrl={profile?.avatarUrl}
-      profileId={profile?.$id!}
+      profileId={profile?.$id || ''}
     />
   );
 };

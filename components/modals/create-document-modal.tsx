@@ -59,12 +59,12 @@ export const CreateDocumentModal = () => {
   });
 
   useEffect(() => {
-    if (data && workspaceId && projectIdString) {
-      setValue('uploadedBy', data?.profile?.name!);
+    if (data?.profile?.name && workspaceId && projectIdString) {
+      setValue('uploadedBy', data?.profile?.name as string);
       setValue('workspaceId', workspaceId);
       setValue('projectId', projectIdString);
     }
-  }, [data, setValue, workspaceId, projectIdString]);
+  }, [data?.profile?.name, setValue, workspaceId, projectIdString]);
 
   const onSubmit = async (data: z.infer<typeof createDocumentSchema>) => {
     const finalValues = {
