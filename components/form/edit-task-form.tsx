@@ -2,7 +2,12 @@ import { colors } from '@/constants';
 import { useUpdateTask } from '@/features/tasks/api/use-update-task';
 import { editTaskSchema } from '@/features/tasks/schema';
 import { useEditTaskModalController } from '@/lib/nuqs/use-editi-task-modal-contoller';
-import { PriorityEnum, StatusEnum, TaskWithProjectAndAssignee } from '@/types';
+import {
+  MemberRole,
+  PriorityEnum,
+  StatusEnum,
+  TaskWithProjectAndAssignee,
+} from '@/types';
 import { Stack } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -11,6 +16,7 @@ import { z } from 'zod';
 import { Button } from '../custom/custom-button';
 import { FlexBox } from '../custom/flex-box';
 import { FormInput, FormInputDate } from './form-input';
+import { toaster } from '../ui/toaster';
 
 type Props = {
   projectOptions: {
@@ -23,12 +29,14 @@ type Props = {
     name: string;
   }[];
   initialValues: TaskWithProjectAndAssignee;
+  memberRole: MemberRole;
 };
 
 export const EditTaskForm = ({
   memberOptions,
   projectOptions,
   initialValues,
+  memberRole,
 }: Props) => {
   const { mutateAsync } = useUpdateTask();
 
@@ -40,6 +48,7 @@ export const EditTaskForm = ({
     register,
     reset,
     control,
+    watch,
   } = useForm<z.infer<typeof editTaskSchema>>({
     defaultValues: {
       ...initialValues,
@@ -49,8 +58,20 @@ export const EditTaskForm = ({
     },
     resolver: zodResolver(editTaskSchema),
   });
-
+  const { status } = watch();
   const onSubmit = async (data: z.infer<typeof editTaskSchema>) => {
+    if (
+      memberRole !== MemberRole.ADMIN &&
+      memberRole !== MemberRole.CHIEF_ADMIN &&
+      status === StatusEnum.DONE
+    ) {
+      toaster.create({
+        title: 'You are not allowed to update this task to done',
+        type: 'info',
+      });
+
+      return;
+    }
     await mutateAsync(
       { json: data, param: { taskId: initialValues.$id } },
       {
@@ -170,9 +191,9 @@ export const EditTaskForm = ({
 
 const statusData = [
   { label: 'Backlog', value: StatusEnum.BACKLOG },
+  { label: 'Todo', value: StatusEnum.TODO },
   { label: 'In Progress', value: StatusEnum.IN_PROGRESS },
   { label: 'In Review', value: StatusEnum.IN_REVIEW },
-  { label: 'Todo', value: StatusEnum.TODO },
   { label: 'Done', value: StatusEnum.DONE },
 ];
 

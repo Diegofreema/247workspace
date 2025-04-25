@@ -4,12 +4,14 @@ import { ErrorComponent } from '@/components/ui/error-component';
 import { Separator } from '@/components/ui/separator';
 import { SmallerLoader } from '@/components/ui/small-loader';
 import { WrapperWithPadding } from '@/components/ui/wrapper-padding';
+import { useGetFeedbacks } from '@/features/feedbacks/api/use-get-feedbacks';
 import { useGetTask } from '@/features/tasks/api/use-get-task';
+import { Feedbacks } from '@/features/tasks/components/feedback';
 import { TaskBreadcrumb } from '@/features/tasks/components/task-breadcrumb';
 import { TaskDescription } from '@/features/tasks/components/task-description';
 import { TaskOverview } from '@/features/tasks/components/task-overview';
 import { useTaskId } from '@/hooks/use-task-id';
-import { SimpleGrid } from '@chakra-ui/react';
+import { SimpleGrid, Stack } from '@chakra-ui/react';
 import React from 'react';
 
 export const TaskIdClient = () => {
@@ -20,12 +22,27 @@ export const TaskIdClient = () => {
     isError,
     refetch,
   } = useGetTask({ taskId });
-
-  if (isError) {
-    return <ErrorComponent message="Failed to get task" reset={refetch} />;
+  const {
+    data: feedbacks,
+    isPending: isPendingFeedbacks,
+    isError: isErrorFeedback,
+    refetch: refetchFeedback,
+  } = useGetFeedbacks({ taskId });
+  if (isError || isErrorFeedback) {
+    return (
+      <Stack mt={50}>
+        <ErrorComponent
+          message="Failed to get task"
+          reset={() => {
+            refetch();
+            refetchFeedback();
+          }}
+        />
+      </Stack>
+    );
   }
 
-  if (isPending) {
+  if (isPending || isPendingFeedbacks) {
     return <SmallerLoader />;
   }
 
@@ -42,6 +59,7 @@ export const TaskIdClient = () => {
         <TaskOverview task={data} />
         <TaskDescription task={data} />
       </SimpleGrid>
+      <Feedbacks feedbacks={feedbacks} />
     </WrapperWithPadding>
   );
 };

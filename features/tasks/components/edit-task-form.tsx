@@ -7,6 +7,8 @@ import { Stack } from '@chakra-ui/react';
 import React from 'react';
 import { useGetTask } from '../api/use-get-task';
 import { EditTaskForm } from '@/components/form/edit-task-form';
+import { useCurrentUser } from '@/features/auth/api/use-current-user';
+import { MemberRole } from '@/types';
 
 type Props = {
   taskId: string;
@@ -15,6 +17,11 @@ type Props = {
 const array = Array(7).fill(0);
 export const EditTaskWrapper = ({ taskId }: Props) => {
   const workspaceId = useWorkspaceId();
+  const {
+    data,
+    isPending: isPendingUser,
+    isError: isErrorUser,
+  } = useCurrentUser();
   const {
     data: initialValue,
     isPending: isPendingTask,
@@ -35,8 +42,10 @@ export const EditTaskWrapper = ({ taskId }: Props) => {
     workspaceId,
   });
 
-  const isLoading = isPendingProjects || isPendingMembers || isPendingTask;
-  const isError = isErrorProjects || isErrorMembers || isErrorTask;
+  const isLoading =
+    isPendingProjects || isPendingMembers || isPendingTask || isPendingUser;
+  const isError =
+    isErrorProjects || isErrorMembers || isErrorTask || isErrorUser;
 
   if (isError) {
     throw new Error('Error getting projects and members');
@@ -65,12 +74,15 @@ export const EditTaskWrapper = ({ taskId }: Props) => {
     id: member.$id,
     imageUrl: member?.avatarUrl,
   }));
-
+  const memberRole = members?.documents.find(
+    (member) => member.$id === data.user?.$id
+  )?.memberRole as MemberRole;
   return (
     <EditTaskForm
       projectOptions={projectOptions}
       memberOptions={memberOptions}
       initialValues={initialValue.data}
+      memberRole={memberRole}
     />
   );
 };

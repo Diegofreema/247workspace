@@ -123,3 +123,13 @@ export type DocumentType = Models.Document & {
   projectId: string;
   uploadedBy: string;
 };
+
+export type FeedbackType = Models.Document & {
+  feedback: string;
+  taskId: string;
+  profileId: string;
+};
+
+export type FeedbackWithProfile = FeedbackType & {
+  profile: Profile;
+};
