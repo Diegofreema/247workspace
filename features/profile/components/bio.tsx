@@ -59,7 +59,7 @@ export const Bio = ({ profile }: Props) => {
           {isEditing ? (
             <div className="flex flex-col gap-y-4">
               <Textarea
-                placeholder="Add a description..."
+                placeholder="Update your bio..."
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 rows={4}

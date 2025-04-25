@@ -1,31 +1,40 @@
 import { Button } from '@/components/custom/custom-button';
 import { FlexBox } from '@/components/custom/flex-box';
-import { CustomText, Title } from '@/components/custom/title';
 import { DataFilter } from '@/components/ui/data-filter';
 import { colors } from '@/constants';
 import { useCreateTaskModalController } from '@/lib/nuqs/use-create-task';
 import { useSwitchTabs } from '@/lib/nuqs/use-switch-tabs';
-import { StatusEnum, TaskWithProjectAndAssignee } from '@/types';
+import { MemberRole, StatusEnum, TaskWithProjectAndAssignee } from '@/types';
 import { Stack, Tabs } from '@chakra-ui/react';
 // import { ProjectCalendar } from './project-calendar';
-import { ProjectKanban } from './project-kanban';
-import { ProjectTable } from './project-table';
-import { SmallerLoader } from '@/components/ui/small-loader';
-import { columns } from './column';
-import { useCallback } from 'react';
-import { useUpdateBulkTask } from '../api/use-bulk-update';
 import { LoadingModal } from '@/components/modals/loading-modal';
 import { Heading } from '@/components/ui/heading';
+import { SmallerLoader } from '@/components/ui/small-loader';
+import { useCallback } from 'react';
+import { useUpdateBulkTask } from '../api/use-bulk-update';
+import { columns } from './column';
+import { ProjectKanban } from './project-kanban';
+import { ProjectTable } from './project-table';
+import { useGetMembers } from '@/features/members/api/use-get-members';
+import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 
 type Props = {
   tasks: TaskWithProjectAndAssignee[];
   isPending: boolean;
   hideProjectFilter?: boolean;
+  memberRole: MemberRole;
 };
 const tabs = ['table', 'kanban'];
-export const TaskTabs = ({ tasks, isPending, hideProjectFilter }: Props) => {
+export const TaskTabs = ({
+  tasks,
+  isPending,
+  hideProjectFilter,
+  memberRole,
+}: Props) => {
   const { tab: value, setTab: setValue } = useSwitchTabs();
+  const workspaceId = useWorkspaceId();
   const { open } = useCreateTaskModalController();
+
   const { mutateAsync, isPending: isPendingTasks } = useUpdateBulkTask();
   const onKanbanChange = useCallback(
     async (tasks: { $id: string; status: StatusEnum; position: number }[]) => {
@@ -85,7 +94,11 @@ export const TaskTabs = ({ tasks, isPending, hideProjectFilter }: Props) => {
                 <ProjectTable data={tasks} columns={columns} />
               </Tabs.Content>
               <Tabs.Content value="kanban" overflowX={'scroll'}>
-                <ProjectKanban onChange={onKanbanChange} tasks={tasks} />
+                <ProjectKanban
+                  onChange={onKanbanChange}
+                  tasks={tasks}
+                  memberRole={memberRole}
+                />
               </Tabs.Content>
               {/* <Tabs.Content value="calender" overflowX={'scroll'}>
                 <ProjectCalendar tasks={tasks} />

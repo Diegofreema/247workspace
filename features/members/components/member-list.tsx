@@ -7,11 +7,13 @@ import { Loading } from '@/components/ui/loading';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { useGetMembers } from '../api/use-get-members';
 import { Member } from './member';
+import { ErrorComponent } from '@/components/ui/error-component';
 
 export const MemberList = ({ userId }: { userId: string }) => {
   const workspaceId = useWorkspaceId();
-  const { data, isPending, isError } = useGetMembers({ workspaceId });
-  if (isError) return <Box>Failed to load members</Box>;
+  const { data, isPending, isError, refetch } = useGetMembers({ workspaceId });
+  if (isError)
+    return <ErrorComponent reset={refetch} message="Failed to fetch members" />;
   if (isPending) return <Loading />;
 
   const { documents } = data;

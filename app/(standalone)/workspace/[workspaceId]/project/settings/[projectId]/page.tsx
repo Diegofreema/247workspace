@@ -17,7 +17,7 @@ const page = async ({ params }: Props) => {
     redirect('/signup');
   }
 
-  const project = await getProject({ projectId: params.projectId });
+  const { project } = await getProject({ projectId: params.projectId });
   return (
     <div className="w-full lg:max-w-xl flex flex-col gap-y-4">
       <Suspense fallback={null}>

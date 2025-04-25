@@ -22,5 +22,5 @@ export const getProject = async ({ projectId }: { projectId: string }) => {
     throw new Error('Failed to get project');
   }
 
-  return project;
+  return { project, member: members };
 };

@@ -1,16 +1,17 @@
-import { TaskWithProjectAndAssignee, StatusEnum } from '@/types';
-import React, { useCallback, useEffect, useState } from 'react';
+import { MemberRole, StatusEnum, TaskWithProjectAndAssignee } from '@/types';
 import {
   DragDropContext,
-  Droppable,
   Draggable,
+  Droppable,
   DropResult,
 } from '@hello-pangea/dnd';
+import { useCallback, useEffect, useState } from 'react';
 
-import { KanbanColumnHeader } from './kaban-column-header';
-import { Box } from '@chakra-ui/react';
 import { colors } from '@/constants';
+import { Box } from '@chakra-ui/react';
+import { KanbanColumnHeader } from './kaban-column-header';
 import { KanbanCard } from './kanban-card';
+import { toaster } from '@/components/ui/toaster';
 
 const boards: StatusEnum[] = [
   StatusEnum.BACKLOG,
@@ -29,9 +30,10 @@ type Props = {
   onChange: (
     tasks: { $id: string; status: StatusEnum; position: number }[]
   ) => void;
+  memberRole: MemberRole;
 };
 
-export const ProjectKanban = ({ tasks: data, onChange }: Props) => {
+export const ProjectKanban = ({ tasks: data, onChange, memberRole }: Props) => {
   const [tasks, setTasks] = useState<TasksState>(() => {
     const initialTasks: TasksState = {
       [StatusEnum.BACKLOG]: [],
@@ -73,6 +75,19 @@ export const ProjectKanban = ({ tasks: data, onChange }: Props) => {
     (result: DropResult) => {
       if (!result.destination) return;
       const { source, destination } = result;
+
+      if (
+        memberRole !== MemberRole.CHIEF_ADMIN &&
+        memberRole !== MemberRole.ADMIN &&
+        destination.droppableId === StatusEnum.DONE
+      ) {
+        toaster.create({
+          title: 'You are not authorized to move this task to done',
+          type: 'info',
+          duration: 5000,
+        });
+        return;
+      }
       const sourceStatus = source.droppableId as StatusEnum;
       const destinationStatus = destination.droppableId as StatusEnum;
       let updatedPayload: {

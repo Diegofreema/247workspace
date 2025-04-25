@@ -12,9 +12,10 @@ import { ProjectInnerItem } from './project-item';
 type Props = {
   project: Project;
   userId: string;
+  memberId: string;
 };
 
-export const ProjectDisplay = async ({ project }: Props) => {
+export const ProjectDisplay = async ({ project, userId, memberId }: Props) => {
   const link = `/workspace/${project.workspaceId}/project/settings/${project.$id}`;
 
   return (
@@ -46,7 +47,7 @@ export const ProjectDisplay = async ({ project }: Props) => {
       </Suspense>
 
       <Suspense fallback={null}>
-        <TaskViewSwitcher />
+        <TaskViewSwitcher memberId={memberId} />
       </Suspense>
     </div>
   );

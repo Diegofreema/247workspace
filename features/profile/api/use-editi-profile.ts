@@ -18,11 +18,15 @@ export const useEditProfile = () => {
   const router = useRouter();
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ json, param }) => {
+      console.log({ json, param });
+
       const res = await client.api.profile[':profileId'].$patch({
         json,
         param,
       });
       if (!res.ok) {
+        console.log(res);
+
         throw new Error('Failed to update profile');
       }
       return await res.json();

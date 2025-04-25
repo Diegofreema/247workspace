@@ -11,15 +11,18 @@ type Props = {
   };
 };
 const page = async ({ params }: Props) => {
-  const { user } = await getLoggedInUser();
+  const { user, profile } = await getLoggedInUser();
 
   if (!user) redirect('/signup');
-  const project = await getProject({ projectId: params.projectId });
-  const profile = await getProfile(user.$id);
+  const { project } = await getProject({ projectId: params.projectId });
 
   return (
     <WrapperWithPadding className="bg-lightGrey">
-      <ProjectDisplay project={project} userId={profile?.userId || ''} />
+      <ProjectDisplay
+        project={project}
+        userId={profile?.userId || ''}
+        memberId={user.$id}
+      />
     </WrapperWithPadding>
   );
 };

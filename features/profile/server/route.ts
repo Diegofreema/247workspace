@@ -35,37 +35,44 @@ const app = new Hono()
       const storage = c.get('storage');
       const { name, bio, email, image, phone } = c.req.valid('json');
       const { profileId } = c.req.param();
+      console.log(image);
 
-      let uploadUrl: string | undefined;
-      if (image instanceof File) {
-        const file = await storage.createFile(
-          IMAGES_BUCKET_ID,
-          ID.unique(),
-          image
-        );
+      try {
+        let uploadUrl: string | undefined;
+        if (image instanceof File) {
+          const file = await storage.createFile(
+            IMAGES_BUCKET_ID,
+            ID.unique(),
+            image
+          );
 
-        const arrayBufferToBase64 = await storage.getFileView(
-          file.bucketId,
-          file.$id
-        );
-        uploadUrl = `data:image/png;base64,${Buffer.from(arrayBufferToBase64).toString('base64')}`;
-      } else {
-        uploadUrl = image;
-      }
-
-      const profile = await databases.updateDocument<Profile>(
-        DATABASE_ID,
-        PROFILE_ID,
-        profileId,
-        {
-          name,
-          bio,
-          email,
-          image: uploadUrl,
-          phone,
+          const arrayBufferToBase64 = await storage.getFileView(
+            file.bucketId,
+            file.$id
+          );
+          uploadUrl = `data:image/png;base64,${Buffer.from(arrayBufferToBase64).toString('base64')}`;
+        } else {
+          uploadUrl = image;
         }
-      );
-      return c.json({ data: profile });
+
+        const profile = await databases.updateDocument<Profile>(
+          DATABASE_ID,
+          PROFILE_ID,
+          profileId,
+          {
+            name,
+            bio,
+            email,
+            avatarUrl: uploadUrl,
+            phone,
+          }
+        );
+        return c.json({ data: profile });
+      } catch (error) {
+        console.log(error);
+
+        return c.json({ error: 'Something went wrong' }, 500);
+      }
     }
   );
 
