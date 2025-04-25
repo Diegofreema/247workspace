@@ -7,6 +7,7 @@ import { Hono } from 'hono';
 import { ID, Query } from 'node-appwrite';
 import { z } from 'zod';
 import { createFeedbackSchema } from '../schema';
+import { getProfile } from '@/features/workspaces/queries';
 
 const app = new Hono()
   .get(
@@ -93,6 +94,80 @@ const app = new Hono()
         }
       );
       return c.json({ data: newFeedback });
+    }
+  )
+  .delete(
+    '/:feedbackId',
+    sessionMiddleware,
+    zValidator('param', z.object({ feedbackId: z.string() })),
+    async (c) => {
+      const databases = c.get('databases');
+      const user = c.get('user');
+      const { feedbackId } = c.req.valid('param');
+
+      const feedback = await databases.getDocument<FeedbackType>(
+        DATABASE_ID,
+        TASK_FEEDBACK_ID,
+        feedbackId
+      );
+
+      if (!feedback) {
+        return c.json({ error: 'No feedback found' }, 404);
+      }
+
+      const profile = await getProfile(user.$id);
+
+      if (profile?.$id !== feedback.profileId) {
+        return c.json({ error: 'Authorized' }, 400);
+      }
+
+      await databases.deleteDocument(
+        DATABASE_ID,
+        TASK_FEEDBACK_ID,
+        feedback.$id
+      );
+      return c.json({
+        data: feedbackId,
+      });
+    }
+  )
+  .patch(
+    '/edit-feedback',
+    sessionMiddleware,
+    zValidator(
+      'json',
+      z.object({ feedback: z.string(), feedbackId: z.string() })
+    ),
+    async (c) => {
+      const databases = c.get('databases');
+      const { feedback, feedbackId } = c.req.valid('json');
+      const user = c.get('user');
+      const feedbackInDb = await databases.getDocument<FeedbackType>(
+        DATABASE_ID,
+        TASK_FEEDBACK_ID,
+        feedbackId
+      );
+
+      if (!feedbackInDb) {
+        return c.json({ error: 'No feedback found' }, 404);
+      }
+
+      const profile = await getProfile(user.$id);
+
+      if (profile?.$id !== feedbackInDb.profileId) {
+        return c.json({ error: 'Authorized' }, 400);
+      }
+
+      const updatedFeedback = await databases.updateDocument(
+        DATABASE_ID,
+        TASK_FEEDBACK_ID,
+        feedbackId,
+        {
+          feedback,
+        }
+      );
+
+      c.json({ data: updatedFeedback });
     }
   );
 
