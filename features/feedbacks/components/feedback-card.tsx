@@ -8,10 +8,13 @@ import React from 'react';
 
 type Props = {
   feedback: FeedbackWithProfile;
+  loggedInUser: string;
 };
 
-export const FeedbackCards = ({ feedback }: Props) => {
-  const { feedback: feedbackText, profile } = feedback;
+export const FeedbackCards = ({ feedback, loggedInUser }: Props) => {
+  const { feedback: feedbackText, profile, profileId } = feedback;
+
+  const isFeedbackOwner = loggedInUser === profile.$id;
   return (
     <Card.Root bg={colors.white} color={colors.black} width="100%">
       <Card.Body gap="2">
@@ -22,12 +25,14 @@ export const FeedbackCards = ({ feedback }: Props) => {
 
         <Card.Description>{feedbackText}</Card.Description>
       </Card.Body>
-      <Card.Footer justifyContent="flex-end">
-        <Button variant="outline">Edit</Button>
-        <Button variant="outline" color={colors.red}>
-          Delete
-        </Button>
-      </Card.Footer>
+      {isFeedbackOwner && (
+        <Card.Footer justifyContent="flex-end">
+          <Button variant="outline">Edit</Button>
+          <Button variant="outline" color={colors.red}>
+            Delete
+          </Button>
+        </Card.Footer>
+      )}
     </Card.Root>
   );
 };

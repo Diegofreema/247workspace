@@ -13,9 +13,10 @@ import { Plus } from 'lucide-react';
 
 type Props = {
   feedbacks: FeedbackWithProfile[];
+  loggedInUser: string;
 };
 
-export const Feedbacks = ({ feedbacks }: Props) => {
+export const Feedbacks = ({ feedbacks, loggedInUser }: Props) => {
   const taskId = useTaskId();
   const { open } = useCreateFeedbackController();
 
@@ -42,7 +43,11 @@ export const Feedbacks = ({ feedbacks }: Props) => {
       <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap={{ base: 5, md: 10 }}>
         <For each={feedbacks}>
           {(feedback) => (
-            <FeedbackCards key={feedback.$id} feedback={feedback} />
+            <FeedbackCards
+              key={feedback.$id}
+              feedback={feedback}
+              loggedInUser={loggedInUser}
+            />
           )}
         </For>
       </SimpleGrid>

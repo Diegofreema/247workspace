@@ -1,5 +1,4 @@
 import { cn } from '@/lib/utils';
-import { Link } from 'next-view-transitions';
 import Image from 'next/image';
 
 type Props = {

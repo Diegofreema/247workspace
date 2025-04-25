@@ -64,38 +64,35 @@ const app = new Hono()
       const { feedback, taskId, profileId } = c.req.valid('json');
       const databases = c.get('databases');
       const user = c.get('user');
-      try {
-        const task = await databases.getDocument<TaskType>(
-          DATABASE_ID,
-          TASK_ID,
-          taskId
-        );
-        if (!task) {
-          return c.json({ message: 'Task not found' }, 404);
-        }
-        const members = await getMember({
-          databases,
-          userId: user.$id,
-          workspaceId: task.workspaceId,
-        });
-        if (!members) {
-          return c.json({ error: 'Unauthorized' }, 400);
-        }
 
-        const newFeedback = await databases.createDocument<FeedbackType>(
-          DATABASE_ID,
-          TASK_FEEDBACK_ID,
-          ID.unique(),
-          {
-            feedback,
-            profileId,
-            taskId,
-          }
-        );
-        return c.json({ data: newFeedback });
-      } catch (error) {
-        console.log(error);
+      const task = await databases.getDocument<TaskType>(
+        DATABASE_ID,
+        TASK_ID,
+        taskId
+      );
+      if (!task) {
+        return c.json({ message: 'Task not found' }, 404);
       }
+      const members = await getMember({
+        databases,
+        userId: user.$id,
+        workspaceId: task.workspaceId,
+      });
+      if (!members) {
+        return c.json({ error: 'Unauthorized' }, 400);
+      }
+
+      const newFeedback = await databases.createDocument<FeedbackType>(
+        DATABASE_ID,
+        TASK_FEEDBACK_ID,
+        ID.unique(),
+        {
+          feedback,
+          profileId,
+          taskId,
+        }
+      );
+      return c.json({ data: newFeedback });
     }
   );
 

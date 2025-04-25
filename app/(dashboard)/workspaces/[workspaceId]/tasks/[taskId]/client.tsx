@@ -4,6 +4,7 @@ import { ErrorComponent } from '@/components/ui/error-component';
 import { Separator } from '@/components/ui/separator';
 import { SmallerLoader } from '@/components/ui/small-loader';
 import { WrapperWithPadding } from '@/components/ui/wrapper-padding';
+import { useCurrentUser } from '@/features/auth/api/use-current-user';
 import { useGetFeedbacks } from '@/features/feedbacks/api/use-get-feedbacks';
 import { useGetTask } from '@/features/tasks/api/use-get-task';
 import { Feedbacks } from '@/features/tasks/components/feedback';
@@ -17,6 +18,11 @@ import React from 'react';
 export const TaskIdClient = () => {
   const taskId = useTaskId();
   const {
+    data: userData,
+    isPending: isPendingUser,
+    isError: isErrorUser,
+  } = useCurrentUser();
+  const {
     data: taskData,
     isPending,
     isError,
@@ -28,7 +34,7 @@ export const TaskIdClient = () => {
     isError: isErrorFeedback,
     refetch: refetchFeedback,
   } = useGetFeedbacks({ taskId });
-  if (isError || isErrorFeedback) {
+  if (isError || isErrorFeedback || isErrorUser) {
     return (
       <Stack mt={50}>
         <ErrorComponent
@@ -42,7 +48,7 @@ export const TaskIdClient = () => {
     );
   }
 
-  if (isPending || isPendingFeedbacks) {
+  if (isPending || isPendingFeedbacks || isPendingUser) {
     return <SmallerLoader />;
   }
 
@@ -59,7 +65,10 @@ export const TaskIdClient = () => {
         <TaskOverview task={data} />
         <TaskDescription task={data} />
       </SimpleGrid>
-      <Feedbacks feedbacks={feedbacks} />
+      <Feedbacks
+        feedbacks={feedbacks}
+        loggedInUser={userData?.profile?.$id ?? ''}
+      />
     </WrapperWithPadding>
   );
 };
