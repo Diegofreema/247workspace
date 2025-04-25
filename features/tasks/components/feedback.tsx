@@ -1,5 +1,6 @@
 import { CreateButton } from '@/components/buttons/create-button';
 import { FlexBox } from '@/components/custom/flex-box';
+import { CustomText } from '@/components/custom/title';
 import { EmptyUi } from '@/components/ui/empty-ui';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
@@ -14,6 +15,8 @@ type Props = {
 };
 
 export const Feedbacks = ({ feedbacks }: Props) => {
+  console.log(feedbacks);
+
   return (
     <div className="mt-6">
       <FlexBox alignItems={'center'} justifyContent={'space-between'}>
@@ -29,8 +32,13 @@ export const Feedbacks = ({ feedbacks }: Props) => {
         />
       </FlexBox>
       <Separator className="my-5" />
+      {feedbacks.length === 0 && (
+        <CustomText className="text-black text-center font-bold text-xl">
+          No feedbacks found
+        </CustomText>
+      )}
       <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap={{ base: 5, md: 10 }}>
-        <For each={feedbacks} fallback={<EmptyUi text="No feedbacks found" />}>
+        <For each={feedbacks}>
           {(feedback) => (
             <FeedbackCards key={feedback.$id} feedback={feedback} />
           )}
