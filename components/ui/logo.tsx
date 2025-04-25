@@ -9,14 +9,12 @@ type Props = {
 
 export const Logo = ({ isPurple = false, className }: Props) => {
   return (
-    <Link href="/">
-      <Image
-        src={'/l.png'}
-        width={250}
-        height={100}
-        alt={'logo'}
-        className={cn('object-contain', className)}
-      />
-    </Link>
+    <Image
+      src={'/l.png'}
+      width={250}
+      height={100}
+      alt={'logo'}
+      className={cn('object-contain', className)}
+    />
   );
 };

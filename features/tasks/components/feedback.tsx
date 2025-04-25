@@ -1,11 +1,12 @@
 import { CreateButton } from '@/components/buttons/create-button';
 import { FlexBox } from '@/components/custom/flex-box';
 import { CustomText } from '@/components/custom/title';
-import { EmptyUi } from '@/components/ui/empty-ui';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
 import { colors } from '@/constants';
 import { FeedbackCards } from '@/features/feedbacks/components/feedback-card';
+import { useTaskId } from '@/hooks/use-task-id';
+import { useCreateFeedbackController } from '@/lib/nuqs/use-create-feedback-controller';
 import { FeedbackWithProfile } from '@/types';
 import { For, SimpleGrid } from '@chakra-ui/react';
 import { Plus } from 'lucide-react';
@@ -15,7 +16,8 @@ type Props = {
 };
 
 export const Feedbacks = ({ feedbacks }: Props) => {
-  console.log(feedbacks);
+  const taskId = useTaskId();
+  const { open } = useCreateFeedbackController();
 
   return (
     <div className="mt-6">
@@ -26,7 +28,7 @@ export const Feedbacks = ({ feedbacks }: Props) => {
         />
         <CreateButton
           text="Add feedback"
-          onClick={() => {}}
+          onClick={() => open(taskId)}
           icon={<Plus color={colors.white} />}
           width={'fit'}
         />

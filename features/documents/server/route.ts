@@ -4,7 +4,7 @@ import { Hono } from 'hono';
 import { createDocumentSchema } from '../schema';
 import { z } from 'zod';
 import { DATABASE_ID, DOCUMENT_ID, IMAGES_BUCKET_ID, VIEW_URL } from '@/config';
-import { AppwriteException, ID, Query } from 'node-appwrite';
+import { ID, Query } from 'node-appwrite';
 import { DocumentType } from '@/types';
 import { getMember } from '@/features/members/utils';
 

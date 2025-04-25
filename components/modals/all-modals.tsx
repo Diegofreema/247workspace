@@ -7,6 +7,7 @@ import { CreateProjectModal } from './create-project-modal';
 import { CreateTaskModal } from './create-task-modal';
 import { EditProjectModal } from './edit-project-modal';
 import { EditTaskModal } from './edit-task-modal';
+import { CreateFeedbackModal } from './create-feedback-modal';
 
 export const AllModals = () => {
   const [mounted, setMounted] = useState(false);
@@ -22,6 +23,7 @@ export const AllModals = () => {
       <EditTaskModal />
       <EditProjectModal />
       <CreateDocumentModal />
+      <CreateFeedbackModal />
     </>
   );
 };
