@@ -5,40 +5,33 @@ import { toaster } from '@/components/ui/toaster';
 import { client } from '@/lib/rpc';
 
 type ResponseType = InferResponseType<
-  (typeof client.api.profile)[':profileId']['$patch'],
+  (typeof client.api.feedbacks)[':feedbackId']['$patch'],
   200
 >;
 type RequestType = InferRequestType<
-  (typeof client.api.profile)[':profileId']['$patch']
+  (typeof client.api.feedbacks)[':feedbackId']['$patch']
 >;
 
-export const useEditProfile = () => {
+export const useEditFeedback = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ json, param }) => {
-      const res = await client.api.profile[':profileId'].$patch({
+      const res = await client.api.feedbacks[':feedbackId'].$patch({
         json,
         param,
       });
       if (!res.ok) {
-        console.log(res);
-
-        throw new Error('Failed to update profile');
+        throw new Error('Failed to update feedback');
       }
       return await res.json();
     },
-    onSuccess: (res) => {
-      const {
-        data: { $id },
-      } = res;
+    onSuccess: ({}) => {
+      queryClient.invalidateQueries({ queryKey: ['feedbacks'] });
 
-      queryClient.invalidateQueries({ queryKey: ['user-profile', $id] });
-
-      //   router.push(`/workspaces/${workspaceId}/projects/${$id}`);
       toaster.create({
         title: 'Success',
-        description: 'Profile has been updated',
+        description: 'Feedback has been updated',
         type: 'success',
       });
     },

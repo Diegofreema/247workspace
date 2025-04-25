@@ -132,15 +132,13 @@ const app = new Hono()
     }
   )
   .patch(
-    '/edit-feedback',
+    '/:feedbackId',
     sessionMiddleware,
-    zValidator(
-      'json',
-      z.object({ feedback: z.string(), feedbackId: z.string() })
-    ),
+    zValidator('json', z.object({ feedback: z.string() })),
     async (c) => {
       const databases = c.get('databases');
-      const { feedback, feedbackId } = c.req.valid('json');
+      const { feedback } = c.req.valid('json');
+      const { feedbackId } = c.req.param();
       const user = c.get('user');
       const feedbackInDb = await databases.getDocument<FeedbackType>(
         DATABASE_ID,
@@ -167,7 +165,7 @@ const app = new Hono()
         }
       );
 
-      c.json({ data: updatedFeedback });
+      return c.json({ data: updatedFeedback });
     }
   );
 

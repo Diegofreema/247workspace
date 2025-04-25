@@ -7,6 +7,8 @@ import { FeedbackWithProfile } from '@/types';
 import { Button, Card } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useDeleteFeedback } from '../api/use-delete-feedback';
+import { useEditFeedback } from '../api/use-update-feedback';
+import { EditFeedbackModal } from '@/components/modals/edit-feedback-modal';
 
 type Props = {
   feedback: FeedbackWithProfile;
@@ -16,6 +18,10 @@ type Props = {
 export const FeedbackCards = ({ feedback, loggedInUser }: Props) => {
   const { feedback: feedbackText, profile } = feedback;
   const { mutateAsync, isPending } = useDeleteFeedback();
+  const { mutateAsync: updateFeedback, isPending: isPendingFeedback } =
+    useEditFeedback();
+  const [value, setValue] = useState(feedbackText);
+  const [editing, setEditing] = useState(false);
   const isFeedbackOwner = loggedInUser === profile.$id;
   const [open, setOpen] = useState(false);
   const onDelete = async () => {
@@ -28,8 +34,27 @@ export const FeedbackCards = ({ feedback, loggedInUser }: Props) => {
       }
     );
   };
+
+  const onUpdate = async () => {
+    await updateFeedback(
+      { json: { feedback: value }, param: { feedbackId: feedback.$id } },
+      {
+        onSuccess: () => {
+          setEditing(false);
+        },
+      }
+    );
+  };
   return (
     <>
+      <EditFeedbackModal
+        value={value}
+        isOpen={editing}
+        onClose={() => setEditing(false)}
+        onSubmit={onUpdate}
+        isPending={isPendingFeedback}
+        setValue={setValue}
+      />
       <ConfirmDialog
         title="Delete feedback"
         subtitle="Are you sure you want to delete this feedback"
@@ -52,7 +77,11 @@ export const FeedbackCards = ({ feedback, loggedInUser }: Props) => {
         </Card.Body>
         {isFeedbackOwner && (
           <Card.Footer justifyContent="flex-end">
-            <Button variant="outline" disabled={isPending}>
+            <Button
+              variant="outline"
+              disabled={isPending}
+              onClick={() => setEditing(true)}
+            >
               Edit
             </Button>
             <Button
