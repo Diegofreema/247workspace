@@ -53,14 +53,14 @@ export const CreateDocumentModal = () => {
       documentUrl: '',
       workspaceId: workspaceId,
       projectId: projectIdString,
-      uploadedBy: data?.name,
+      uploadedBy: data?.profile?.name,
     },
     resolver: zodResolver(createDocumentSchema),
   });
 
   useEffect(() => {
     if (data && workspaceId && projectIdString) {
-      setValue('uploadedBy', data?.name);
+      setValue('uploadedBy', data?.profile?.name!);
       setValue('workspaceId', workspaceId);
       setValue('projectId', projectIdString);
     }

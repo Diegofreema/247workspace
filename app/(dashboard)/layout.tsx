@@ -2,7 +2,9 @@ import { AllModals } from '@/components/modals/all-modals';
 import { DashboardSidebar } from '@/components/navigation/dashboard-sidebar';
 import { MobileSidebar } from '@/components/navigation/mobile-sidebar';
 import { NavigationHeader } from '@/components/navigation/navigation-header';
+import { ReusableSkeleton } from '@/components/skeletons/link-skeleton';
 import { Box } from '@chakra-ui/react';
+import { Suspense } from 'react';
 
 type Props = {
   children: React.ReactNode;
@@ -38,7 +40,9 @@ const DashboardLayout = async ({ children }: Props) => {
         transitionProperty="top, bottom, width"
         transitionTimingFunction="linear, linear, ease"
       >
-        <NavigationHeader />
+        <Suspense fallback={<ReusableSkeleton width={'100%'} />}>
+          <NavigationHeader />
+        </Suspense>
         <Box>{children}</Box>
       </Box>
     </Box>

@@ -1,3 +1,4 @@
+'use client';
 import { Suspense } from 'react';
 
 import { CreateButton } from '../buttons/create-button';
@@ -7,8 +8,10 @@ import { SearchInput } from './search-input';
 import { SidebarBtn } from './sidebar-btn';
 import { UserAvatarAction } from './user-avatar-action';
 import { SkeletonCircle } from '@chakra-ui/react';
+import { useCreateProjectModalController } from '@/lib/nuqs/use-create-project';
 
 export const NavigationHeader = () => {
+  const { open } = useCreateProjectModalController();
   return (
     <FlexBox
       bg="white"
@@ -26,6 +29,7 @@ export const NavigationHeader = () => {
             width="fit-content"
             text="Create a project"
             color="white"
+            onClick={open}
           />
         </FlexBox>
       </Suspense>
