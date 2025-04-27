@@ -14,6 +14,16 @@ export const routes = [
     path: '/team',
     icon: 'IconUsers',
   },
+  {
+    label: 'Documents',
+    path: '/documents',
+    icon: 'IconFile',
+  },
+  {
+    label: 'Tickets',
+    path: '/tickets',
+    icon: 'IconTicket',
+  },
 
   {
     label: 'Settings',

@@ -5,6 +5,12 @@ export enum MemberRole {
   MEMBER = 'MEMBER',
   CHIEF_ADMIN = 'CHIEF_ADMIN',
 }
+export enum TicketStatus {
+  UNASSIGNED = 'UNASSIGNED',
+  TODO = 'TODO',
+  IN_PROGRESS = 'IN_PROGRESS',
+  RESOLVED = 'RESOLVED',
+}
 export enum StatusEnum {
   TODO = 'TODO',
   IN_PROGRESS = 'IN_PROGRESS',
@@ -132,4 +138,16 @@ export type FeedbackType = Models.Document & {
 
 export type FeedbackWithProfile = FeedbackType & {
   profile: Profile;
+};
+
+export type TicketsType = Models.Document & {
+  assigneeId: string;
+  raisedId: string;
+  subject: string;
+  status: TicketStatus;
+};
+
+export type TicketWithProfile = TicketsType & {
+  assignee: Profile;
+  raisedBy: Profile;
 };

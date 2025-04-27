@@ -1,10 +1,12 @@
 'use client';
 import {
   IconBriefcase2,
+  IconFile,
   IconFolders,
   IconLayout2,
   IconSettings,
   IconSortAscending2,
+  IconTicket,
   IconUsers,
 } from '@tabler/icons-react';
 import { Link } from 'next-view-transitions';
@@ -29,6 +31,8 @@ const icons = {
   IconUsers,
   IconFolders,
   IconSettings,
+  IconFile,
+  IconTicket,
 };
 export const NavLink = ({ item }: Props) => {
   const pathname = usePathname();
