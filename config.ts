@@ -9,5 +9,5 @@ export const DOCUMENT_ID = process.env.NEXT_PUBLIC_DOCUMENT_ID!;
 export const VIEW_URL = process.env.NEXT_PUBLIC_BLOG;
 export const ACTIVITIES_ID = process.env.NEXT_PUBLIC_APPWRITE_ACTIVITY_ID!;
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL!;
-
+export const TICKET_ID = process.env.NEXT_PUBLIC_TICKET_ID!;
 export const TASK_FEEDBACK_ID = process.env.NEXT_PUBLIC_TASK_FEEDBACK_ID!;
