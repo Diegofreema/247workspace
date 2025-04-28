@@ -1,12 +1,14 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { AppwriteException, ID } from 'node-appwrite';
+import { AppwriteException, ID, Query } from 'node-appwrite';
 import { deleteCookie, setCookie } from 'hono/cookie';
 import { createAdminClient } from '@/lib/appwrite';
 import { onboardSchema, SignUpValidator } from '@/utils/validators';
 import { AUTH_COOKIE } from '../constants';
 import { sessionMiddleware } from '@/lib/session-middleware';
-import { DATABASE_ID, PROFILE_ID } from '@/config';
+import { DATABASE_ID, MEMBERS_ID, PROFILE_ID } from '@/config';
+import { z } from 'zod';
+import { Member, Profile } from '@/types';
 
 const app = new Hono()
   .get('/current', sessionMiddleware, (c) => {

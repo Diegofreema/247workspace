@@ -1,4 +1,4 @@
-import { DATABASE_ID, MEMBERS_ID } from '@/config';
+import { DATABASE_ID, MEMBERS_ID, PROFILE_ID } from '@/config';
 import { getProfile } from '@/features/workspaces/queries';
 import { sessionMiddleware } from '@/lib/session-middleware';
 import { Member, MemberRole, Profile } from '@/types';
@@ -219,6 +219,38 @@ const app = new Hono()
           500
         );
       }
+    }
+  )
+  .get(
+    '/profiles',
+    sessionMiddleware,
+    zValidator('query', z.object({ workspaceId: z.string() })),
+    async (c) => {
+      const { workspaceId } = c.req.valid('query');
+      const databases = c.get('databases');
+
+      const members = await databases.listDocuments<Member>(
+        DATABASE_ID,
+        MEMBERS_ID,
+        [Query.equal('workspaceId', workspaceId)]
+      );
+
+      const profilesFromMembers = await Promise.all(
+        members.documents.map(async (member) => {
+          const profiles = await databases.listDocuments<Profile>(
+            DATABASE_ID,
+            PROFILE_ID,
+            [Query.equal('userId', member.userId)]
+          );
+          return profiles.documents[0];
+        })
+      );
+      return c.json({
+        data: {
+          ...members,
+          documents: profilesFromMembers,
+        },
+      });
     }
   );
 

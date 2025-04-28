@@ -2,6 +2,7 @@ import { CreateTicketForm } from '@/components/form/create-ticket-form';
 import { ReusableSkeleton } from '@/components/skeletons/link-skeleton';
 import { useCurrentUser } from '@/features/auth/api/use-current-user';
 import { useGetMembers } from '@/features/members/api/use-get-members';
+import { useGetProfiles } from '@/features/members/api/use-profile';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { Stack } from '@chakra-ui/react';
 
@@ -15,36 +16,34 @@ export const CreateTicketFormWrapper = () => {
     isError: isErrorProfile,
   } = useCurrentUser();
   const {
-    data: members,
-    isPending: isPendingMembers,
-    isError: isErrorMembers,
-  } = useGetMembers({
+    data: profiles,
+    isPending: isPendingProfiles,
+    isError: isErrorProfiles,
+  } = useGetProfiles({
     workspaceId,
   });
 
-  const isLoading = isPendingProfile || isPendingMembers;
-  const isError = isErrorProfile || isErrorMembers;
+  const isLoading = isPendingProfile || isPendingProfiles;
+  const isError = isErrorProfile || isErrorProfiles;
 
   if (isError) {
-    throw new Error('Error getting projects and members');
+    throw new Error('Error getting projects and profiles');
   }
   if (isLoading) {
     return (
       <Stack gap={4}>
-        {array.map((_, i) => (
-          <ReusableSkeleton
-            key={i}
-            height={i === array.at(-1) ? '30px' : '10px'}
-          />
-        ))}
+        {array.map((_, i) => {
+          const isLast = i === array.length - 1;
+          return <ReusableSkeleton key={i} height={isLast ? '60px' : '30px'} />;
+        })}
       </Stack>
     );
   }
   const { profile } = data;
 
-  const memberOptions = members?.documents.map((member) => ({
-    label: member.name,
-    value: member.$id,
+  const memberOptions = profiles?.documents.map((p) => ({
+    label: p.name,
+    value: p.$id,
   }));
   return (
     <CreateTicketForm

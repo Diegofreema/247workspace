@@ -1,7 +1,7 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { client } from '@/lib/rpc';
-import { StatusEnum, TicketStatus } from '@/types';
+import { TicketStatus } from '@/types';
 
 type GetTickets = {
   workspaceId: string;
@@ -13,7 +13,6 @@ type GetTickets = {
 
 export const useGetTickets = ({
   workspaceId,
-
   assigneeId,
   status,
   page,
@@ -32,6 +31,8 @@ export const useGetTickets = ({
         },
       });
       if (!response.ok) {
+        const error = await response.json();
+        console.error(error);
         throw new Error('Failed to get tickets');
       }
       const { data } = await response.json();

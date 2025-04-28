@@ -43,7 +43,7 @@ export const CreateTicketForm = ({ memberOptions, profileId }: Props) => {
     defaultValues: {
       workspaceId,
       status: TicketStatus.TODO,
-      raisedBy: profileId,
+      raisedId: profileId,
     },
     resolver: zodResolver(createTicketSchema),
   });
@@ -116,6 +116,7 @@ export const CreateTicketForm = ({ memberOptions, profileId }: Props) => {
         placeholder="About this task..."
         disabled={isSubmitting}
         variant="textarea"
+        required
       />
       <FlexBox>
         <Button
