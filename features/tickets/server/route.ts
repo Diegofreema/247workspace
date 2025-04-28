@@ -4,8 +4,9 @@ import { sessionMiddleware } from '@/lib/session-middleware';
 import { Profile, TicketStatus, TicketsType, Workspace } from '@/types';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { Query } from 'node-appwrite';
+import { ID, Query } from 'node-appwrite';
 import { z } from 'zod';
+import { createTicketSchema } from '../schema';
 
 const app = new Hono()
   .get(
@@ -93,6 +94,51 @@ const app = new Hono()
           documents: ticketsWithAssigneeAndRaisedBy,
         },
       });
+    }
+  )
+  .post(
+    '/',
+    sessionMiddleware,
+    zValidator('json', createTicketSchema),
+    async (c) => {
+      const {
+        workspaceId,
+        assigneeId,
+        status,
+        subject,
+        description,
+        raisedBy,
+      } = c.req.valid('json');
+      const databases = c.get('databases');
+      const user = c.get('user');
+      const workspace = await databases.getDocument<Workspace>(
+        DATABASE_ID,
+        WORKSPACE_ID,
+        workspaceId
+      );
+      const member = await getMember({
+        databases,
+        userId: user.$id,
+        workspaceId: workspace.$id,
+      });
+      if (!member) {
+        return c.json({ error: 'You are not a member of this workspace' }, 401);
+      }
+      const ticket = await databases.createDocument<TicketsType>(
+        DATABASE_ID,
+        TICKET_ID,
+        ID.unique(),
+        {
+          workspaceId,
+          assigneeId,
+          status,
+          subject,
+          description,
+          raisedBy,
+        }
+      );
+
+      return c.json({ data: ticket });
     }
   )
   .delete(

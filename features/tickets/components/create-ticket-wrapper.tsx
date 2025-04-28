@@ -43,9 +43,8 @@ export const CreateTicketFormWrapper = () => {
   const { profile } = data;
 
   const memberOptions = members?.documents.map((member) => ({
-    name: member.name,
-    id: member.$id,
-    imageUrl: member?.avatarUrl,
+    label: member.name,
+    value: member.$id,
   }));
   return (
     <CreateTicketForm

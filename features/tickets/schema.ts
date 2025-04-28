@@ -1,4 +1,4 @@
-import { TicketStatus } from '@/types';
+import { PriorityEnum, TicketStatus } from '@/types';
 import { z } from 'zod';
 
 export const createTicketSchema = z.object({
@@ -7,6 +7,10 @@ export const createTicketSchema = z.object({
   assigneeId: z.string().min(1, { message: 'Assignee is required' }),
   raisedBy: z.string(),
   workspaceId: z.string(),
+  priority: z.nativeEnum(PriorityEnum, {
+    required_error: 'Priority is required',
+    message: 'Priority is required',
+  }),
   status: z.nativeEnum(TicketStatus, {
     required_error: 'Status is required',
     message: 'Status is required',

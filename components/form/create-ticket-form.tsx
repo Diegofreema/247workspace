@@ -7,7 +7,7 @@ import {
   useSetProjectId,
   useSetTask,
 } from '@/lib/nuqs/use-create-task';
-import { PriorityEnum, StatusEnum } from '@/types';
+import { PriorityEnum, StatusEnum, TicketStatus } from '@/types';
 import { Stack } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -16,93 +16,74 @@ import { z } from 'zod';
 import { Button } from '../custom/custom-button';
 import { FlexBox } from '../custom/flex-box';
 import { FormInput, FormInputDate } from './form-input';
+import { useRaiseTicketModalController } from '@/lib/nuqs/use-raise-ticket';
+import { createTicketSchema } from '@/features/tickets/schema';
+import { useRaiseTicket } from '@/features/tickets/api/use-create-ticket';
+import { statusData } from '@/features/tickets/components/ticket-filter';
 
 type Props = {
   profileId: string;
   memberOptions: {
-    id: string;
-    name: string;
+    label: string;
+    value: string;
   }[];
 };
 
 export const CreateTicketForm = ({ memberOptions, profileId }: Props) => {
-  const { mutateAsync } = useCreateTask();
+  const { mutateAsync } = useRaiseTicket();
   const workspaceId = useWorkspaceId();
-  const { close } = useCreateTaskModalController();
-  const { onRemoveProjectId, projectId } = useSetProjectId();
-  const { status, onRemoveStatus } = useSetTask();
-  const router = useRouter();
+  const { close } = useRaiseTicketModalController();
+
   const {
     handleSubmit,
     formState: { errors, isSubmitting },
     register,
     reset,
-    control,
-  } = useForm<z.infer<typeof createTaskSchema>>({
+  } = useForm<z.infer<typeof createTicketSchema>>({
     defaultValues: {
       workspaceId,
-      status: status ? status : StatusEnum.BACKLOG,
-      projectId: projectId ? projectId : '',
+      status: TicketStatus.TODO,
+      raisedBy: profileId,
     },
-    resolver: zodResolver(createTaskSchema),
+    resolver: zodResolver(createTicketSchema),
   });
 
-  const onSubmit = async (data: z.infer<typeof createTaskSchema>) => {
+  const onSubmit = async (data: z.infer<typeof createTicketSchema>) => {
     await mutateAsync(
       { json: { ...data, workspaceId } },
       {
         onSuccess: () => {
-          router.refresh();
           reset();
-          onRemoveProjectId();
         },
       }
     );
 
-    onRemoveStatus();
     await close();
   };
-  const assigneeItem = memberOptions.map((member) => ({
-    label: member.name,
-    value: member.id,
-  }));
 
   return (
     <Stack gap={4}>
       <FormInput
         register={register}
-        name="name"
-        label="Task name"
+        name="subject"
+        label="Title"
         errors={errors}
-        placeholder="My task"
+        placeholder="eg Can't login"
         required
         disabled={isSubmitting}
       />
-      <FlexBox
-        alignItems={{ base: 'start', md: 'center' }}
-        flexDir={{ base: 'column', md: 'row' }}
-        gap={3}
-      >
-        <FormInput
-          register={register}
-          name="assigneeId"
-          label="Assignee"
-          errors={errors}
-          placeholder="Choose Assignee"
-          required
-          disabled={isSubmitting}
-          variant={'select'}
-          data={assigneeItem}
-        />
-        <FormInputDate
-          control={control}
-          name="dueDate"
-          label="Due date"
-          errors={errors}
-          required
-          disabled={isSubmitting}
-        />
-      </FlexBox>
+
+      <FormInput
+        register={register}
+        name="assigneeId"
+        label="Assignee"
+        errors={errors}
+        placeholder="Choose Assignee"
+        required
+        disabled={isSubmitting}
+        variant={'select'}
+        data={memberOptions}
+      />
 
       <FormInput
         register={register}
@@ -154,20 +135,12 @@ export const CreateTicketForm = ({ memberOptions, profileId }: Props) => {
           loading={isSubmitting}
           width={'fit-content'}
         >
-          Create
+          Raise
         </Button>
       </FlexBox>
     </Stack>
   );
 };
-
-const statusData = [
-  { label: 'Backlog', value: StatusEnum.BACKLOG },
-  { label: 'In Progress', value: StatusEnum.IN_PROGRESS },
-  { label: 'In Review', value: StatusEnum.IN_REVIEW },
-  { label: 'Todo', value: StatusEnum.TODO },
-  { label: 'Done', value: StatusEnum.DONE },
-];
 
 const priorityData = [
   { label: 'Urgent', value: PriorityEnum.URGENT },
