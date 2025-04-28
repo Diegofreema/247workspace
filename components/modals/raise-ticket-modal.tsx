@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 
-import { CreateTaskFormWrapper } from '@/features/tasks/components/create-task-form-wrapper';
+import { CreateTicketFormWrapper } from '@/features/tickets/components/create-ticket-wrapper';
 import { useRaiseTicketModalController } from '@/lib/nuqs/use-raise-ticket';
 
 export const CreateTicketModal = () => {
@@ -29,7 +29,7 @@ export const CreateTicketModal = () => {
           <DialogDescription>
             Assign a ticket to a team member and track accountability
           </DialogDescription>
-          <CreateTaskFormWrapper />
+          <CreateTicketFormWrapper />
         </DialogHeader>
       </DialogContent>
     </Dialog>
