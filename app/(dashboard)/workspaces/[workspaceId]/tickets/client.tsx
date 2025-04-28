@@ -6,16 +6,21 @@ import { WrapperWithPadding } from '@/components/ui/wrapper-padding';
 import { useGetTickets } from '@/features/tickets/api/use-get-tickets';
 import { DisplayTicket } from '@/features/tickets/components/display-ticket';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
+import { useTicketFilters } from '@/lib/nuqs/use-data-filter';
 import { usePaginateTicket } from '@/lib/nuqs/use-paginate-tickets';
 
 export const TicketClient = () => {
   const workspaceId = useWorkspaceId();
   const [page] = usePaginateTicket();
+  const [filters] = useTicketFilters();
+  const { assigneeId, search, status } = filters;
+  // const [value] = useDebounce(() => setFilters({search}) ,500, [search])
   const { data, isPending, isError, refetch, error } = useGetTickets({
     workspaceId,
     page: page.toString(),
+    assigneeId,
+    status,
   });
-  console.log(error);
 
   if (isError) {
     return (

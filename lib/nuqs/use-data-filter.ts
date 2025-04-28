@@ -14,7 +14,6 @@ export const useTicketFilters = () => {
   return useQueryStates({
     assigneeId: parseAsString,
     status: parseAsStringEnum(Object.values(TicketStatus)),
-
     search: parseAsString,
   });
 };

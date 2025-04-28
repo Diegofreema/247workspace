@@ -1,15 +1,13 @@
+import { CustomText } from '@/components/custom/title';
 import { colors } from '@/constants';
 import { usePaginateTicket } from '@/lib/nuqs/use-paginate-tickets';
 import { TicketWithProfile } from '@/types';
 import { snakeCaseToTitleCase } from '@/utils/helper';
 import { ButtonGroup, IconButton, Pagination, Table } from '@chakra-ui/react';
 import { format } from 'date-fns';
-import React from 'react';
+import { MoreHorizontal } from 'lucide-react';
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
 import { TicketAction } from './ticket-action';
-import { MoreHorizontal } from 'lucide-react';
-import { EmptyUi } from '@/components/ui/empty-ui';
-import { CustomText } from '@/components/custom/title';
 
 type Props = {
   tickets: TicketWithProfile[];

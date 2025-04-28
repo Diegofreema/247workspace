@@ -1,11 +1,11 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { client } from '@/lib/rpc';
-import { StatusEnum } from '@/types';
+import { StatusEnum, TicketStatus } from '@/types';
 
 type GetTickets = {
   workspaceId: string;
-  status?: StatusEnum | null;
+  status?: TicketStatus | null;
   assigneeId?: string | null;
   page: string;
   search?: string | null;
