@@ -75,15 +75,6 @@ export const TicketAction = ({ children, ticketId }: Props) => {
               <Pencil className="size-4 mr-2 stroke-2" />
               Edit ticket
             </DropdownMenuItem>
-
-            <DropdownMenuItem
-              onClick={() => setOpen(true)}
-              disabled={isLoading}
-              className="text-amber-700 focus:text-amber-700 font-medium p-[10px]"
-            >
-              <Trash className="size-4 mr-2 stroke-2" />
-              Delete ticket
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

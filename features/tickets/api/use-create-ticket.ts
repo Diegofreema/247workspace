@@ -17,6 +17,9 @@ export const useRaiseTicket = () => {
     mutationFn: async ({ json }) => {
       const res = await client.api.tickets.$post({ json });
       if (!res.ok) {
+        const error = await res.json();
+        console.log(error);
+
         throw new Error('Failed to raise ticket');
       }
       return await res.json();

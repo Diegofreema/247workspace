@@ -1,25 +1,16 @@
 import { colors } from '@/constants';
-import { useCreateTask } from '@/features/tasks/api/use-create-task';
-import { createTaskSchema } from '@/features/tasks/schema';
+import { useRaiseTicket } from '@/features/tickets/api/use-create-ticket';
+import { createTicketSchema } from '@/features/tickets/schema';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
-import {
-  useCreateTaskModalController,
-  useSetProjectId,
-  useSetTask,
-} from '@/lib/nuqs/use-create-task';
-import { PriorityEnum, StatusEnum, TicketStatus } from '@/types';
+import { useRaiseTicketModalController } from '@/lib/nuqs/use-raise-ticket';
+import { PriorityEnum, TicketStatus } from '@/types';
 import { Stack } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '../custom/custom-button';
 import { FlexBox } from '../custom/flex-box';
-import { FormInput, FormInputDate } from './form-input';
-import { useRaiseTicketModalController } from '@/lib/nuqs/use-raise-ticket';
-import { createTicketSchema } from '@/features/tickets/schema';
-import { useRaiseTicket } from '@/features/tickets/api/use-create-ticket';
-import { statusData } from '@/features/tickets/components/ticket-filter';
+import { FormInput } from './form-input';
 
 type Props = {
   profileId: string;
@@ -149,4 +140,12 @@ const priorityData = [
   { label: 'Moderate', value: PriorityEnum.MODERATE },
   { label: 'Low', value: PriorityEnum.LOW },
   { label: 'Minimal', value: PriorityEnum.MINIMAL },
+];
+
+export const statusData = [
+  { label: 'Unassigned', value: TicketStatus.UNASSIGNED },
+  { label: 'Todo', value: TicketStatus.TODO },
+  { label: 'In progress', value: TicketStatus.IN_PROGRESS },
+  { label: 'In review', value: TicketStatus.IN_REVIEW },
+  { label: 'Resolved', value: TicketStatus.RESOLVED },
 ];

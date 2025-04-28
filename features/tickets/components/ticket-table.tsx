@@ -1,20 +1,20 @@
 import { CustomText } from '@/components/custom/title';
+import { Badge } from '@/components/ui/badge';
 import { colors } from '@/constants';
 import { usePaginateTicket } from '@/lib/nuqs/use-paginate-tickets';
 import { TicketWithProfile } from '@/types';
 import { snakeCaseToTitleCase } from '@/utils/helper';
 import { ButtonGroup, IconButton, Pagination, Table } from '@chakra-ui/react';
 import { format } from 'date-fns';
-import { MoreHorizontal } from 'lucide-react';
+import { EllipsisVertical } from 'lucide-react';
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
 import { TicketAction } from './ticket-action';
-import { Badge } from '@/components/ui/badge';
 
 type Props = {
   tickets: TicketWithProfile[];
   total: number;
 };
-export const LIMIT = 25;
+export const LIMIT = 10;
 export const TicketTable = ({ tickets, total }: Props) => {
   const [page, setPage] = usePaginateTicket();
   const disableNextButton = page === Math.ceil(total / LIMIT) || total === 0;
@@ -69,7 +69,7 @@ export const TicketTable = ({ tickets, total }: Props) => {
               </Table.Cell>
               <Table.Cell color={colors.black} className="!bg-white">
                 <TicketAction ticketId={item.$id}>
-                  <MoreHorizontal color={colors.black} size={30} />
+                  <EllipsisVertical color={colors.black} size={20} />
                 </TicketAction>
               </Table.Cell>
             </Table.Row>
@@ -106,7 +106,10 @@ export const TicketTable = ({ tickets, total }: Props) => {
 
           <Pagination.Items
             render={(page) => (
-              <IconButton variant={{ base: 'ghost', _selected: 'outline' }}>
+              <IconButton
+                variant={{ base: 'ghost', _selected: 'outline' }}
+                onClick={() => setPage(page.value)}
+              >
                 {page.value}
               </IconButton>
             )}

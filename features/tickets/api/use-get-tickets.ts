@@ -31,8 +31,6 @@ export const useGetTickets = ({
         },
       });
       if (!response.ok) {
-        const error = await response.json();
-        console.error(error);
         throw new Error('Failed to get tickets');
       }
       const { data } = await response.json();
