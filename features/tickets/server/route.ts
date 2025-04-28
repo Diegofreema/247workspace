@@ -17,10 +17,12 @@ const app = new Hono().get(
       assigneeId: z.string().nullish(),
       status: z.nativeEnum(TicketStatus).nullish(),
       search: z.string().nullish(),
+      page: z.string().nullish(),
     })
   ),
   async (c) => {
-    const { workspaceId, assigneeId, search, status } = c.req.valid('query');
+    const { workspaceId, assigneeId, search, status, page } =
+      c.req.valid('query');
     const user = c.get('user');
     const databases = c.get('databases');
     const workspace = await databases.getDocument<Workspace>(
@@ -37,9 +39,15 @@ const app = new Hono().get(
     if (!member) {
       return c.json({ error: 'You are not a member of this workspace' }, 401);
     }
+    const limit = 25;
+    const pageNumber = Number(page) || 1;
+    const offset = (pageNumber - 1) * limit;
+
     const query = [
       Query.equal('workspaceId', workspaceId),
       Query.orderDesc('$createdAt'),
+      Query.limit(limit),
+      Query.offset(offset),
     ];
     if (status) {
       query.push(Query.equal('status', status));
