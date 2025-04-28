@@ -17,7 +17,7 @@ const app = new Hono().get(
       assigneeId: z.string().nullish(),
       status: z.nativeEnum(TicketStatus).nullish(),
       search: z.string().nullish(),
-      page: z.number().default(1),
+      page: z.string(),
     })
   ),
   async (c) => {
@@ -25,6 +25,7 @@ const app = new Hono().get(
       c.req.valid('query');
     const user = c.get('user');
     const databases = c.get('databases');
+
     const workspace = await databases.getDocument<Workspace>(
       DATABASE_ID,
       WORKSPACE_ID,

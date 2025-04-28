@@ -7,9 +7,10 @@ import { CustomText, Title } from '../custom/title';
 type Props = {
   message: string;
   reset: () => void;
+  className?: string;
 };
 
-export const ErrorComponent = ({ message, reset }: Props) => {
+export const ErrorComponent = ({ message, reset, className }: Props) => {
   return (
     <Stack
       gap={4}
@@ -17,6 +18,7 @@ export const ErrorComponent = ({ message, reset }: Props) => {
       justify="center"
       display={'flex'}
       flexDir={'column'}
+      className={className}
     >
       <Image
         src="/warning.png"

@@ -11,12 +11,20 @@ import { usePaginateTicket } from '@/lib/nuqs/use-paginate-tickets';
 export const TicketClient = () => {
   const workspaceId = useWorkspaceId();
   const [page] = usePaginateTicket();
-  const { data, isPending, isError, refetch } = useGetTickets({
+  const { data, isPending, isError, refetch, error } = useGetTickets({
     workspaceId,
     page: page.toString(),
   });
+  console.log(error);
+
   if (isError) {
-    return <ErrorComponent message="Failed to get tickets" reset={refetch} />;
+    return (
+      <ErrorComponent
+        className="min-h-screen"
+        message="Failed to get tickets"
+        reset={refetch}
+      />
+    );
   }
   if (isPending) {
     return <Loading />;

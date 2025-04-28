@@ -7,7 +7,7 @@ type GetTickets = {
   workspaceId: string;
   status?: StatusEnum | null;
   assigneeId?: string | null;
-  page?: string | null;
+  page: string;
   search?: string | null;
 };
 
@@ -20,15 +20,14 @@ export const useGetTickets = ({
   search,
 }: GetTickets) => {
   return useQuery({
-    queryKey: ['tasks', workspaceId, page, assigneeId, status, search],
+    queryKey: ['tickets', workspaceId, page, assigneeId, status, search],
     queryFn: async () => {
       const response = await client.api.tickets.$get({
         query: {
           workspaceId,
-
+          page: page,
           assigneeId: assigneeId ?? undefined,
           status: status ?? undefined,
-          page: page ?? undefined,
           search: search ?? undefined,
         },
       });

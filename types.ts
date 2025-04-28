@@ -146,6 +146,7 @@ export type TicketsType = Models.Document & {
   subject: string;
   status: TicketStatus;
   description: string;
+  workspaceId: string;
 };
 
 export type TicketWithProfile = TicketsType & {
