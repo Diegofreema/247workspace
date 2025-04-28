@@ -1,7 +1,7 @@
 import { DATABASE_ID, PROFILE_ID, TICKET_ID, WORKSPACE_ID } from '@/config';
 import { getMember } from '@/features/members/utils';
 import { sessionMiddleware } from '@/lib/session-middleware';
-import { TicketStatus, TicketsType, Workspace } from '@/types';
+import { Profile, TicketStatus, TicketsType, Workspace } from '@/types';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { Query } from 'node-appwrite';
@@ -17,7 +17,7 @@ const app = new Hono().get(
       assigneeId: z.string().nullish(),
       status: z.nativeEnum(TicketStatus).nullish(),
       search: z.string().nullish(),
-      page: z.string().nullish(),
+      page: z.number().default(1),
     })
   ),
   async (c) => {
@@ -67,12 +67,12 @@ const app = new Hono().get(
 
     const ticketsWithAssigneeAndRaisedBy = await Promise.all(
       tickets.documents.map(async (ticket) => {
-        const assignee = await databases.getDocument(
+        const assignee = await databases.getDocument<Profile>(
           DATABASE_ID,
           PROFILE_ID,
           ticket.assigneeId
         );
-        const raisedBy = await databases.getDocument(
+        const raisedBy = await databases.getDocument<Profile>(
           DATABASE_ID,
           PROFILE_ID,
           ticket.raisedBy
@@ -85,7 +85,12 @@ const app = new Hono().get(
         };
       })
     );
-    return c.json({ data: ticketsWithAssigneeAndRaisedBy });
+    return c.json({
+      data: {
+        ...tickets,
+        documents: ticketsWithAssigneeAndRaisedBy,
+      },
+    });
   }
 );
 
