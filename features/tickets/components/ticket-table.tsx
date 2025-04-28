@@ -8,6 +8,8 @@ import React from 'react';
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
 import { TicketAction } from './ticket-action';
 import { MoreHorizontal } from 'lucide-react';
+import { EmptyUi } from '@/components/ui/empty-ui';
+import { CustomText } from '@/components/custom/title';
 
 type Props = {
   tickets: TicketWithProfile[];
@@ -53,6 +55,15 @@ export const TicketTable = ({ tickets, total }: Props) => {
           ))}
         </Table.Body>
       </Table.Root>
+      <CustomText
+        textAlign={'center'}
+        color={colors.black}
+        fontWeight={'bold'}
+        fontSize={{ base: 20, md: 25 }}
+        mt={10}
+      >
+        No tickets yet
+      </CustomText>
 
       <Pagination.Root
         count={total}

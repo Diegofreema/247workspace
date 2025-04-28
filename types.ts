@@ -9,6 +9,7 @@ export enum TicketStatus {
   UNASSIGNED = 'UNASSIGNED',
   TODO = 'TODO',
   IN_PROGRESS = 'IN_PROGRESS',
+  IN_REVIEW = 'IN_REVIEW',
   RESOLVED = 'RESOLVED',
 }
 export enum StatusEnum {

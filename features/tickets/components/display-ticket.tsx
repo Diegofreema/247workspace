@@ -6,6 +6,7 @@ import { FlexBox } from '@/components/custom/flex-box';
 import { Button } from '@/components/custom/custom-button';
 import { colors } from '@/constants';
 import { DataFilter } from '@/components/ui/data-filter';
+import { TicketFilter } from './ticket-filter';
 
 type Props = {
   tickets: TicketWithProfile[];
@@ -13,6 +14,12 @@ type Props = {
 };
 
 export const DisplayTicket = ({ tickets, total }: Props) => {
+  const allAssignees = tickets.map((ticket) => {
+    return {
+      label: ticket.assignee?.name || 'Unassigned',
+      value: ticket.assignee?.id || 'unassigned',
+    };
+  });
   return (
     <div className="bg-white min-h-screen p-5">
       <Heading title="All tickets" subTitle="View all raised tickets" />
@@ -23,7 +30,7 @@ export const DisplayTicket = ({ tickets, total }: Props) => {
         flexDir={{ base: 'column', md: 'row' }}
         mt={3}
       >
-        <DataFilter />
+        <TicketFilter allAssignees={allAssignees} />
         <Button
           color={colors.white}
           bg={colors.purple}
