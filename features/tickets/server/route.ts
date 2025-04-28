@@ -7,6 +7,7 @@ import { Hono } from 'hono';
 import { ID, Query } from 'node-appwrite';
 import { z } from 'zod';
 import { createTicketSchema } from '../schema';
+import { editTicketSchema } from '@/components/form/edit-ticket-form';
 
 const app = new Hono()
   .get(
@@ -108,6 +109,43 @@ const app = new Hono()
       }
     }
   )
+  .get(
+    '/:ticketId',
+    sessionMiddleware,
+    zValidator('param', z.object({ ticketId: z.string() })),
+    async (c) => {
+      const { ticketId } = c.req.valid('param');
+      const databases = c.get('databases');
+
+      const ticket = await databases.getDocument<TicketsType>(
+        DATABASE_ID,
+        TICKET_ID,
+        ticketId
+      );
+      if (!ticket) {
+        return c.json({ error: 'Ticket not found' }, 404);
+      }
+
+      const assignee = await databases.getDocument<Profile>(
+        DATABASE_ID,
+        PROFILE_ID,
+        ticket.assigneeId
+      );
+      const raisedBy = await databases.getDocument<Profile>(
+        DATABASE_ID,
+        PROFILE_ID,
+        ticket.raisedId
+      );
+
+      return c.json({
+        data: {
+          ticket,
+          assignee,
+          raisedBy,
+        },
+      });
+    }
+  )
   .post(
     '/',
     sessionMiddleware,
@@ -149,6 +187,48 @@ const app = new Hono()
           subject,
           description,
           raisedId,
+          priority,
+        }
+      );
+
+      return c.json({ data: ticket });
+    }
+  )
+  .patch(
+    '/:ticketId',
+    sessionMiddleware,
+    zValidator('json', editTicketSchema),
+    async (c) => {
+      const { assigneeId, status, subject, description, raisedId, priority } =
+        c.req.valid('json');
+      const { ticketId } = c.req.param();
+      const databases = c.get('databases');
+
+      const ticketInDb = await databases.getDocument<TicketsType>(
+        DATABASE_ID,
+        TICKET_ID,
+        ticketId
+      );
+      if (!ticketInDb) {
+        return c.json({ error: 'Ticket not found' }, 404);
+      }
+
+      if (raisedId !== ticketInDb.raisedId) {
+        return c.json(
+          { error: 'You are not authorized to update this ticket' },
+          401
+        );
+      }
+
+      const ticket = await databases.updateDocument<TicketsType>(
+        DATABASE_ID,
+        TICKET_ID,
+        ticketId,
+        {
+          assigneeId,
+          status,
+          subject,
+          description,
           priority,
         }
       );

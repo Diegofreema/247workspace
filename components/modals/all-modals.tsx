@@ -9,6 +9,7 @@ import { EditProjectModal } from './edit-project-modal';
 import { EditTaskModal } from './edit-task-modal';
 import { CreateFeedbackModal } from './create-feedback-modal';
 import { CreateTicketModal } from './raise-ticket-modal';
+import { EditTicketModal } from './edit-ticket-modal';
 
 export const AllModals = () => {
   const [mounted, setMounted] = useState(false);
@@ -26,6 +27,7 @@ export const AllModals = () => {
       <CreateDocumentModal />
       <CreateFeedbackModal />
       <CreateTicketModal />
+      <EditTicketModal />
     </>
   );
 };

@@ -13,6 +13,7 @@ import { useState } from 'react';
 
 import { useEditTaskModalController } from '@/lib/nuqs/use-editi-task-modal-contoller';
 import { useDeleteTicket } from '../api/use-delete-ticket';
+import { useEditTicketModalController } from '@/lib/nuqs/use-edit-ticket-modal-controller';
 
 type Props = {
   ticketId: string;
@@ -21,7 +22,7 @@ type Props = {
 
 export const TicketAction = ({ children, ticketId }: Props) => {
   const { mutateAsync, isPending } = useDeleteTicket();
-  const { open } = useEditTaskModalController();
+  const { open } = useEditTicketModalController();
   const [isOpen, setOpen] = useState(false);
   const workspaceId = useWorkspaceId();
   const router = useRouter();

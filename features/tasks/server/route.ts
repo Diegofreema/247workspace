@@ -98,7 +98,7 @@ const app = new Hono()
         name,
         description,
         projectId,
-        workspaceId,
+
         assigneeId,
         status,
         priority,
