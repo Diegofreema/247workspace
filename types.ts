@@ -148,6 +148,7 @@ export type TicketsType = Models.Document & {
   status: TicketStatus;
   description: string;
   workspaceId: string;
+  priority: PriorityEnum;
 };
 
 export type TicketWithProfile = TicketsType & {

@@ -8,14 +8,16 @@ import { format } from 'date-fns';
 import { MoreHorizontal } from 'lucide-react';
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
 import { TicketAction } from './ticket-action';
+import { Badge } from '@/components/ui/badge';
 
 type Props = {
   tickets: TicketWithProfile[];
   total: number;
 };
-
+export const LIMIT = 25;
 export const TicketTable = ({ tickets, total }: Props) => {
   const [page, setPage] = usePaginateTicket();
+  const disableNextButton = page === Math.ceil(total / LIMIT) || total === 0;
   return (
     <div>
       <Table.Root size="sm" variant="outline" striped>
@@ -38,13 +40,34 @@ export const TicketTable = ({ tickets, total }: Props) => {
         </Table.Header>
         <Table.Body>
           {tickets.map((item) => (
-            <Table.Row key={item.$id}>
-              <Table.Cell>Tck{item.subject}</Table.Cell>
-              <Table.Cell>{item.raisedBy.name}</Table.Cell>
-              <Table.Cell>{item.assignee.name}</Table.Cell>
-              <Table.Cell>{format(item.$createdAt, 'PPP')}</Table.Cell>
-              <Table.Cell>{snakeCaseToTitleCase(item.status)}</Table.Cell>
-              <Table.Cell>
+            <Table.Row key={item.$id} bg="white" className="!bg-white">
+              <Table.Cell color={colors.black} className="!bg-white">
+                Tck{item.$id}
+              </Table.Cell>
+              <Table.Cell color={colors.black} className="!bg-white">
+                {item.subject}
+              </Table.Cell>
+              <Table.Cell color={colors.black} className="!bg-white">
+                {item.raisedBy.name}
+              </Table.Cell>
+              <Table.Cell color={colors.black} className="!bg-white">
+                {item.assignee.name}
+              </Table.Cell>
+              <Table.Cell color={colors.black} className="!bg-white">
+                {format(item.$createdAt, 'PPP')}
+              </Table.Cell>
+              <Table.Cell color={colors.black} className="!bg-white">
+                <Badge variant={item.priority}>
+                  {snakeCaseToTitleCase(item.priority)}
+                </Badge>
+              </Table.Cell>
+              <Table.Cell color={colors.black} className="!bg-white">
+                {/* @ts-ignore */}
+                <Badge variant={item.status}>
+                  {snakeCaseToTitleCase(item.status)}
+                </Badge>
+              </Table.Cell>
+              <Table.Cell color={colors.black} className="!bg-white">
                 <TicketAction ticketId={item.$id}>
                   <MoreHorizontal color={colors.black} size={30} />
                 </TicketAction>
@@ -53,19 +76,21 @@ export const TicketTable = ({ tickets, total }: Props) => {
           ))}
         </Table.Body>
       </Table.Root>
-      <CustomText
-        textAlign={'center'}
-        color={colors.black}
-        fontWeight={'bold'}
-        fontSize={{ base: 20, md: 25 }}
-        mt={10}
-      >
-        No tickets yet
-      </CustomText>
+      {total === 0 && (
+        <CustomText
+          textAlign={'center'}
+          color={colors.black}
+          fontWeight={'bold'}
+          fontSize={{ base: 20, md: LIMIT }}
+          mt={10}
+        >
+          No tickets yet
+        </CustomText>
+      )}
 
       <Pagination.Root
         count={total}
-        pageSize={25}
+        pageSize={LIMIT}
         page={page}
         color={colors.black}
       >
@@ -90,7 +115,7 @@ export const TicketTable = ({ tickets, total }: Props) => {
           <Pagination.NextTrigger asChild>
             <IconButton
               onClick={() => setPage((page) => page + 1)}
-              disabled={total === 0}
+              disabled={disableNextButton}
             >
               <LuChevronRight />
             </IconButton>
@@ -107,6 +132,7 @@ const header = [
   'Raised by',
   'Assigned to',
   'Raised',
+  'Priority',
   'Status',
   'Action',
 ];
