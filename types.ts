@@ -155,3 +155,13 @@ export type TicketWithProfile = TicketsType & {
   assignee: Profile;
   raisedBy: Profile;
 };
+
+export type CommentType = Models.Document & {
+  ticketId: string;
+  comment: string;
+  authorId: string;
+};
+
+export type CommentWithProfile = CommentType & {
+  author: Profile;
+};

@@ -9,6 +9,7 @@ import documents from '@/features/documents/server/route';
 import profile from '@/features/profile/server/route';
 import feedbacks from '@/features/feedbacks/server/route';
 import tickets from '@/features/tickets/server/route';
+import comments from '@/features/comments/server/route';
 export const runtime = 'nodejs';
 
 const app = new Hono().basePath('/api');
@@ -22,7 +23,8 @@ const routes = app
   .route('/documents', documents)
   .route('/profile', profile)
   .route('/feedbacks', feedbacks)
-  .route('/tickets', tickets);
+  .route('/tickets', tickets)
+  .route('/comments', comments);
 
 export const GET = handle(app);
 export const POST = handle(app);
