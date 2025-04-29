@@ -44,7 +44,7 @@ export const TicketTable = ({ tickets, total }: Props) => {
               <Table.Cell color={colors.black} className="!bg-white">
                 Tck{item.$id}
               </Table.Cell>
-              <Table.Cell color={colors.black} className="!bg-white">
+              <Table.Cell color={colors.black} className="!bg-white truncate">
                 {item.subject}
               </Table.Cell>
               <Table.Cell color={colors.black} className="!bg-white">
