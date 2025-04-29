@@ -4,12 +4,12 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { colors } from '@/constants';
-import { SelectData, StatusEnum } from '@/types';
-import { Icon } from '@tabler/icons-react';
-import { CustomText } from '@/components/custom/title';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/select";
+import { colors } from "@/constants";
+import { SelectData, StatusEnum } from "@/types";
+import { Icon } from "@tabler/icons-react";
+import { CustomText } from "@/components/custom/title";
+import { Badge } from "@/components/ui/badge";
 
 type Props = {
   data: SelectData[];
@@ -43,9 +43,11 @@ export function ShadCnSelect({
           <SelectItem
             value={item.value}
             key={item.value}
-            className="text-black"
+            className="text-black w-full"
           >
-            <Badge variant={item.value as StatusEnum}>{item.label}</Badge>
+            <Badge variant={item.value as StatusEnum} className={"w-full"}>
+              {item.label}
+            </Badge>
           </SelectItem>
         ))}
       </SelectContent>

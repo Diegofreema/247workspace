@@ -9,6 +9,7 @@ import {format} from "date-fns";
 import {CommentAction} from "@/features/comments/components/comment-action";
 import {useEditTicketCommentController} from "@/lib/nuqs/use-edit-ticket-comment-controller";
 import {editComment$} from "@/lib/legend/edit-comment";
+import {useDeleteCommentModalController} from "@/lib/nuqs/useDeleteModalController";
 
 type Props = {
   item: CommentWithProfile;
@@ -18,12 +19,15 @@ type Props = {
 export const Comment = ({ item, profileId }: Props) => {
   const isMyComment = item.author?.$id === profileId;
   const { open } = useEditTicketCommentController();
+  const { open: openDelete } = useDeleteCommentModalController();
   const onEdit = useCallback(() => {
     void open(item.$id);
     editComment$.setValues({ comment: item.comment, authorId: profileId });
   }, [item, open, profileId]);
 
-  const onDelete = useCallback(() => {}, []);
+  const onDelete = () => {
+    void openDelete(item.$id);
+  };
   return (
     <Stack>
       <FlexBox alignItems={"center"} justifyContent={"space-between"}>
