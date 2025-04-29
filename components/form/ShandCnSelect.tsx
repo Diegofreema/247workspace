@@ -1,14 +1,9 @@
-import { FlexBox } from '@/components/custom/flex-box';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { colors } from '@/constants';
-import { SelectData } from '@/types';
-import { Icon } from '@tabler/icons-react';
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from '@/components/ui/select';
+import {colors} from '@/constants';
+import {SelectData} from '@/types';
+import {Icon} from '@tabler/icons-react';
+import {CustomText} from "@/components/custom/title";
+import {Badge} from "@/components/ui/badge";
 
 type Props = {
   data: SelectData[];
@@ -16,7 +11,8 @@ type Props = {
   value: string | undefined;
   onValueChange: (value: string) => void;
   disabled: boolean;
-  icon: Icon;
+  icon?: Icon;
+  text?: string;
 };
 export function ShadCnSelect({
   data,
@@ -25,11 +21,13 @@ export function ShadCnSelect({
   onValueChange,
   disabled,
   icon: Icon,
+    text
 }: Props) {
   return (
     <Select defaultValue={value} onValueChange={onValueChange}>
       <SelectTrigger className="w-full text-black gap-2" disabled={disabled}>
-        <Icon color={colors.iconGrey} />
+        {Icon && <Icon color={colors.iconGrey}/>}
+        {text && <CustomText className="text-black font-bold">{text}</CustomText>}
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent className="bg-white">
@@ -39,9 +37,10 @@ export function ShadCnSelect({
             key={item.value}
             className="text-black"
           >
-            <FlexBox alignItems={'center'} gap={2}>
+            {/* @ts-ignore */}
+            <Badge variant={item.value}>
               {item.label}
-            </FlexBox>
+            </Badge>
           </SelectItem>
         ))}
       </SelectContent>

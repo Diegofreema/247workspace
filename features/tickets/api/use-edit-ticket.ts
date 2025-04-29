@@ -15,11 +15,16 @@ type RequestType = InferRequestType<
 export const useUpdateTicket = () => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation<ResponseType, Error, RequestType>({
+  return useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ json, param }) => {
       const res = await client.api.tickets[':ticketId'].$patch({ json, param });
       if (!res.ok) {
-        throw new Error('Failed to update task');
+        const errorResponse = (await res.json()) as {
+          error?: string;
+          data?: Record<string, any>;
+        };
+
+        throw new Error(errorResponse.error || 'Failed to update task');
       }
       return await res.json();
     },
@@ -45,6 +50,4 @@ export const useUpdateTicket = () => {
       });
     },
   });
-
-  return mutation;
 };

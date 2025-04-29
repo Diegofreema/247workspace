@@ -197,7 +197,7 @@ const app = new Hono()
   .patch(
     '/:ticketId',
     sessionMiddleware,
-    zValidator('json', editTicketSchema),
+    zValidator('json', editTicketSchema.partial()),
     async (c) => {
       const { assigneeId, status, subject, description, raisedId, priority } =
         c.req.valid('json');

@@ -1,16 +1,19 @@
 'use client';
 
 import * as SelectPrimitive from '@radix-ui/react-select';
-import { Check, ChevronDown, ChevronsDownUp } from 'lucide-react';
+import {Check, ChevronDown, ChevronsDownUp} from 'lucide-react';
 import * as React from 'react';
 
-import { cn } from '@/lib/utils';
+import {cn} from '@/lib/utils';
 
 const Select = SelectPrimitive.Root;
 
 const SelectGroup = SelectPrimitive.Group;
 
 const SelectValue = SelectPrimitive.Value;
+
+
+
 
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
@@ -110,10 +113,12 @@ const SelectLabel = React.forwardRef<
   />
 ));
 SelectLabel.displayName = SelectPrimitive.Label.displayName;
-
+type SelectItemProps = typeof  SelectPrimitive.Item & {
+  myClass?: string;
+};
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
+  React.ComponentPropsWithoutRef<SelectItemProps>
 >(({ className, children, ...props }, ref) => (
   <SelectPrimitive.Item
     ref={ref}

@@ -46,7 +46,6 @@ export const TicketFilter = ({ allAssignees }: Props) => {
 
 export const statusData = [
   { label: 'All statuses', value: 'all' },
-  { label: 'Unassigned', value: TicketStatus.UNASSIGNED },
   { label: 'Todo', value: TicketStatus.TODO },
   { label: 'In progress', value: TicketStatus.IN_PROGRESS },
   { label: 'In review', value: TicketStatus.IN_REVIEW },
