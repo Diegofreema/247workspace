@@ -6,7 +6,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { colors } from '@/constants';
-import { SelectData } from '@/types';
+import { SelectData, StatusEnum } from '@/types';
 import { Icon } from '@tabler/icons-react';
 import { CustomText } from '@/components/custom/title';
 import { Badge } from '@/components/ui/badge';
@@ -45,8 +45,7 @@ export function ShadCnSelect({
             key={item.value}
             className="text-black"
           >
-            {/* @ts-expect-error*/}
-            <Badge variant={item.value}>{item.label}</Badge>
+            <Badge variant={item.value as StatusEnum}>{item.label}</Badge>
           </SelectItem>
         ))}
       </SelectContent>
