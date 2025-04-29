@@ -1,24 +1,25 @@
-import { FlexBox } from "@/components/custom/flex-box";
-import { FormInput } from "@/components/form/form-input";
-import { colors } from "@/constants";
-import { useCreateComment } from "@/features/comments/api/use-create-comment";
-import { commentSchema } from "@/features/comments/schema";
-import { IconButton } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { IconSend } from "@tabler/icons-react";
-import { LoaderCircle } from "lucide-react";
+import {FlexBox} from "@/components/custom/flex-box";
+import {FormInput} from "@/components/form/form-input";
+import {colors} from "@/constants";
+import {commentSchema} from "@/features/comments/schema";
+import {IconButton} from "@chakra-ui/react";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {IconSend} from "@tabler/icons-react";
+import {LoaderCircle} from "lucide-react";
 import React from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { CustomText } from "@/components/custom/title";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
+import {CustomText} from "@/components/custom/title";
+import {useUpdateComment} from "@/features/comments/api/use-update-comment";
+import {useEditTicketCommentController} from "@/lib/nuqs/use-edit-ticket-comment-controller";
+import {editComment$} from "@/lib/legend/edit-comment";
 
-type Props = {
-  profileId: string;
-  ticketId: string;
-};
 const MAX_LENGTH = 200;
-export const CommentForm = ({ profileId, ticketId }: Props) => {
-  const { mutateAsync } = useCreateComment();
+export const EditTicketCommentForm = () => {
+  const { mutateAsync } = useUpdateComment();
+  const { commentId, close } = useEditTicketCommentController();
+  const authorId = editComment$.authorId.get();
+  const previousComment = editComment$.comment.get();
   const {
     handleSubmit,
     register,
@@ -27,22 +28,25 @@ export const CommentForm = ({ profileId, ticketId }: Props) => {
     formState: { isSubmitting, errors },
   } = useForm<z.infer<typeof commentSchema>>({
     defaultValues: {
-      comment: "",
-      authorId: profileId,
+      comment: previousComment,
+      authorId,
     },
     resolver: zodResolver(commentSchema),
   });
   const onSubmit = async (data: z.infer<typeof commentSchema>) => {
+    if (!commentId) return;
     await mutateAsync(
       {
         json: data,
         param: {
-          ticketId,
+          commentId,
         },
       },
       {
         onSuccess: () => {
           reset();
+          editComment$.clear();
+          close();
         },
       },
     );

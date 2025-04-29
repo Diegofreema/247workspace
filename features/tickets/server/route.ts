@@ -47,7 +47,7 @@ const app = new Hono()
             401
           );
         }
-        const limit = 10;
+        const limit = 25;
         const pageNumber = Number(page) || 1;
         const offset = (pageNumber - 1) * limit;
 

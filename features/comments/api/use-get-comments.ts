@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { client } from '@/lib/rpc';
+import {ApiResponse} from "@/types";
 
 type GetComments = {
   ticketId: string;
@@ -14,7 +15,9 @@ export const useGetComments = ({ ticketId }: GetComments) => {
         param: { ticketId },
       });
       if (!response.ok) {
-        throw new Error('Failed to get comments');
+        const errorResponse = await response.json() as ApiResponse;
+
+        throw new Error(errorResponse.error || 'Failed to get comments');
       }
       const { data } = await response.json();
 
