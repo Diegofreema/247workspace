@@ -16,7 +16,7 @@ export const DisplaySingleTicket = ({ data, profileId }: Props) => {
   return (
     <Stack mx={'auto'} maxW={{ base: '100%', md: '70%', lg: '50%' }} gap={4}>
       <TicketInfoCard ticket={data?.ticket} profileId={profileId} />
-      <Comments />
+      <Comments ticketId={data?.ticket?.$id} profileId={profileId} />
     </Stack>
   );
 };

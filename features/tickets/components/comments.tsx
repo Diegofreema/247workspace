@@ -1,48 +1,45 @@
 'use client';
 
-import { FlexBox } from '@/components/custom/flex-box';
 import { colors } from '@/constants';
-import { Card, IconButton, Textarea } from '@chakra-ui/react';
-import { IconSend } from '@tabler/icons-react';
-import { useState } from 'react';
+import { Card, For, Stack } from '@chakra-ui/react';
+import { CommentForm } from './comment-form';
+import { useGetComments } from '@/features/comments/api/use-get-comments';
+import { ErrorComponent } from '@/components/ui/error-component';
+import { SmallerLoader } from '@/components/ui/small-loader';
+import { Comment } from './comment';
 
-type Props = {};
+type Props = {
+  ticketId: string;
+  profileId: string;
+};
 
-export const Comments = (props: Props) => {
-  const [value, setValue] = useState('');
+export const Comments = ({ profileId, ticketId }: Props) => {
+  const { data, isPending, isError, refetch } = useGetComments({ ticketId });
+
+  if (isError) {
+    return (
+      <ErrorComponent
+        message="Failed to get comments"
+        reset={refetch}
+        className="mt-5"
+      />
+    );
+  }
+
+  if (isPending) {
+    return <SmallerLoader />;
+  }
   return (
     <Card.Root width="100%" bg={colors.white}>
       <Card.Body gap="2">
-        <Card.Title mt="2">Nue Camp</Card.Title>
-        <Card.Description>
-          This is the card body. Lorem ipsum dolor sit amet, consectetur
-          adipiscing elit. Curabitur nec odio vel dui euismod fermentum.
-          Curabitur nec odio vel dui euismod fermentum.
-        </Card.Description>
+        <Stack gap={4}>
+          <For each={data.documents}>
+            {(item) => <Comment key={item.$id} item={item} />}
+          </For>
+        </Stack>
       </Card.Body>
       <Card.Footer>
-        <FlexBox
-          flexDir={'column'}
-          width="100%"
-          border={'1px solid #ccc'}
-          gap={2}
-          p={3}
-          borderRadius={5}
-        >
-          <Textarea
-            rows={6}
-            resize={'none'}
-            placeholder="Add a comment.."
-            focusRing={'none'}
-          />
-          <IconButton
-            bg={colors.purple}
-            className="hover:opacity-50 transition self-end"
-            disabled={!value}
-          >
-            <IconSend color={colors.white} size={30} />
-          </IconButton>
-        </FlexBox>
+        <CommentForm profileId={profileId} ticketId={ticketId} />
       </Card.Footer>
     </Card.Root>
   );

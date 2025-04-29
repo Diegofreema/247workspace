@@ -29,7 +29,6 @@ export const SinglePageClient = () => {
     return <Loading />;
   }
   const { profile } = profileData;
-  const { ticket } = data;
 
   return (
     <PageWrapper className={'bg-transparent'}>
