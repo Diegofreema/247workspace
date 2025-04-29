@@ -6,46 +6,45 @@ import { client } from '@/lib/rpc';
 import { ApiResponse } from '@/types';
 
 type ResponseType = InferResponseType<
-  (typeof client.api.tickets)[':ticketId']['$patch'],
+  (typeof client.api.comments)[':commentId']['$delete'],
   200
 >;
 type RequestType = InferRequestType<
-  (typeof client.api.tickets)[':ticketId']['$patch']
+  (typeof client.api.comments)[':commentId']['$delete']
 >;
 
-export const useUpdateTicket = () => {
+export const useDeleteComment = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<ResponseType, Error, RequestType>({
-    mutationFn: async ({ json, param }) => {
-      const res = await client.api.tickets[':ticketId'].$patch({ json, param });
+  const mutation = useMutation<ResponseType, Error, RequestType>({
+    mutationFn: async ({ param, json }) => {
+      const res = await client.api.comments[':commentId'].$delete({
+        param,
+        json,
+      });
       if (!res.ok) {
         const errorResponse = (await res.json()) as ApiResponse;
-
-        throw new Error(errorResponse.error || 'Failed to update task');
+        throw new Error(errorResponse.error || 'Failed to delete comment');
       }
       return await res.json();
     },
-    onSuccess: (res) => {
-      const {
-        data: { $id },
-      } = res;
-
-      queryClient.invalidateQueries({ queryKey: ['tickets'] });
-      queryClient.invalidateQueries({ queryKey: ['ticket', $id] });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['comments'] });
 
       toaster.create({
         title: 'Success',
-        description: 'Ticket has been updated',
+        description: 'Comment has been deleted',
         type: 'success',
       });
     },
     onError: (error) => {
       toaster.create({
         title: 'Something went wrong',
-        description: error.message || 'Please try again',
+        description: error.message || 'Failed to delete comment',
         type: 'error',
       });
     },
   });
+
+  return mutation;
 };

@@ -3,7 +3,6 @@ import { InferRequestType, InferResponseType } from 'hono';
 
 import { toaster } from '@/components/ui/toaster';
 import { client } from '@/lib/rpc';
-import { useTransitionRouter } from 'next-view-transitions';
 import { AppwriteException } from 'node-appwrite';
 
 type ResponseType = InferResponseType<

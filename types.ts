@@ -165,3 +165,8 @@ export type CommentType = Models.Document & {
 export type CommentWithProfile = CommentType & {
   author: Profile;
 };
+
+export type ApiResponse = {
+  error?: string;
+  data?: Record<string, any>;
+};
