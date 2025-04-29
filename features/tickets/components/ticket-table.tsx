@@ -19,7 +19,7 @@ export const TicketTable = ({ tickets, total }: Props) => {
   const [page, setPage] = usePaginateTicket();
   const disableNextButton = page === Math.ceil(total / LIMIT) || total === 0;
   return (
-    <div>
+    <div className={'overflow-auto'}>
       <Table.Root size="sm" variant="outline" striped>
         <Table.Header bg={colors.milk} border={"none"}>
           <Table.Row border={"none"}>

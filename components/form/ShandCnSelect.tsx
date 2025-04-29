@@ -19,6 +19,7 @@ type Props = {
   disabled: boolean;
   icon?: Icon;
   text?: string;
+  isBadge?: boolean;
 };
 export function ShadCnSelect({
   data,
@@ -28,6 +29,7 @@ export function ShadCnSelect({
   disabled,
   icon: Icon,
   text,
+  isBadge,
 }: Props) {
   return (
     <Select defaultValue={value} onValueChange={onValueChange}>
@@ -45,9 +47,13 @@ export function ShadCnSelect({
             key={item.value}
             className="text-black w-full"
           >
-            <Badge variant={item.value as StatusEnum} className={"w-full"}>
-              {item.label}
-            </Badge>
+            {isBadge ? (
+              <Badge variant={item.value as StatusEnum} className={"w-full"}>
+                {item.label}
+              </Badge>
+            ) : (
+              item.label
+            )}
           </SelectItem>
         ))}
       </SelectContent>
