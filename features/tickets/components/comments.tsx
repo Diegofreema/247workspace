@@ -1,3 +1,5 @@
+'use client';
+
 import { FlexBox } from '@/components/custom/flex-box';
 import { colors } from '@/constants';
 import { Card, IconButton, Textarea } from '@chakra-ui/react';

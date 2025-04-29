@@ -1,9 +1,15 @@
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from '@/components/ui/select';
-import {colors} from '@/constants';
-import {SelectData} from '@/types';
-import {Icon} from '@tabler/icons-react';
-import {CustomText} from "@/components/custom/title";
-import {Badge} from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { colors } from '@/constants';
+import { SelectData } from '@/types';
+import { Icon } from '@tabler/icons-react';
+import { CustomText } from '@/components/custom/title';
+import { Badge } from '@/components/ui/badge';
 
 type Props = {
   data: SelectData[];
@@ -21,13 +27,15 @@ export function ShadCnSelect({
   onValueChange,
   disabled,
   icon: Icon,
-    text
+  text,
 }: Props) {
   return (
     <Select defaultValue={value} onValueChange={onValueChange}>
       <SelectTrigger className="w-full text-black gap-2" disabled={disabled}>
-        {Icon && <Icon color={colors.iconGrey}/>}
-        {text && <CustomText className="text-black font-bold">{text}</CustomText>}
+        {Icon && <Icon color={colors.iconGrey} />}
+        {text && (
+          <CustomText className="text-black font-bold">{text}</CustomText>
+        )}
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent className="bg-white">
@@ -37,10 +45,8 @@ export function ShadCnSelect({
             key={item.value}
             className="text-black"
           >
-            {/* @ts-ignore */}
-            <Badge variant={item.value}>
-              {item.label}
-            </Badge>
+            {/* @ts-expect-error*/}
+            <Badge variant={item.value}>{item.label}</Badge>
           </SelectItem>
         ))}
       </SelectContent>

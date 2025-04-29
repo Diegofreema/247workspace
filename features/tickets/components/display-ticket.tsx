@@ -1,3 +1,4 @@
+'use client';
 import { Button } from '@/components/custom/custom-button';
 import { FlexBox } from '@/components/custom/flex-box';
 import { Heading } from '@/components/ui/heading';
