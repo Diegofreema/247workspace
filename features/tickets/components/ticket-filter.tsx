@@ -6,9 +6,10 @@ import { IconListCheck, IconUser } from '@tabler/icons-react';
 
 type Props = {
   allAssignees: { label: string; value: string }[];
+  isPending: boolean;
 };
 
-export const TicketFilter = ({ allAssignees }: Props) => {
+export const TicketFilter = ({ allAssignees,isPending }: Props) => {
   const [{ assigneeId, status }, setFilters] = useTicketFilters();
 
   const onStatusChange = (value: string) => {
@@ -29,7 +30,7 @@ export const TicketFilter = ({ allAssignees }: Props) => {
         onValueChange={onStatusChange}
         data={statusData}
         value={status ?? undefined}
-        disabled={false}
+        disabled={isPending}
         icon={IconListCheck}
       />
       <ShadCnSelect
@@ -37,7 +38,7 @@ export const TicketFilter = ({ allAssignees }: Props) => {
         onValueChange={onAssigneeChange}
         data={[{ label: 'All assignees', value: 'all' }, ...allAssignees]}
         value={assigneeId ?? undefined}
-        disabled={false}
+        disabled={isPending}
         icon={IconUser}
       />
     </FlexBox>

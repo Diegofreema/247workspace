@@ -37,7 +37,7 @@ export const TicketClient = () => {
 
   return (
     <WrapperWithPadding className="bg-lightGrey">
-      <DisplayTicket tickets={data.documents} total={data.total} />
+      <DisplayTicket tickets={data.documents} total={data.total} isPending={isPending} />
     </WrapperWithPadding>
   );
 };

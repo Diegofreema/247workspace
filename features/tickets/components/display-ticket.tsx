@@ -11,9 +11,10 @@ import { useRaiseTicketModalController } from "@/lib/nuqs/use-raise-ticket";
 type Props = {
   tickets: TicketWithProfile[];
   total: number;
+  isPending: boolean
 };
 
-export const DisplayTicket = ({ tickets, total }: Props) => {
+export const DisplayTicket = ({ tickets, total,isPending }: Props) => {
   const { open } = useRaiseTicketModalController();
   const data = tickets.map((ticket) => {
     return {
@@ -22,8 +23,7 @@ export const DisplayTicket = ({ tickets, total }: Props) => {
     };
   });
 
-  console.log(data);
-  // const allAssignees = [...new Set(data)];
+
     const allAssignees = [
         ...new Map(data.map(d => [d.value, d])).values()
     ];
@@ -38,7 +38,7 @@ export const DisplayTicket = ({ tickets, total }: Props) => {
         flexDir={{ base: "column", md: "row" }}
         mt={3}
       >
-        <TicketFilter allAssignees={allAssignees} />
+        <TicketFilter allAssignees={allAssignees} isPending={isPending} />
         <Button
           color={colors.white}
           bg={colors.purple}
