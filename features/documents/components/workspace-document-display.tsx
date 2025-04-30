@@ -1,7 +1,11 @@
+import { WorkspaceFolderType } from '@/types';
 import React from 'react';
 
-type Props = {};
+type Props = {
+  folders: WorkspaceFolderType[];
+  total: number;
+};
 
-export const WorkspaceDocumentDisplay = (props: Props) => {
+export const WorkspaceDocumentDisplay = ({ folders, total }: Props) => {
   return <div>WorkspaceDocumentDisplay</div>;
 };

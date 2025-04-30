@@ -3,26 +3,36 @@ import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { createDocumentSchema } from '../schema';
 import { z } from 'zod';
-import { DATABASE_ID, DOCUMENT_ID, IMAGES_BUCKET_ID, VIEW_URL } from '@/config';
+import {
+  DATABASE_ID,
+  DOCUMENT_ID,
+  IMAGES_BUCKET_ID,
+  VIEW_URL,
+  WORKSPACE_DOCUMENT_FOLDER_ID,
+} from '@/config';
 import { ID, Query } from 'node-appwrite';
-import { DocumentType } from '@/types';
+import { DocumentType, WorkspaceFolderType } from '@/types';
 import { getMember } from '@/features/members/utils';
 
 const app = new Hono()
   .get(
-    '/',
+    '/:workspaceId',
     sessionMiddleware,
-    zValidator('query', z.object({ projectId: z.string() })),
+
     async (c) => {
       const databases = c.get('databases');
-      const { projectId } = c.req.valid('query');
+      const { workspaceId } = c.req.param();
 
-      const documents = await databases.listDocuments<DocumentType>(
-        DATABASE_ID,
-        DOCUMENT_ID,
-        [Query.equal('projectId', projectId), Query.orderDesc('$createdAt')]
-      );
-      return c.json({ data: documents });
+      const workspaceFolder =
+        await databases.listDocuments<WorkspaceFolderType>(
+          DATABASE_ID,
+          WORKSPACE_DOCUMENT_FOLDER_ID,
+          [
+            Query.equal('workspaceId', workspaceId),
+            Query.orderDesc('$createdAt'),
+          ]
+        );
+      return c.json({ data: workspaceFolder });
     }
   )
   .post(
