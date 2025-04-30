@@ -35,7 +35,7 @@ export const PersonalInfo = ({ profile }: Props) => {
   const onSubmit = async (data: z.infer<typeof profileSchema>) => {
     await mutateAsync(
       {
-        json: {
+        form: {
           name: data.name,
           email: data.email,
           phone: data.phone,

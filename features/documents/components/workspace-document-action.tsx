@@ -30,7 +30,7 @@ export const WorkspaceDocumentAction = ({ children, folderId }: Props) => {
   };
 
   return (
-    <div className="flex justify-end">
+    <div className="flex justify-end cursor-pointer">
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48 text-black bg-white">
@@ -47,7 +47,7 @@ export const WorkspaceDocumentAction = ({ children, folderId }: Props) => {
             className="font-medium p-[10px]"
           >
             <Pencil className="size-4 mr-2 stroke-2" />
-            Edit task
+            Edit folder
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
