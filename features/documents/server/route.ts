@@ -18,19 +18,30 @@ const app = new Hono()
   .get(
     '/:workspaceId',
     sessionMiddleware,
-
+    zValidator(
+      'query',
+      z.object({ searchQuery: z.string().nullish(), more: z.string() })
+    ),
     async (c) => {
       const databases = c.get('databases');
       const { workspaceId } = c.req.param();
+      const { more, searchQuery } = c.req.valid('query');
+      const limit = 25;
+      const offset = limit + Number(more);
+      const query = [
+        Query.equal('workspaceId', workspaceId),
+        Query.orderDesc('$createdAt'),
+        Query.limit(offset),
+      ];
 
+      if (searchQuery) {
+        query.push(searchQuery);
+      }
       const workspaceFolder =
         await databases.listDocuments<WorkspaceFolderType>(
           DATABASE_ID,
           WORKSPACE_DOCUMENT_FOLDER_ID,
-          [
-            Query.equal('workspaceId', workspaceId),
-            Query.orderDesc('$createdAt'),
-          ]
+          query
         );
       return c.json({ data: workspaceFolder });
     }
