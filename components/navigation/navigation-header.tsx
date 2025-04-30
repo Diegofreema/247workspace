@@ -1,5 +1,5 @@
 'use client';
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 
 import { CreateButton } from '../buttons/create-button';
 import { FlexBox } from '../custom/flex-box';
@@ -12,6 +12,10 @@ import { useCreateProjectModalController } from '@/lib/nuqs/use-create-project';
 
 export const NavigationHeader = () => {
   const { open } = useCreateProjectModalController();
+  const [value, setValue] = useState('');
+  const onClear = () => {
+    setValue('');
+  };
   return (
     <FlexBox
       bg="white"
@@ -24,7 +28,12 @@ export const NavigationHeader = () => {
       <Suspense fallback={<ReusableSkeleton width="100%" height="15" />}>
         <SidebarBtn />
         <FlexBox alignItems={'center'} gap={4} flex={1}>
-          <SearchInput />
+          <SearchInput
+            clearValue={onClear}
+            value={value}
+            setValue={setValue}
+            placeholder="Search for projects..."
+          />
           <CreateButton
             width="fit-content"
             text="Create a project"

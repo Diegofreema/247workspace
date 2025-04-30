@@ -13,3 +13,13 @@ export const createDocumentSchema = z.object({
   projectId: z.string(),
   uploadedBy: z.string(),
 });
+
+export const createFolderSchema = z.object({
+  name: z
+    .string()
+    .min(1, {
+      message: 'Folder name is required',
+    })
+    .max(50, { message: 'Folder name must be less than 50 characters' }),
+  workspaceId: z.string(),
+});

@@ -17,7 +17,7 @@ export const FolderActions = ({}: Props) => {
         setValue={setQuery}
         clearValue={clearQuery}
       />
-      <CreateButton onClick={open} text="Add folder" width="fit" />
+      <CreateButton onClick={open} text="Create folder" width="fit" />
     </FlexBox>
   );
 };

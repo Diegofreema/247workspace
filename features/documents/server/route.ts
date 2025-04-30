@@ -1,7 +1,7 @@
 import { sessionMiddleware } from '@/lib/session-middleware';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { createDocumentSchema } from '../schema';
+import { createDocumentSchema, createFolderSchema } from '../schema';
 import { z } from 'zod';
 import {
   DATABASE_ID,
@@ -9,6 +9,7 @@ import {
   IMAGES_BUCKET_ID,
   VIEW_URL,
   WORKSPACE_DOCUMENT_FOLDER_ID,
+  WORKSPACE_ID,
 } from '@/config';
 import { ID, Query } from 'node-appwrite';
 import { DocumentType, WorkspaceFolderType } from '@/types';
@@ -175,6 +176,72 @@ const app = new Hono()
     return c.json({
       data: documentId,
     });
-  });
+  })
+  .post(
+    '/create-folder',
+    sessionMiddleware,
+    zValidator('json', createFolderSchema),
+    async (c) => {
+      const databases = c.get('databases');
+      const { name, workspaceId } = c.req.valid('json');
+      const workspace = await databases.getDocument(
+        DATABASE_ID,
+        WORKSPACE_ID,
+        workspaceId
+      );
+      if (!workspace) {
+        return c.json(
+          {
+            error: 'Workspace not found',
+          },
+          404
+        );
+      }
+      const member = await getMember({
+        databases,
+        userId: c.get('user').$id,
+        workspaceId,
+      });
+      if (!member) {
+        return c.json(
+          {
+            error: 'Unauthorized',
+          },
+          401
+        );
+      }
+      const folderExists = await databases.listDocuments(
+        DATABASE_ID,
+        WORKSPACE_DOCUMENT_FOLDER_ID,
+        [
+          Query.equal('folderName', name),
+          Query.equal('workspaceId', workspaceId),
+        ]
+      );
+      if (folderExists.documents.length > 0) {
+        return c.json(
+          {
+            error:
+              'Folder with name already exists, please choose a different name',
+          },
+          400
+        );
+      }
+
+      const folder = await databases.createDocument(
+        DATABASE_ID,
+        WORKSPACE_DOCUMENT_FOLDER_ID,
+        ID.unique(),
+        {
+          folderName: name,
+          workspaceId,
+        }
+      );
+
+      return c.json({
+        data: folder,
+      });
+    }
+  );
 
 export default app;

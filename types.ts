@@ -145,11 +145,11 @@ export type FeedbackWithProfile = FeedbackType & {
 };
 
 export type ProjectFolderType = Models.Document & {
-  name: string;
+  folderName: string;
   projectId: string;
 };
 export type WorkspaceFolderType = Models.Document & {
-  name: string;
+  folderName: string;
   workspaceId: string;
 };
 

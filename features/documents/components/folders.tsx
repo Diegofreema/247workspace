@@ -30,7 +30,7 @@ export const Folders = ({ folders, total }: Props) => {
   }, [hasNextPage, inView, loading, setMore]);
 
   return (
-    <Stack>
+    <Stack mt={{ base: 10, md: 20 }}>
       <SimpleGrid
         columns={{ base: 1, md: 2, lg: 4 }}
         gap={{ base: 5, md: 10 }}

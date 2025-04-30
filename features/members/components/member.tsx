@@ -20,6 +20,10 @@ type Props = {
 
 export const Member = ({ members, userId }: Props) => {
   const [value, setValue] = useState(['CHIEF_ADMIN']);
+  const [search, setSearch] = useState('');
+  const onClear = () => {
+    setSearch('');
+  };
   const onChange = (
     data: SelectValueChangeDetails<{ label: string; value: string }>
   ) => {
@@ -35,7 +39,12 @@ export const Member = ({ members, userId }: Props) => {
         </CustomText>
       </Stack>
       <FlexBox alignItems={'center'} justifyContent={'space-between'}>
-        <SearchInput />
+        <SearchInput
+          placeholder={'Search members'}
+          value={search}
+          setValue={setSearch}
+          clearValue={onClear}
+        />
         <CustomSelect data={data} value={value} onChange={onChange} />
       </FlexBox>
 
