@@ -129,6 +129,9 @@ export type DocumentType = Models.Document & {
   workspaceId: string;
   projectId: string;
   uploadedBy: string;
+  folderId: string;
+  version: number;
+  fileId: string;
 };
 
 export type FeedbackType = Models.Document & {
@@ -139,6 +142,15 @@ export type FeedbackType = Models.Document & {
 
 export type FeedbackWithProfile = FeedbackType & {
   profile: Profile;
+};
+
+export type ProjectFolderType = Models.Document & {
+  name: string;
+  projectId: string;
+};
+export type WorkspaceFolderType = Models.Document & {
+  name: string;
+  workspaceId: string;
 };
 
 export type TicketsType = Models.Document & {
