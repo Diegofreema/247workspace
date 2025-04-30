@@ -51,6 +51,7 @@
     "react-dom": "19.0.0",
     "react-hook-form": "^7.55.0",
     "react-icons": "^5.5.0",
+    "react-intersection-observer": "^9.16.0",
     "react-loader-spinner": "^6.1.6",
     "react-pdf": "^9.2.1",
     "react-use": "^17.6.0",

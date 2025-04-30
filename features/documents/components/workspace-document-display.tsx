@@ -3,6 +3,8 @@ import { WorkspaceFolderType } from '@/types';
 import React from 'react';
 import { Folders } from './folders';
 import { FolderActions } from './folder-actions';
+import { CustomText } from '@/components/custom/title';
+import { colors } from '@/constants';
 
 type Props = {
   folders: WorkspaceFolderType[];
@@ -14,6 +16,16 @@ export const WorkspaceDocumentDisplay = ({ folders, total }: Props) => {
     <div>
       <Heading title="Folders" subTitle="View your folders here" />
       <FolderActions />
+      {total === 0 && (
+        <CustomText
+          color={colors.black}
+          fontWeight={'bold'}
+          textAlign={'center'}
+          mt={10}
+        >
+          No folders yet
+        </CustomText>
+      )}
       <Folders folders={folders} total={total} />
     </div>
   );
