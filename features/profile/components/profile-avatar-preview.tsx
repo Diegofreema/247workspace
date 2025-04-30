@@ -67,7 +67,7 @@ const FileUploadList = () => {
     await mutateAsync(
       {
         param: { profileId },
-        json: { image: '' },
+        form: { image: files[0] },
       },
       {
         onSuccess: () => {

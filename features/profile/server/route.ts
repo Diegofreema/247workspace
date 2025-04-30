@@ -29,13 +29,12 @@ const app = new Hono()
   .patch(
     '/:profileId',
     sessionMiddleware,
-    zValidator('json', profileSchema.partial()),
+    zValidator('form', profileSchema.partial()),
     async (c) => {
       const databases = c.get('databases');
       const storage = c.get('storage');
-      const { name, bio, email, image, phone } = c.req.valid('json');
+      const { name, bio, email, image, phone } = c.req.valid('form');
       const { profileId } = c.req.param();
-      console.log(image);
 
       try {
         let uploadUrl: string | undefined;

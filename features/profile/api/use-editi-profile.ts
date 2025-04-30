@@ -3,6 +3,7 @@ import { InferRequestType, InferResponseType } from 'hono';
 
 import { toaster } from '@/components/ui/toaster';
 import { client } from '@/lib/rpc';
+import { ApiResponse } from '@/types';
 
 type ResponseType = InferResponseType<
   (typeof client.api.profile)[':profileId']['$patch'],
@@ -16,15 +17,16 @@ export const useEditProfile = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
-    mutationFn: async ({ json, param }) => {
+    mutationFn: async ({ form, param }) => {
       const res = await client.api.profile[':profileId'].$patch({
-        json,
+        form,
         param,
       });
       if (!res.ok) {
-        console.log(res);
+        const errorResponse = (await res.json()) as ApiResponse;
+        console.error(errorResponse);
 
-        throw new Error('Failed to update profile');
+        throw new Error(errorResponse.error || 'Failed to update profile');
       }
       return await res.json();
     },
@@ -43,6 +45,7 @@ export const useEditProfile = () => {
       });
     },
     onError: (error) => {
+      console.log(error);
       toaster.create({
         title: 'Something went wrong',
         description: error.message || 'Please try again',
