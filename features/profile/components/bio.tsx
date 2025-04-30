@@ -18,7 +18,7 @@ export const Bio = ({ profile }: Props) => {
   const { mutateAsync, isPending } = useEditProfile();
   const handleSave = async () => {
     await mutateAsync(
-      { json: { bio: value }, param: { profileId: profile.$id } },
+      { form: { bio: value }, param: { profileId: profile.$id } },
       {
         onSuccess: () => {
           setIsEditing(false);
