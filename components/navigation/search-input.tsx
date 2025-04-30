@@ -2,14 +2,23 @@
 import React from 'react';
 import { FlexBox } from '../custom/flex-box';
 import { IconSearch } from '@tabler/icons-react';
-import { Input } from '@chakra-ui/react';
+import { IconButton, Input } from '@chakra-ui/react';
 import { colors } from '@/constants';
+import { X } from 'lucide-react';
 
 type Props = {
   placeholder?: string;
+  value: string;
+  setValue: (value: string) => void;
+  clearValue: () => void;
 };
 
-export const SearchInput = ({ placeholder = 'Search...' }: Props) => {
+export const SearchInput = ({
+  placeholder = 'Search...',
+  clearValue,
+  setValue,
+  value,
+}: Props) => {
   return (
     <FlexBox
       alignItems={'center'}
@@ -28,7 +37,14 @@ export const SearchInput = ({ placeholder = 'Search...' }: Props) => {
         focusRingColor={'transparent'}
         placeholder={placeholder}
         color={colors.black}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
       />
+      {value && (
+        <IconButton onClick={clearValue}>
+          <X color={colors.black} />
+        </IconButton>
+      )}
     </FlexBox>
   );
 };
