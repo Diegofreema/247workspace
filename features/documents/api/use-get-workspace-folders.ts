@@ -14,13 +14,16 @@ export const useGetWorkspaceFolders = ({
   searchQuery,
 }: GetDocuments) => {
   return useQuery({
-    queryKey: ['workspace-folder', workspaceId, more],
+    queryKey: ['workspace-folder', workspaceId, more, searchQuery],
     queryFn: async () => {
       const response = await client.api.documents[':workspaceId'].$get({
         param: { workspaceId },
         query: { more, searchQuery },
       });
       if (!response.ok) {
+        const errorResponse = await response.json();
+        console.log(errorResponse);
+
         throw new Error('Failed to get folders');
       }
       const { data } = await response.json();

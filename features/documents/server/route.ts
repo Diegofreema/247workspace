@@ -36,8 +36,9 @@ const app = new Hono()
       ];
 
       if (searchQuery) {
-        query.push(searchQuery);
+        query.push(Query.search('folderName', searchQuery));
       }
+
       const workspaceFolder =
         await databases.listDocuments<WorkspaceFolderType>(
           DATABASE_ID,

@@ -14,13 +14,21 @@ export const DocumentClient = () => {
   const workspaceId = useWorkspaceId();
   const { more } = useOffsetWorkspaceFolder();
   const { value } = useSearchFolder();
+  console.log(value);
+
   const { data, isPending, isError, refetch } = useGetWorkspaceFolders({
     workspaceId,
     more: more.toString(),
     searchQuery: value || '',
   });
   if (isError) {
-    return <ErrorComponent message="Failed to get folders" reset={refetch} />;
+    return (
+      <ErrorComponent
+        message="Failed to get folders"
+        reset={refetch}
+        className="mt-10"
+      />
+    );
   }
 
   if (isPending) {

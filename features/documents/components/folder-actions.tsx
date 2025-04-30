@@ -5,9 +5,7 @@ import React from 'react';
 import { useFolderModalController } from '../hooks/use-folder-modal-controller';
 import { useSearchFolder } from '../hooks/use-search-folder';
 
-type Props = {};
-
-export const FolderActions = ({}: Props) => {
+export const FolderActions = () => {
   const { open } = useFolderModalController();
   const { query, setQuery, clearQuery } = useSearchFolder();
   return (
@@ -16,6 +14,7 @@ export const FolderActions = ({}: Props) => {
         value={query || ''}
         setValue={setQuery}
         clearValue={clearQuery}
+        placeholder="Search by folder name"
       />
       <CreateButton onClick={open} text="Create folder" width="fit" />
     </FlexBox>

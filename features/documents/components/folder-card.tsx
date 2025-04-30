@@ -13,7 +13,7 @@ type Props = {
 
 export const FolderCard = ({ folder }: Props) => {
   return (
-    <Card.Root bg={colors.white} boxShadow={'md'}>
+    <Card.Root bg={colors.white} boxShadow={'sm'}>
       <Card.Body>
         <FlexBox alignItems={'center'} justifyContent={'space-between'}>
           <Card.Title
