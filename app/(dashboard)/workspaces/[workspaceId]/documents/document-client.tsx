@@ -14,7 +14,6 @@ export const DocumentClient = () => {
   const workspaceId = useWorkspaceId();
   const { more } = useOffsetWorkspaceFolder();
   const { value } = useSearchFolder();
-  console.log(value);
 
   const { data, isPending, isError, refetch } = useGetWorkspaceFolders({
     workspaceId,

@@ -1,32 +1,30 @@
+import {
+  DATABASE_ID,
+  DOCUMENT_ID,
+  IMAGES_BUCKET_ID,
+  VIEW_URL,
+  WORKSPACE_DOCUMENT_FOLDER_ID,
+  WORKSPACE_DOCUMENT_ID,
+  WORKSPACE_ID,
+} from '@/config';
+import { getMember } from '@/features/members/utils';
 import { sessionMiddleware } from '@/lib/session-middleware';
+import {
+  ProjectDocumentType,
+  WorkspaceDocumentType,
+  WorkspaceFolderType,
+} from '@/types';
+import { generateRandomString } from '@/utils/helper';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
+import { ID, Query } from 'node-appwrite';
+import { z } from 'zod';
 import {
   createDocumentSchema,
   createFolderSchema,
   createWorkspaceDocumentSchema,
   editFolderSchema,
 } from '../schema';
-import { z } from 'zod';
-import {
-  DATABASE_ID,
-  DOCUMENT_ID,
-  IMAGES_BUCKET_ID,
-  PROFILE_ID,
-  VIEW_URL,
-  WORKSPACE_DOCUMENT_FOLDER_ID,
-  WORKSPACE_DOCUMENT_ID,
-  WORKSPACE_ID,
-} from '@/config';
-import { ID, Query } from 'node-appwrite';
-import {
-  Profile,
-  ProjectDocumentType,
-  WorkspaceDocumentType,
-  WorkspaceFolderType,
-} from '@/types';
-import { getMember } from '@/features/members/utils';
-import { generateRandomString } from '@/utils/helper';
 
 const app = new Hono()
   .get(
@@ -120,7 +118,6 @@ const app = new Hono()
           data: document,
         });
       } catch (error) {
-        // console.log(error);
         return c.json(
           {
             error: 'Something went wrong, please try again',
