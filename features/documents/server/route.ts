@@ -1,7 +1,11 @@
 import { sessionMiddleware } from '@/lib/session-middleware';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { createDocumentSchema, createFolderSchema } from '../schema';
+import {
+  createDocumentSchema,
+  createFolderSchema,
+  editFolderSchema,
+} from '../schema';
 import { z } from 'zod';
 import {
   DATABASE_ID,
@@ -236,6 +240,55 @@ const app = new Hono()
         {
           folderName: name,
           workspaceId,
+        }
+      );
+
+      return c.json({
+        data: folder,
+      });
+    }
+  )
+  .patch(
+    '/:folderId',
+    sessionMiddleware,
+    zValidator('json', editFolderSchema),
+    async (c) => {
+      const databases = c.get('databases');
+      const { folderId } = c.req.param();
+      const { name } = c.req.valid('json');
+      const folder = await databases.getDocument<WorkspaceFolderType>(
+        DATABASE_ID,
+        WORKSPACE_DOCUMENT_FOLDER_ID,
+        folderId
+      );
+      if (!folder) {
+        return c.json(
+          {
+            error: 'Folder not found',
+          },
+          404
+        );
+      }
+      const member = await getMember({
+        databases,
+        userId: c.get('user').$id,
+        workspaceId: folder.workspaceId,
+      });
+      if (!member) {
+        return c.json(
+          {
+            error: 'Unauthorized',
+          },
+          401
+        );
+      }
+
+      await databases.updateDocument(
+        DATABASE_ID,
+        WORKSPACE_DOCUMENT_FOLDER_ID,
+        folderId,
+        {
+          folderName: name,
         }
       );
 

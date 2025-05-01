@@ -25,7 +25,10 @@ export const FolderCard = ({ folder }: Props) => {
             <IconFolder color={colors.purple} />
             {folder.folderName}
           </Card.Title>
-          <WorkspaceDocumentAction folderId={folder.$id}>
+          <WorkspaceDocumentAction
+            folderId={folder.$id}
+            folderName={folder.folderName}
+          >
             <EllipsisVertical color={colors.black} />
           </WorkspaceDocumentAction>
         </FlexBox>

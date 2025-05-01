@@ -1,27 +1,29 @@
-import { ConfirmDialog } from '@/components/modals/confirm-dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { colors } from '@/constants';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
-import { ExternalLinkIcon, Pencil, Trash } from 'lucide-react';
+import { ExternalLinkIcon, Pencil } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
-import { useEditTaskModalController } from '@/lib/nuqs/use-editi-task-modal-contoller';
 import { useEditFolderModalController } from '../hooks/use-edit-folder-controller';
+import { useEditWorkspaceFolderStore } from '../store/edit-workspace-folder-store';
 
 type Props = {
   folderId: string;
+  folderName: string;
   children: React.ReactNode;
 };
 
-export const WorkspaceDocumentAction = ({ children, folderId }: Props) => {
+export const WorkspaceDocumentAction = ({
+  children,
+  folderId,
+  folderName,
+}: Props) => {
   const { open } = useEditFolderModalController();
-
+  const setValue = useEditWorkspaceFolderStore((state) => state.setValue);
   const workspaceId = useWorkspaceId();
   const router = useRouter();
 
@@ -29,6 +31,10 @@ export const WorkspaceDocumentAction = ({ children, folderId }: Props) => {
     router.push(`/workspaces/${workspaceId}/documents/folders/${folderId}`);
   };
 
+  const editFolder = () => {
+    setValue(folderName);
+    open(folderId);
+  };
   return (
     <div className="flex justify-end cursor-pointer">
       <DropdownMenu modal={false}>
@@ -43,7 +49,7 @@ export const WorkspaceDocumentAction = ({ children, folderId }: Props) => {
           </DropdownMenuItem>
 
           <DropdownMenuItem
-            onClick={() => open(folderId)}
+            onClick={editFolder}
             className="font-medium p-[10px]"
           >
             <Pencil className="size-4 mr-2 stroke-2" />

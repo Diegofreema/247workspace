@@ -12,6 +12,7 @@ import { CreateTicketModal } from './raise-ticket-modal';
 import { EditTicketModal } from './edit-ticket-modal';
 import { EditCommentModal } from '@/components/modals/edit-comment-modal';
 import { CreateWorkspaceFolder } from '@/features/documents/components/modal/create-workspace-folder-modal';
+import { EditWorkspaceFolderModal } from '@/features/documents/components/modal/edit-workspace-folder-modal';
 
 export const AllModals = () => {
   const [mounted, setMounted] = useState(false);
@@ -32,6 +33,7 @@ export const AllModals = () => {
       <EditTicketModal />
       <EditCommentModal />
       <CreateWorkspaceFolder />
+      <EditWorkspaceFolderModal />
     </>
   );
 };
