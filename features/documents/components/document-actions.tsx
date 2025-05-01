@@ -18,9 +18,15 @@ type Props = {
 
   children: React.ReactNode;
   url: string;
+  hideVersionHistory?: boolean;
 };
 
-export const DocumentAction = ({ children, versionId, url }: Props) => {
+export const DocumentAction = ({
+  children,
+  versionId,
+  url,
+  hideVersionHistory,
+}: Props) => {
   const pathname = usePathname();
   //   console.log(url);
 
@@ -59,13 +65,15 @@ export const DocumentAction = ({ children, versionId, url }: Props) => {
               View
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={goToVersionPage}
-            className="font-medium p-[10px]"
-          >
-            <IconHistory className="size-4 mr-2 stroke-2" />
-            Version history
-          </DropdownMenuItem>
+          {!hideVersionHistory && (
+            <DropdownMenuItem
+              onClick={goToVersionPage}
+              className="font-medium p-[10px]"
+            >
+              <IconHistory className="size-4 mr-2 stroke-2" />
+              Version history
+            </DropdownMenuItem>
+          )}
 
           <DropdownMenuItem
             onClick={copyToClipboard}

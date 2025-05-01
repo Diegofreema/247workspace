@@ -414,14 +414,116 @@ const app = new Hono()
       });
     }
   )
-  .get('/version-history/:documentId', sessionMiddleware, async (c) => {
-    const databases = c.get('databases');
-    const { documentId } = c.req.param();
-    const documents = await databases.listDocuments<WorkspaceDocumentType>(
-      DATABASE_ID,
-      WORKSPACE_DOCUMENT_ID,
-      [Query.equal('documentId', documentId), Query.orderDesc('$createdAt')]
-    );
-  });
+  .get(
+    '/version-history/:versionId',
+    sessionMiddleware,
+    zValidator('query', z.object({ page: z.string() })),
+    async (c) => {
+      const databases = c.get('databases');
+      const { versionId } = c.req.param();
+      const { page } = c.req.valid('query');
+      const pageNumber = Number(page);
+      const limit = 25;
+      const offset = (pageNumber - 1) * limit;
+
+      const documents = await databases.listDocuments<WorkspaceDocumentType>(
+        DATABASE_ID,
+        WORKSPACE_DOCUMENT_ID,
+        [
+          Query.equal('versionId', versionId),
+          Query.orderDesc('$createdAt'),
+          Query.limit(limit),
+          Query.offset(offset),
+        ]
+      );
+
+      return c.json({
+        data: documents,
+      });
+    }
+  )
+  .post(
+    '/upload-new-version/:versionId',
+    sessionMiddleware,
+    zValidator('form', createWorkspaceDocumentSchema.partial()),
+    async (c) => {
+      const databases = c.get('databases');
+      const storage = c.get('storage');
+      const user = c.get('user');
+      const { versionId } = c.req.param();
+      const { documentUrl, workspaceId, uploadedBy } = c.req.valid('form');
+      const member = await getMember({
+        databases,
+        userId: user.$id,
+        workspaceId: workspaceId!,
+      });
+
+      if (!member) {
+        return c.json(
+          {
+            error: 'Unauthorized, you are not a member of this workspace',
+          },
+          401
+        );
+      }
+      let link: string | undefined;
+      let id: string | undefined;
+      if (documentUrl instanceof File) {
+        const file = await storage.createFile(
+          IMAGES_BUCKET_ID,
+          ID.unique(),
+          documentUrl
+        );
+        id = file.$id;
+        link = `${VIEW_URL}/${IMAGES_BUCKET_ID}/files/${file.$id}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT}&mode=admin`;
+      }
+
+      const previousDocuments =
+        await databases.listDocuments<WorkspaceDocumentType>(
+          DATABASE_ID,
+          WORKSPACE_DOCUMENT_ID,
+          [
+            Query.equal('versionId', versionId),
+            Query.orderDesc('$createdAt'),
+            Query.limit(1),
+          ]
+        );
+      const previousDocument = previousDocuments.documents[0];
+      const previousDocumentVersion =
+        previousDocuments.documents.length > 0
+          ? previousDocuments.documents[0].version
+          : 1;
+
+      await databases.updateDocument(
+        DATABASE_ID,
+        WORKSPACE_DOCUMENT_ID,
+        previousDocument.$id,
+        {
+          isCurrent: false,
+        }
+      );
+
+      const document = await databases.createDocument<WorkspaceDocumentType>(
+        DATABASE_ID,
+        WORKSPACE_DOCUMENT_ID,
+        ID.unique(),
+        {
+          name: previousDocument.name,
+          workspaceId,
+          folderId: previousDocument.folderId,
+          uploadedBy,
+          documentUrl: link,
+          fileId: id,
+          isCurrent: true,
+          version: previousDocumentVersion + 1,
+          versionId: previousDocument.versionId,
+        }
+      );
+
+      return c.json({
+        data: document,
+      });
+    }
+  );
 
 export default app;

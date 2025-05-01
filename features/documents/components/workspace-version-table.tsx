@@ -25,7 +25,7 @@ type Props = {
 };
 export const LIMIT = 25;
 
-export const DocumentTable = ({ documents, total }: Props) => {
+export const VersionTable = ({ documents, total }: Props) => {
   const [page, setPage] = usePaginate();
   const disableNextButton = page === Math.ceil(total / LIMIT) || total === 0;
   return (
@@ -71,10 +71,10 @@ export const DocumentTable = ({ documents, total }: Props) => {
                 </Table.Cell>
                 <Table.Cell color={colors.black}>{item.uploadedBy}</Table.Cell>
                 <Table.Cell color={colors.black}>
-                  {format(item.createdAt ?? item.$createdAt, 'PPP hh:mm a')}
+                  {format(item.createdAt ?? item.$createdAt, 'PP hh:mm a')}
                 </Table.Cell>
                 <Table.Cell color={colors.black}>
-                  {format(item.$updatedAt, 'PPP hh:mm a')}
+                  {format(item.$updatedAt, 'PP hh:mm a')}
                 </Table.Cell>
                 <Table.Cell color={colors.black}>{item.version}</Table.Cell>
 
@@ -82,6 +82,7 @@ export const DocumentTable = ({ documents, total }: Props) => {
                   <DocumentAction
                     versionId={item.versionId}
                     url={item.documentUrl}
+                    hideVersionHistory
                   >
                     <EllipsisVertical
                       className="text-black size-4 cursor-pointer"
