@@ -1,40 +1,33 @@
-import { ConfirmDialog } from '@/components/modals/confirm-dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { colors } from '@/constants';
-import { Download, File, Trash } from 'lucide-react';
-import { useState } from 'react';
+import { File } from 'lucide-react';
 
-import { useRouter } from 'next/navigation';
-import { useWorkspaceId } from '@/hooks/useWorkspaceId';
-import { useProjectId } from '@/hooks/useProjectId';
-import { Link } from 'next-view-transitions';
-import { useDeleteDocument } from '../api/use-delete';
-import { IconHistory, IconShare2 } from '@tabler/icons-react';
 import { toaster } from '@/components/ui/toaster';
+import { useProjectId } from '@/hooks/useProjectId';
+import { useWorkspaceId } from '@/hooks/useWorkspaceId';
+import { IconHistory, IconShare2 } from '@tabler/icons-react';
+import { Link } from 'next-view-transitions';
+import { usePathname, useRouter } from 'next/navigation';
 
 type Props = {
-  documentId: string;
+  versionId: string;
 
   children: React.ReactNode;
   url: string;
 };
 
-export const DocumentAction = ({ children, documentId, url }: Props) => {
-  const workspaceId = useWorkspaceId();
-  const projectId = useProjectId();
+export const DocumentAction = ({ children, versionId, url }: Props) => {
+  const pathname = usePathname();
   //   console.log(url);
 
   const router = useRouter();
 
   const goToVersionPage = () => {
-    router.push(
-      `/workspaces/${workspaceId}/projects/${projectId}/documents/${documentId}`
-    );
+    router.push(`${pathname}/version-history/${versionId}`);
   };
 
   const copyToClipboard = async () => {
@@ -69,12 +62,9 @@ export const DocumentAction = ({ children, documentId, url }: Props) => {
           <DropdownMenuItem
             onClick={goToVersionPage}
             className="font-medium p-[10px]"
-            asChild
           >
-            <Link href={url} download target="_blank">
-              <IconHistory className="size-4 mr-2 stroke-2" />
-              Version history
-            </Link>
+            <IconHistory className="size-4 mr-2 stroke-2" />
+            Version history
           </DropdownMenuItem>
 
           <DropdownMenuItem

@@ -79,7 +79,10 @@ export const DocumentTable = ({ documents, total }: Props) => {
                 <Table.Cell color={colors.black}>{item.version}</Table.Cell>
 
                 <Table.Cell color={colors.black}>
-                  <DocumentAction documentId={item.$id} url={item.documentUrl}>
+                  <DocumentAction
+                    versionId={item.versionId}
+                    url={item.documentUrl}
+                  >
                     <EllipsisVertical
                       className="text-black size-4 cursor-pointer"
                       size={30}

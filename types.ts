@@ -131,7 +131,7 @@ export type BaseDocumentType = Models.Document & {
   version: number;
   fileId: string;
   isCurrent: boolean;
-  parentId?: string;
+  versionId: string;
   createdAt?: string;
 };
 

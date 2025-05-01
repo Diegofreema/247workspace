@@ -26,6 +26,7 @@ import {
   WorkspaceFolderType,
 } from '@/types';
 import { getMember } from '@/features/members/utils';
+import { generateRandomString } from '@/utils/helper';
 
 const app = new Hono()
   .get(
@@ -167,6 +168,23 @@ const app = new Hono()
         );
       }
 
+      const documentExist =
+        await databases.listDocuments<WorkspaceDocumentType>(
+          DATABASE_ID,
+          WORKSPACE_DOCUMENT_ID,
+          [Query.equal('name', name), Query.equal('workspaceId', workspaceId)]
+        );
+
+      if (documentExist.documents.length > 0) {
+        return c.json(
+          {
+            error:
+              'Document with name already exists, please choose a different name',
+          },
+          400
+        );
+      }
+
       const document = await databases.createDocument<WorkspaceDocumentType>(
         DATABASE_ID,
         WORKSPACE_DOCUMENT_ID,
@@ -180,6 +198,7 @@ const app = new Hono()
           fileId: id,
           isCurrent: true,
           version: 1,
+          versionId: id + generateRandomString(10),
         }
       );
 
@@ -394,6 +413,15 @@ const app = new Hono()
         data: documents,
       });
     }
-  );
+  )
+  .get('/version-history/:documentId', sessionMiddleware, async (c) => {
+    const databases = c.get('databases');
+    const { documentId } = c.req.param();
+    const documents = await databases.listDocuments<WorkspaceDocumentType>(
+      DATABASE_ID,
+      WORKSPACE_DOCUMENT_ID,
+      [Query.equal('documentId', documentId), Query.orderDesc('$createdAt')]
+    );
+  });
 
 export default app;
