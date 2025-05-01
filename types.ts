@@ -123,15 +123,31 @@ export type AnalyticsType = {
   projectDifference?: number;
 };
 
-export type DocumentType = Models.Document & {
+export type BaseDocumentType = Models.Document & {
   name: string;
   documentUrl: string;
-  workspaceId: string;
-  projectId: string;
   uploadedBy: string;
   folderId: string;
   version: number;
   fileId: string;
+  isCurrent: boolean;
+  parentId?: string;
+  createdAt: string;
+};
+
+export type ProjectDocumentType = BaseDocumentType & {
+  projectId: string;
+};
+
+export type WorkspaceDocumentType = BaseDocumentType & {
+  workspaceId: string;
+};
+
+export type ProjectDocumentWithProfile = ProjectDocumentType & {
+  uploader: Profile;
+};
+export type WorkspaceDocumentWithProfile = WorkspaceDocumentType & {
+  uploader: Profile;
 };
 
 export type FeedbackType = Models.Document & {

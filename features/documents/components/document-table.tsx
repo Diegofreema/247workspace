@@ -1,29 +1,33 @@
 'use client';
 
+import { CustomText } from '@/components/custom/title';
+import { EmptyUi } from '@/components/ui/empty-ui';
 import { colors } from '@/constants';
-import { DocumentType } from '@/types';
+import { usePaginate } from '@/lib/nuqs/use-paginate-tickets';
+import { WorkspaceDocumentWithProfile } from '@/types';
 import {
   ButtonGroup,
   For,
-  Heading,
   IconButton,
   Image,
   Pagination,
   Stack,
   Table,
 } from '@chakra-ui/react';
+import { format } from 'date-fns';
+import { EllipsisVertical } from 'lucide-react';
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
 import { DocumentAction } from './document-actions';
-import { EllipsisVertical } from 'lucide-react';
-import { format } from 'date-fns';
-import { EmptyUi } from '@/components/ui/empty-ui';
 
 type Props = {
-  documents: DocumentType[];
+  documents: WorkspaceDocumentWithProfile[];
   total: number;
 };
+export const LIMIT = 25;
 
 export const DocumentTable = ({ documents, total }: Props) => {
+  const [page, setPage] = usePaginate();
+  const disableNextButton = page === Math.ceil(total / LIMIT) || total === 0;
   return (
     <Stack width="full" gap="5">
       <Table.Root size="sm" variant="outline">
@@ -83,19 +87,39 @@ export const DocumentTable = ({ documents, total }: Props) => {
         </Table.Body>
       </Table.Root>
 
-      <Pagination.Root count={total * 5} pageSize={10} page={1}>
+      {total === 0 && (
+        <CustomText
+          textAlign={'center'}
+          color={colors.black}
+          fontWeight={'bold'}
+          fontSize={{ base: 20, md: LIMIT }}
+          mt={10}
+        >
+          No documents found for this workspace
+        </CustomText>
+      )}
+
+      <Pagination.Root
+        count={total}
+        pageSize={LIMIT}
+        page={page}
+        color={colors.black}
+      >
         <ButtonGroup variant="ghost" size="sm" wrap="wrap">
           <Pagination.PrevTrigger asChild>
-            <IconButton>
-              <LuChevronLeft color={colors.black} />
+            <IconButton
+              onClick={() => setPage((page) => page - 1)}
+              disabled={page === 1}
+            >
+              <LuChevronLeft />
             </IconButton>
           </Pagination.PrevTrigger>
 
           <Pagination.Items
             render={(page) => (
               <IconButton
-                color={colors.black}
                 variant={{ base: 'ghost', _selected: 'outline' }}
+                onClick={() => setPage(page.value)}
               >
                 {page.value}
               </IconButton>
@@ -103,8 +127,11 @@ export const DocumentTable = ({ documents, total }: Props) => {
           />
 
           <Pagination.NextTrigger asChild>
-            <IconButton>
-              <LuChevronRight color={colors.black} />
+            <IconButton
+              onClick={() => setPage((page) => page + 1)}
+              disabled={disableNextButton}
+            >
+              <LuChevronRight />
             </IconButton>
           </Pagination.NextTrigger>
         </ButtonGroup>
@@ -113,4 +140,4 @@ export const DocumentTable = ({ documents, total }: Props) => {
   );
 };
 
-const columns = ['Name', 'Uploaded by', 'Date', 'Actions'];
+const columns = ['Name', 'Uploaded by', 'Date', 'Last Modified', 'Actions'];

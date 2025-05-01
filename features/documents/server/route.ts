@@ -11,12 +11,19 @@ import {
   DATABASE_ID,
   DOCUMENT_ID,
   IMAGES_BUCKET_ID,
+  PROFILE_ID,
   VIEW_URL,
   WORKSPACE_DOCUMENT_FOLDER_ID,
+  WORKSPACE_DOCUMENT_ID,
   WORKSPACE_ID,
 } from '@/config';
 import { ID, Query } from 'node-appwrite';
-import { DocumentType, WorkspaceFolderType } from '@/types';
+import {
+  Profile,
+  ProjectDocumentType,
+  WorkspaceDocumentType,
+  WorkspaceFolderType,
+} from '@/types';
 import { getMember } from '@/features/members/utils';
 
 const app = new Hono()
@@ -91,7 +98,7 @@ const app = new Hono()
           );
         }
 
-        const document = await databases.createDocument<DocumentType>(
+        const document = await databases.createDocument<ProjectDocumentType>(
           DATABASE_ID,
           DOCUMENT_ID,
           ID.unique(),
@@ -124,7 +131,7 @@ const app = new Hono()
 
     const { documentId } = c.req.param();
 
-    const document = await databases.getDocument<DocumentType>(
+    const document = await databases.getDocument<ProjectDocumentType>(
       DATABASE_ID,
       DOCUMENT_ID,
       documentId
@@ -148,7 +155,7 @@ const app = new Hono()
     const storage = c.get('storage');
     const user = c.get('user');
     const { documentId } = c.req.param();
-    const document = await databases.getDocument<DocumentType>(
+    const document = await databases.getDocument<ProjectDocumentType>(
       DATABASE_ID,
       DOCUMENT_ID,
       documentId
@@ -294,6 +301,52 @@ const app = new Hono()
 
       return c.json({
         data: folder,
+      });
+    }
+  )
+  .get(
+    '/workspace-documents/:folderId',
+    sessionMiddleware,
+    zValidator('query', z.object({ page: z.string() })),
+    async (c) => {
+      const databases = c.get('databases');
+
+      const { folderId } = c.req.param();
+      const { page } = c.req.valid('query');
+      const pageNumber = Number(page);
+      const limit = 25;
+      const offset = (pageNumber - 1) * limit;
+      const documents = await databases.listDocuments<WorkspaceDocumentType>(
+        DATABASE_ID,
+        WORKSPACE_DOCUMENT_ID,
+        [
+          Query.equal('folderId', folderId),
+          Query.orderDesc('$createdAt'),
+          Query.equal('isCurrent', true),
+          Query.limit(limit),
+          Query.offset(offset),
+        ]
+      );
+
+      const documentsWithProfile = await Promise.all(
+        documents.documents.map(async (document) => {
+          const profile = await databases.getDocument<Profile>(
+            DATABASE_ID,
+            PROFILE_ID,
+            document.uploadedBy
+          );
+          return {
+            ...document,
+            uploader: profile,
+          };
+        })
+      );
+
+      return c.json({
+        data: {
+          ...documents,
+          documents: documentsWithProfile,
+        },
       });
     }
   );

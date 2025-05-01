@@ -7,11 +7,11 @@ import { useGetTickets } from '@/features/tickets/api/use-get-tickets';
 import { DisplayTicket } from '@/features/tickets/components/display-ticket';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { useTicketFilters } from '@/lib/nuqs/use-data-filter';
-import { usePaginateTicket } from '@/lib/nuqs/use-paginate-tickets';
+import { usePaginate } from '@/lib/nuqs/use-paginate-tickets';
 
 export const TicketClient = () => {
   const workspaceId = useWorkspaceId();
-  const [page] = usePaginateTicket();
+  const [page] = usePaginate();
   const [filters] = useTicketFilters();
   const { assigneeId, search, status } = filters;
   // const [value] = useDebounce(() => setFilters({search}) ,500, [search])
@@ -37,7 +37,11 @@ export const TicketClient = () => {
 
   return (
     <WrapperWithPadding className="bg-lightGrey">
-      <DisplayTicket tickets={data.documents} total={data.total} isPending={isPending} />
+      <DisplayTicket
+        tickets={data.documents}
+        total={data.total}
+        isPending={isPending}
+      />
     </WrapperWithPadding>
   );
 };
