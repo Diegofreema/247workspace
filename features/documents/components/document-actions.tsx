@@ -15,6 +15,7 @@ import { useProjectId } from '@/hooks/useProjectId';
 import { Link } from 'next-view-transitions';
 import { useDeleteDocument } from '../api/use-delete';
 import { IconHistory, IconShare2 } from '@tabler/icons-react';
+import { toaster } from '@/components/ui/toaster';
 
 type Props = {
   documentId: string;
@@ -27,87 +28,64 @@ export const DocumentAction = ({ children, documentId, url }: Props) => {
   const workspaceId = useWorkspaceId();
   const projectId = useProjectId();
   //   console.log(url);
-  const { mutateAsync, isPending } = useDeleteDocument();
-  const [isOpen, setOpen] = useState(false);
-  const router = useRouter();
-  const isLoading = isPending;
-  const onDelete = async () => {
-    await mutateAsync(
-      { param: { documentId } },
-      {
-        onSuccess: () => {
-          setOpen(false);
-        },
-      }
-    );
-  };
 
-  const onDownload = () => {};
+  const router = useRouter();
+
   const goToVersionPage = () => {
     router.push(
       `/workspaces/${workspaceId}/projects/${projectId}/documents/${documentId}`
     );
   };
 
-  return (
-    <>
-      <ConfirmDialog
-        isOpen={isOpen}
-        setIsOpen={setOpen}
-        onCancel={() => setOpen(false)}
-        isSubmitting={isLoading}
-        title="Delete document"
-        subtitle="Are you sure you want to delete this document?, this action is irreversible."
-        confirmButtonText="Delete"
-        onConfirm={onDelete}
-        btnColor={colors.red}
-      />
-      <div className="flex justify-end">
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48 text-black bg-white">
-            {/* <DropdownMenuItem
-              disabled={isLoading}
-              className="font-medium p-[10px]"
-              onClick={onOpenDocuments}
-            >
-              
-              View
-            </DropdownMenuItem> */}
-            <DropdownMenuItem
-              onClick={onDownload}
-              disabled={isLoading}
-              className="font-medium p-[10px]"
-              asChild
-            >
-              <Link href={url} download target="_blank">
-                <File className="size-4 mr-2 stroke-2" />
-                View
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={onDownload}
-              disabled={isLoading}
-              className="font-medium p-[10px]"
-              asChild
-            >
-              <Link href={url} download target="_blank">
-                <IconHistory className="size-4 mr-2 stroke-2" />
-                Version history
-              </Link>
-            </DropdownMenuItem>
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      // Optional: Show success message
+      toaster.create({
+        title: 'Copied to clipboard',
+        description: 'The link has been copied to your clipboard.',
+        type: 'info',
+      });
+    } catch (err) {
+      toaster.create({
+        title: 'Error',
+        description: 'Failed to copy link to clipboard.',
+        type: 'error',
+      });
+    }
+  };
 
-            <DropdownMenuItem
-              onClick={() => setOpen(true)}
-              disabled={isLoading}
-              className="font-medium p-[10px]"
-            >
-              <IconShare2 className="size-4 mr-2 stroke-2" />
-              Share document
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    </>
+  return (
+    <div className="flex justify-end">
+      <DropdownMenu modal={false}>
+        <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-48 text-black bg-white">
+          <DropdownMenuItem className="font-medium p-[10px]" asChild>
+            <Link href={url} download target="_blank">
+              <File className="size-4 mr-2 stroke-2" />
+              View
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={goToVersionPage}
+            className="font-medium p-[10px]"
+            asChild
+          >
+            <Link href={url} download target="_blank">
+              <IconHistory className="size-4 mr-2 stroke-2" />
+              Version history
+            </Link>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            onClick={copyToClipboard}
+            className="font-medium p-[10px]"
+          >
+            <IconShare2 className="size-4 mr-2 stroke-2" />
+            Share document
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 };
