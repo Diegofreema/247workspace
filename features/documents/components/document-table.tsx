@@ -4,7 +4,7 @@ import { CustomText } from '@/components/custom/title';
 import { EmptyUi } from '@/components/ui/empty-ui';
 import { colors } from '@/constants';
 import { usePaginate } from '@/lib/nuqs/use-paginate-tickets';
-import { WorkspaceDocumentWithProfile } from '@/types';
+import { WorkspaceDocumentType } from '@/types';
 import {
   ButtonGroup,
   For,
@@ -20,7 +20,7 @@ import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
 import { DocumentAction } from './document-actions';
 
 type Props = {
-  documents: WorkspaceDocumentWithProfile[];
+  documents: WorkspaceDocumentType[];
   total: number;
 };
 export const LIMIT = 25;
@@ -71,8 +71,13 @@ export const DocumentTable = ({ documents, total }: Props) => {
                 </Table.Cell>
                 <Table.Cell color={colors.black}>{item.uploadedBy}</Table.Cell>
                 <Table.Cell color={colors.black}>
-                  {format(item.$createdAt, 'PPP')}
+                  {format(item.createdAt ?? item.$createdAt, 'PPP')}
                 </Table.Cell>
+                <Table.Cell color={colors.black}>
+                  {format(item.$updatedAt, 'PPP')}
+                </Table.Cell>
+                <Table.Cell color={colors.black}>{item.version}</Table.Cell>
+
                 <Table.Cell color={colors.black}>
                   <DocumentAction documentId={item.$id} url={item.documentUrl}>
                     <EllipsisVertical
@@ -140,4 +145,11 @@ export const DocumentTable = ({ documents, total }: Props) => {
   );
 };
 
-const columns = ['Name', 'Uploaded by', 'Date', 'Last Modified', 'Actions'];
+const columns = [
+  'Name',
+  'Uploaded by',
+  'Date',
+  'Last Modified',
+  'Version',
+  'Actions',
+];

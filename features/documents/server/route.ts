@@ -4,6 +4,7 @@ import { Hono } from 'hono';
 import {
   createDocumentSchema,
   createFolderSchema,
+  createWorkspaceDocumentSchema,
   editFolderSchema,
 } from '../schema';
 import { z } from 'zod';
@@ -109,6 +110,8 @@ const app = new Hono()
             uploadedBy,
             documentUrl: link,
             fileId: id,
+            isCurrent: true,
+            version: 1,
           }
         );
 
@@ -124,6 +127,65 @@ const app = new Hono()
           500
         );
       }
+    }
+  )
+  .post(
+    '/create-workspace-document',
+    sessionMiddleware,
+    zValidator('form', createWorkspaceDocumentSchema),
+    async (c) => {
+      const databases = c.get('databases');
+      const user = c.get('user');
+      const storage = c.get('storage');
+      const { name, documentUrl, workspaceId, uploadedBy, folderId } =
+        c.req.valid('form');
+
+      let link: string | undefined;
+      let id: string | undefined;
+      if (documentUrl instanceof File) {
+        const file = await storage.createFile(
+          IMAGES_BUCKET_ID,
+          ID.unique(),
+          documentUrl
+        );
+        id = file.$id;
+        link = `${VIEW_URL}/${IMAGES_BUCKET_ID}/files/${file.$id}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT}&mode=admin`;
+      }
+
+      const member = await getMember({
+        databases,
+        userId: user.$id,
+        workspaceId,
+      });
+
+      if (!member) {
+        return c.json(
+          {
+            error: 'Unauthorized',
+          },
+          401
+        );
+      }
+
+      const document = await databases.createDocument<WorkspaceDocumentType>(
+        DATABASE_ID,
+        WORKSPACE_DOCUMENT_ID,
+        ID.unique(),
+        {
+          name,
+          workspaceId,
+          folderId,
+          uploadedBy,
+          documentUrl: link,
+          fileId: id,
+          isCurrent: true,
+          version: 1,
+        }
+      );
+
+      return c.json({
+        data: document,
+      });
     }
   )
   .get('/:documentId', sessionMiddleware, async (c) => {
@@ -328,25 +390,8 @@ const app = new Hono()
         ]
       );
 
-      const documentsWithProfile = await Promise.all(
-        documents.documents.map(async (document) => {
-          const profile = await databases.getDocument<Profile>(
-            DATABASE_ID,
-            PROFILE_ID,
-            document.uploadedBy
-          );
-          return {
-            ...document,
-            uploader: profile,
-          };
-        })
-      );
-
       return c.json({
-        data: {
-          ...documents,
-          documents: documentsWithProfile,
-        },
+        data: documents,
       });
     }
   );

@@ -132,7 +132,7 @@ export type BaseDocumentType = Models.Document & {
   fileId: string;
   isCurrent: boolean;
   parentId?: string;
-  createdAt: string;
+  createdAt?: string;
 };
 
 export type ProjectDocumentType = BaseDocumentType & {

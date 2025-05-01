@@ -14,6 +14,7 @@ import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { useProjectId } from '@/hooks/useProjectId';
 import { Link } from 'next-view-transitions';
 import { useDeleteDocument } from '../api/use-delete';
+import { IconHistory, IconShare2 } from '@tabler/icons-react';
 
 type Props = {
   documentId: string;
@@ -41,10 +42,8 @@ export const DocumentAction = ({ children, documentId, url }: Props) => {
     );
   };
 
-  const onOpenProject = () => {};
-
   const onDownload = () => {};
-  const onOpenDocuments = () => {
+  const goToVersionPage = () => {
     router.push(
       `/workspaces/${workspaceId}/projects/${projectId}/documents/${documentId}`
     );
@@ -86,14 +85,25 @@ export const DocumentAction = ({ children, documentId, url }: Props) => {
                 View
               </Link>
             </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={onDownload}
+              disabled={isLoading}
+              className="font-medium p-[10px]"
+              asChild
+            >
+              <Link href={url} download target="_blank">
+                <IconHistory className="size-4 mr-2 stroke-2" />
+                Version history
+              </Link>
+            </DropdownMenuItem>
 
             <DropdownMenuItem
               onClick={() => setOpen(true)}
               disabled={isLoading}
-              className="text-amber-700 focus:text-amber-700 font-medium p-[10px]"
+              className="font-medium p-[10px]"
             >
-              <Trash className="size-4 mr-2 stroke-2" />
-              Delete
+              <IconShare2 className="size-4 mr-2 stroke-2" />
+              Share document
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

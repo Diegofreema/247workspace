@@ -14,6 +14,19 @@ export const createDocumentSchema = z.object({
   uploadedBy: z.string(),
 });
 
+export const createWorkspaceDocumentSchema = z.object({
+  name: z.string().min(1, { message: 'Document name is required' }),
+  documentUrl: z.union([
+    z.instanceof(File),
+    z
+      .string()
+      .min(1, { message: 'Document is required' })
+      .transform((value) => (value === '' ? undefined : value)),
+  ]),
+  workspaceId: z.string(),
+  folderId: z.string(),
+  uploadedBy: z.string(),
+});
 export const createFolderSchema = z.object({
   name: z
     .string()
