@@ -1,10 +1,12 @@
 'use client';
 import {
   IconBriefcase2,
+  IconFile,
   IconFolders,
   IconLayout2,
   IconSettings,
   IconSortAscending2,
+  IconTicket,
   IconUsers,
 } from '@tabler/icons-react';
 import { useTransitionRouter } from 'next-view-transitions';
@@ -23,11 +25,11 @@ type Props = {
 };
 
 const icons = {
-  IconBriefcase2,
+  IconTicket,
   IconLayout2,
   IconSortAscending2,
   IconUsers,
-  IconFolders,
+  IconFile,
   IconSettings,
 };
 export const NavLinkButtons = ({ item }: Props) => {

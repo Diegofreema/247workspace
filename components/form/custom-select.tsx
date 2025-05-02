@@ -17,12 +17,7 @@ export const CustomSelect = <TFormValues extends FieldValues>({
   register,
 }: Props<TFormValues>) => {
   return (
-    <NativeSelect.Root
-      size="md"
-      width="100%"
-      colorPalette={'black'}
-      borderColor={'black'}
-    >
+    <NativeSelect.Root size="md" width="100%" borderColor={'black'}>
       <NativeSelect.Field
         placeholder={placeholder}
         className="placeholder:text-[#645D5D]"
