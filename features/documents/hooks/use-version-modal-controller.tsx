@@ -7,3 +7,13 @@ export const useVersionModalController = () => {
   const close = () => setVersionId(null);
   return { versionId, open, close, setVersionId };
 };
+export const useProjectVersionModalController = () => {
+  const [versionId, setVersionId] = useQueryState(
+    'project-versionId',
+    parseAsString
+  );
+
+  const open = (id: string) => setVersionId(id);
+  const close = () => setVersionId(null);
+  return { versionId, open, close, setVersionId };
+};

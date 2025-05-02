@@ -837,7 +837,8 @@ const app = new Hono()
       const storage = c.get('storage');
       const user = c.get('user');
       const { versionId } = c.req.param();
-      const { documentUrl, workspaceId, uploadedBy } = c.req.valid('form');
+      const { documentUrl, workspaceId, uploadedBy, projectId } =
+        c.req.valid('form');
       const member = await getMember({
         databases,
         userId: user.$id,
@@ -895,7 +896,7 @@ const app = new Hono()
         ID.unique(),
         {
           name: previousDocument.name,
-          workspaceId,
+          projectId,
           folderId: previousDocument.folderId,
           uploadedBy,
           documentUrl: link,

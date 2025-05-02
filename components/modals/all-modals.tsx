@@ -16,6 +16,7 @@ import { EditWorkspaceFolderModal } from '@/features/documents/components/modal/
 import { UploadNewVersionModal } from '@/features/documents/components/modal/upload-new-version';
 import { CreateProjectFolder } from '@/features/documents/components/modal/create-project-folder-modal';
 import { EditProjectFolderModal } from '@/features/documents/components/modal/edit-project-modal';
+import { UploadProjectVersionModal } from '@/features/documents/components/modal/upload-new-project-version';
 
 export const AllModals = () => {
   const [mounted, setMounted] = useState(false);
@@ -40,6 +41,7 @@ export const AllModals = () => {
       <UploadNewVersionModal />
       <CreateProjectFolder />
       <EditProjectFolderModal />
+      <UploadProjectVersionModal />
     </>
   );
 };
