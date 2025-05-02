@@ -1,10 +1,10 @@
-import { getLoggedInUser } from '@/features/auth/queries';
+import { getLoggedInUser, protect } from '@/features/auth/queries';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { ProfilePageClient } from './client';
 
 const ProfilePage = async () => {
-  const { user } = await getLoggedInUser();
+  const user = await protect();
   if (!user) redirect('/signup');
   return (
     <div className="w-full bg-red-500">
