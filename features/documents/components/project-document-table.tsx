@@ -4,7 +4,7 @@ import { CustomText } from '@/components/custom/title';
 import { EmptyUi } from '@/components/ui/empty-ui';
 import { colors } from '@/constants';
 import { usePaginate } from '@/lib/nuqs/use-paginate-tickets';
-import { WorkspaceDocumentType } from '@/types';
+import { ProjectDocumentType, WorkspaceDocumentType } from '@/types';
 import {
   ButtonGroup,
   For,
@@ -20,12 +20,12 @@ import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
 import { DocumentAction } from './document-actions';
 
 type Props = {
-  documents: WorkspaceDocumentType[];
+  documents: ProjectDocumentType[];
   total: number;
 };
 export const LIMIT = 25;
 
-export const DocumentTable = ({ documents, total }: Props) => {
+export const ProjectDocumentTable = ({ documents, total }: Props) => {
   const [page, setPage] = usePaginate();
   const disableNextButton = page === Math.ceil(total / LIMIT) || total === 0;
   return (

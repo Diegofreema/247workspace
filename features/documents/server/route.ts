@@ -26,6 +26,7 @@ import { z } from 'zod';
 import {
   createDocumentSchema,
   createFolderSchema,
+  createProjectDocumentSchema,
   createProjectFolderSchema,
   createWorkspaceDocumentSchema,
   editFolderSchema,
@@ -63,45 +64,6 @@ const app = new Hono()
           query
         );
 
-      return c.json({ data: workspaceFolder });
-    }
-  )
-  .get(
-    '/get-project-folder',
-    sessionMiddleware,
-    zValidator(
-      'query',
-      z.object({
-        searchQuery: z.string().nullish(),
-        more: z.string(),
-        projectId: z.string(),
-      })
-    ),
-    async (c) => {
-      const databases = c.get('databases');
-      const { more, searchQuery, projectId } = c.req.valid('query');
-      const limit = 25;
-      const offset = limit + Number(more);
-      const query = [
-        Query.equal('projectId', projectId),
-        Query.orderDesc('$createdAt'),
-        Query.limit(offset),
-      ];
-
-      if (searchQuery) {
-        query.push(Query.search('folderName', searchQuery));
-      }
-
-      const projectFolders = await databases.listDocuments<ProjectFolderType>(
-        DATABASE_ID,
-        PROJECT_DOCUMENT_FOLDER_ID,
-        query
-      );
-      const workspaceFolder =
-        await databases.listDocuments<WorkspaceFolderType>(
-          DATABASE_ID,
-          WORKSPACE_DOCUMENT_FOLDER_ID
-        );
       return c.json({ data: workspaceFolder });
     }
   )
@@ -283,13 +245,19 @@ const app = new Hono()
   .post(
     '/create-project-document',
     sessionMiddleware,
-    zValidator('form', createWorkspaceDocumentSchema),
+    zValidator('form', createProjectDocumentSchema),
     async (c) => {
       const databases = c.get('databases');
       const user = c.get('user');
       const storage = c.get('storage');
-      const { name, documentUrl, workspaceId, uploadedBy, folderId } =
-        c.req.valid('form');
+      const {
+        name,
+        documentUrl,
+        projectId,
+        workspaceId,
+        uploadedBy,
+        folderId,
+      } = c.req.valid('form');
 
       let link: string | undefined;
       let id: string | undefined;
@@ -321,8 +289,8 @@ const app = new Hono()
       const documentExist =
         await databases.listDocuments<WorkspaceDocumentType>(
           DATABASE_ID,
-          WORKSPACE_DOCUMENT_ID,
-          [Query.equal('name', name), Query.equal('workspaceId', workspaceId)]
+          DOCUMENT_ID,
+          [Query.equal('name', name), Query.equal('projectId', projectId)]
         );
 
       if (documentExist.documents.length > 0) {
@@ -335,13 +303,13 @@ const app = new Hono()
         );
       }
 
-      const document = await databases.createDocument<WorkspaceDocumentType>(
+      const document = await databases.createDocument<ProjectDocumentType>(
         DATABASE_ID,
-        WORKSPACE_DOCUMENT_ID,
+        DOCUMENT_ID,
         ID.unique(),
         {
           name,
-          workspaceId,
+          projectId,
           folderId,
           uploadedBy,
           documentUrl: link,
@@ -678,6 +646,35 @@ const app = new Hono()
       const documents = await databases.listDocuments<WorkspaceDocumentType>(
         DATABASE_ID,
         WORKSPACE_DOCUMENT_ID,
+        [
+          Query.equal('folderId', folderId),
+          Query.orderDesc('$createdAt'),
+          Query.equal('isCurrent', true),
+          Query.limit(limit),
+          Query.offset(offset),
+        ]
+      );
+
+      return c.json({
+        data: documents,
+      });
+    }
+  )
+  .get(
+    '/project-documents/:folderId',
+    sessionMiddleware,
+    zValidator('query', z.object({ page: z.string() })),
+    async (c) => {
+      const databases = c.get('databases');
+
+      const { folderId } = c.req.param();
+      const { page } = c.req.valid('query');
+      const pageNumber = Number(page);
+      const limit = 25;
+      const offset = (pageNumber - 1) * limit;
+      const documents = await databases.listDocuments<ProjectDocumentType>(
+        DATABASE_ID,
+        DOCUMENT_ID,
         [
           Query.equal('folderId', folderId),
           Query.orderDesc('$createdAt'),

@@ -1,21 +1,13 @@
-'use client';
-
-import { notFound } from 'next/navigation';
-
+import { getLoggedInUser } from '@/features/auth/queries';
 import { DocumentViewClient } from './client';
+import { redirect } from 'next/navigation';
 
-type Props = {
-  params: {
-    documentId: string;
-  };
-};
-
-const DocumentIdPage = ({ params }: Props) => {
-  if (!params.documentId) {
-    return notFound();
+const DocumentIdPage = async () => {
+  const { user } = await getLoggedInUser();
+  if (!user) {
+    redirect('/signup');
   }
-
-  return <DocumentViewClient documentId={params.documentId} />;
+  return <DocumentViewClient />;
 };
 
 export default DocumentIdPage;

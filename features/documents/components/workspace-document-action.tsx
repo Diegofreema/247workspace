@@ -74,11 +74,11 @@ export const ProjectDocumentAction = ({
   const { open } = useEditProjectFolderModalController();
   const setValue = useEditProjectFolderStore((state) => state.setValue);
   const pathname = usePathname();
-  const workspaceId = useWorkspaceId();
+
   const router = useRouter();
 
   const openFolder = () => {
-    router.push(`/workspaces/${workspaceId}/documents/folders/${folderId}`);
+    router.push(`${pathname}/${folderId}`);
   };
 
   const editFolder = () => {

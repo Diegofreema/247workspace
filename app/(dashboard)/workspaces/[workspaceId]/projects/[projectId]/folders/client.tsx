@@ -12,7 +12,6 @@ import { useOffsetProjectFolder } from '@/lib/nuqs/use-workspace-folder-more';
 
 export const DocumentClient = () => {
   const projectId = useProjectId();
-  console.log({ projectId });
 
   const { more } = useOffsetProjectFolder();
   const { value } = useSearchProjectFolder();
@@ -21,7 +20,6 @@ export const DocumentClient = () => {
     more: more.toString(),
     searchQuery: value,
   });
-  console.log(data);
 
   if (isError) {
     return <ErrorComponent message="Failed to get documents" reset={refetch} />;
