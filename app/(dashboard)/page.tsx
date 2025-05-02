@@ -1,9 +1,11 @@
 import { getLoggedInUser, protect } from '@/features/auth/queries';
+import { getProfile, getWorkspace } from '@/features/workspaces/queries';
 import { redirect } from 'next/navigation';
 
 const WorkspaceHomePage = async () => {
   const user = await protect();
-  const { profile, workspaces } = await getLoggedInUser();
+  const { workspaces } = await getLoggedInUser();
+  const profile = await getProfile(user?.$id);
 
   if (!user) redirect('/signup');
 

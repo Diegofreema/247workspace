@@ -15,6 +15,7 @@ export const UserAvatarAction = () => {
     return <SkeletonCircle size="12" />;
   }
   const { profile } = data;
+  if (!profile) return null;
   return (
     <AvatarMenu
       name={profile?.name || ''}
