@@ -29,6 +29,7 @@ import {
   createProjectFolderSchema,
   createWorkspaceDocumentSchema,
   editFolderSchema,
+  editProjectFolderSchema,
 } from '../schema';
 
 const app = new Hono()
@@ -96,8 +97,42 @@ const app = new Hono()
         PROJECT_DOCUMENT_FOLDER_ID,
         query
       );
+      const workspaceFolder =
+        await databases.listDocuments<WorkspaceFolderType>(
+          DATABASE_ID,
+          WORKSPACE_DOCUMENT_FOLDER_ID
+        );
+      return c.json({ data: workspaceFolder });
+    }
+  )
+  .get(
+    '/get-project-folder/:projectId',
+    sessionMiddleware,
+    zValidator(
+      'query',
+      z.object({ searchQuery: z.string().nullish(), more: z.string() })
+    ),
+    async (c) => {
+      const databases = c.get('databases');
+      const { projectId } = c.req.param();
+      const { searchQuery, more } = c.req.valid('query');
+      const limit = 25;
+      const offset = limit + Number(more);
+      const query = [
+        Query.equal('projectId', projectId),
+        Query.orderDesc('$createdAt'),
+        Query.limit(offset),
+      ];
+      if (searchQuery) {
+        query.push(Query.search('folderName', searchQuery));
+      }
+      const projectFolder = await databases.listDocuments<ProjectFolderType>(
+        DATABASE_ID,
+        PROJECT_DOCUMENT_FOLDER_ID,
+        query
+      );
 
-      return c.json({ data: projectFolders });
+      return c.json({ data: projectFolder });
     }
   )
   .post(
@@ -545,6 +580,78 @@ const app = new Hono()
       await databases.updateDocument(
         DATABASE_ID,
         WORKSPACE_DOCUMENT_FOLDER_ID,
+        folderId,
+        {
+          folderName: name,
+        }
+      );
+
+      return c.json({
+        data: folder,
+      });
+    }
+  )
+  .patch(
+    '/project-folder/:folderId',
+    sessionMiddleware,
+    zValidator('json', editProjectFolderSchema),
+    async (c) => {
+      const databases = c.get('databases');
+      const { folderId } = c.req.param();
+      const { name } = c.req.valid('json');
+
+      const folder = await databases.getDocument<ProjectFolderType>(
+        DATABASE_ID,
+        PROJECT_DOCUMENT_FOLDER_ID,
+        folderId
+      );
+      const folderExists = await databases.listDocuments(
+        DATABASE_ID,
+        PROJECT_DOCUMENT_FOLDER_ID,
+        [
+          Query.equal('folderName', name),
+          Query.equal('projectId', folder.projectId),
+        ]
+      );
+      if (folderExists.documents.length > 0) {
+        return c.json(
+          {
+            error:
+              'Folder with name already exists, please choose a different name',
+          },
+          400
+        );
+      }
+      const project = await databases.getDocument<Project>(
+        DATABASE_ID,
+        PROJECT_ID,
+        folder.projectId
+      );
+      if (!folder) {
+        return c.json(
+          {
+            error: 'Folder not found',
+          },
+          404
+        );
+      }
+      const member = await getMember({
+        databases,
+        userId: c.get('user').$id,
+        workspaceId: project.workspaceId,
+      });
+      if (!member) {
+        return c.json(
+          {
+            error: 'Unauthorized',
+          },
+          401
+        );
+      }
+
+      await databases.updateDocument(
+        DATABASE_ID,
+        PROJECT_DOCUMENT_FOLDER_ID,
         folderId,
         {
           folderName: name,

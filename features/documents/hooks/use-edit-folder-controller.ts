@@ -7,3 +7,11 @@ export const useEditFolderModalController = () => {
   const close = () => setFolderId(null);
   return { folderId, open, close, setFolderId };
 };
+
+export const useEditProjectFolderModalController = () => {
+  const [folderId, setFolderId] = useQueryState('edit-folder', parseAsString);
+
+  const open = (id: string) => setFolderId(id);
+  const close = () => setFolderId(null);
+  return { folderId, open, close, setFolderId };
+};

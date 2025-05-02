@@ -14,12 +14,13 @@ export const useGetProjectFolders = ({
   searchQuery,
 }: GetDocuments) => {
   return useQuery({
-    queryKey: ['project-folder', projectId, more, searchQuery],
+    queryKey: ['project-folder', projectId, searchQuery, more],
     queryFn: async () => {
-      console.log({ projectId });
-
-      const response = await client.api.documents['get-project-folder'].$get({
-        query: { more, searchQuery, projectId },
+      const response = await client.api.documents['get-project-folder'][
+        ':projectId'
+      ].$get({
+        query: { searchQuery, more },
+        param: { projectId },
       });
       if (!response.ok) {
         const errorResponse = await response.json();

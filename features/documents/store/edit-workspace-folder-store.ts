@@ -11,3 +11,8 @@ export const useEditWorkspaceFolderStore = create<Props>((set) => ({
   setValue: (values: string) => set({ name: values }),
   clear: () => set({ name: '' }),
 }));
+export const useEditProjectFolderStore = create<Props>((set) => ({
+  name: '',
+  setValue: (values: string) => set({ name: values }),
+  clear: () => set({ name: '' }),
+}));

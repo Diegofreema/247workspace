@@ -4,7 +4,10 @@ import { ProjectFolderType } from '@/types';
 import { Card } from '@chakra-ui/react';
 import { IconFolder } from '@tabler/icons-react';
 import { EllipsisVertical } from 'lucide-react';
-import { WorkspaceDocumentAction } from './workspace-document-action';
+import {
+  ProjectDocumentAction,
+  WorkspaceDocumentAction,
+} from './workspace-document-action';
 
 type Props = {
   folder: ProjectFolderType;
@@ -24,12 +27,12 @@ export const ProjectFolderCard = ({ folder }: Props) => {
             <IconFolder color={colors.purple} />
             {folder.folderName}
           </Card.Title>
-          <WorkspaceDocumentAction
+          <ProjectDocumentAction
             folderId={folder.$id}
             folderName={folder.folderName}
           >
             <EllipsisVertical color={colors.black} />
-          </WorkspaceDocumentAction>
+          </ProjectDocumentAction>
         </FlexBox>
       </Card.Body>
     </Card.Root>
