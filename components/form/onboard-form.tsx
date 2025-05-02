@@ -90,7 +90,6 @@ export const OnboardForm = ({ initialValue }: Props) => {
           register={register}
           errors={errors}
           name="fullName"
-          disabled
           required
         />
         <FormInput
@@ -99,7 +98,6 @@ export const OnboardForm = ({ initialValue }: Props) => {
           register={register}
           errors={errors}
           name="email"
-          disabled
           required
         />
         <FormInput
