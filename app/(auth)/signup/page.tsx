@@ -7,9 +7,10 @@ import { Suspense } from 'react';
 
 const SignIn = async () => {
   const user = await protect();
-  console.log(user);
 
-  if (user) redirect('/');
+  if (user) {
+    return redirect('/');
+  }
   return (
     <FlexBox
       mx="auto"

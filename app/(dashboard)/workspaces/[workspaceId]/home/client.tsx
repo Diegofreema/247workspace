@@ -91,8 +91,8 @@ export const TaskList = ({ tasks, total }: Props) => {
   const { open: createTask } = useCreateTaskModalController();
   const workspaceId = useWorkspaceId();
   return (
-    <div className="flex flex-col gap-y-4 col-span-1">
-      <div className="bg-white text-black rounded-lg p-4">
+    <div className="flex flex-col gap-y-4 col-span-1 flex-1">
+      <div className="bg-white text-black rounded-lg p-4 flex-1">
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">Tasks ({total})</p>
           <Tooltip content="Create a new task">
@@ -151,8 +151,8 @@ export const ProjectList = ({ projects, total }: ProjectProps) => {
   const { open: createProject } = useCreateProjectModalController();
   const workspaceId = useWorkspaceId();
   return (
-    <div className="flex flex-col gap-y-4 col-span-1">
-      <div className="bg-white text-black rounded-lg p-4">
+    <div className="flex flex-col gap-y-4 col-span-1 flex-1">
+      <div className="bg-white text-black rounded-lg p-4 flex-1">
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">Projects ({total})</p>
           <Tooltip content="Create a new project">
@@ -199,8 +199,8 @@ export const ProjectList = ({ projects, total }: ProjectProps) => {
 export const MemberList = ({ members, total }: MemberProps) => {
   const workspaceId = useWorkspaceId();
   return (
-    <div className="flex flex-col gap-y-4 col-span-1">
-      <div className="bg-white text-black rounded-lg p-4">
+    <div className="flex flex-col gap-y-4 col-span-1 flex-1">
+      <div className="bg-white text-black rounded-lg p-4 flex-1">
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">Members ({total})</p>
           <Tooltip content="Create a new project">

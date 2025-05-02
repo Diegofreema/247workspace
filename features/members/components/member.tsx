@@ -7,11 +7,14 @@ import { MemberWithProfile } from '@/types';
 import {
   Box,
   createListCollection,
+  IconButton,
   SelectValueChangeDetails,
   Stack,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { MemberTable } from './member-table';
+import { Input } from '@/components/ui/input';
+import { X } from 'lucide-react';
 
 type Props = {
   members: MemberWithProfile[];
@@ -30,6 +33,11 @@ export const Member = ({ members, userId }: Props) => {
     setValue(data.value);
   };
 
+  const filteredMembers = members.filter((member) => {
+    if (!search) return member;
+    return member.name?.toLowerCase().includes(search.toLowerCase());
+  });
+
   return (
     <Box>
       <Stack>
@@ -39,16 +47,28 @@ export const Member = ({ members, userId }: Props) => {
         </CustomText>
       </Stack>
       <FlexBox alignItems={'center'} justifyContent={'space-between'}>
-        <SearchInput
-          placeholder={'Search members'}
-          value={search}
-          setValue={setSearch}
-          clearValue={onClear}
-        />
+        <FlexBox
+          borderWidth={1}
+          borderColor={'#ccc'}
+          borderRadius={5}
+          className="w-full max-w-screen-sm"
+        >
+          <Input
+            placeholder={'Search members'}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="flex-1 border-0 outline-0"
+          />
+          {search && (
+            <IconButton onClick={() => setSearch('')}>
+              <X />
+            </IconButton>
+          )}
+        </FlexBox>
         <CustomSelect data={data} value={value} onChange={onChange} />
       </FlexBox>
 
-      <MemberTable members={members} userId={userId} />
+      <MemberTable members={filteredMembers} userId={userId} />
     </Box>
   );
 };
