@@ -1,9 +1,9 @@
-import { getLoggedInUser } from '@/features/auth/queries';
+import { protect } from '@/features/auth/queries';
 import { DeleteProjectCard } from '@/features/projects/components/delete-project-card';
 import { EditProjectCard } from '@/features/projects/components/edit-project-card';
 import { getProject } from '@/features/projects/queries';
 import { redirect } from 'next/navigation';
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 
 type Props = {
   params: {
@@ -12,7 +12,7 @@ type Props = {
 };
 
 const page = async ({ params }: Props) => {
-  const { user } = await getLoggedInUser();
+  const user = await protect();
   if (!user) {
     redirect('/signup');
   }
