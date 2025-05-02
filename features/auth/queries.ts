@@ -43,3 +43,12 @@ export const getLoggedInUser = async () => {
     };
   }
 };
+
+export const protect = async () => {
+  try {
+    const { account } = await createSessionClient();
+    return await account.get();
+  } catch (error) {
+    return null;
+  }
+};

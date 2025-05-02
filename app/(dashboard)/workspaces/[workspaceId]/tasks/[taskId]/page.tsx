@@ -1,10 +1,9 @@
-import { getLoggedInUser } from '@/features/auth/queries';
+import { protect } from '@/features/auth/queries';
 import { redirect } from 'next/navigation';
-import React from 'react';
 import { TaskIdClient } from './client';
 
 const TaskIdPage = async () => {
-  const { user } = await getLoggedInUser();
+  const user = await protect();
 
   if (!user) redirect('/signup');
   return <TaskIdClient />;

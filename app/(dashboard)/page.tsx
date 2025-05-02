@@ -1,8 +1,9 @@
-import { getLoggedInUser } from '@/features/auth/queries';
+import { getLoggedInUser, protect } from '@/features/auth/queries';
 import { redirect } from 'next/navigation';
 
 const WorkspaceHomePage = async () => {
-  const { user, profile, workspaces } = await getLoggedInUser();
+  const user = await protect();
+  const { profile, workspaces } = await getLoggedInUser();
 
   if (!user) redirect('/signup');
 

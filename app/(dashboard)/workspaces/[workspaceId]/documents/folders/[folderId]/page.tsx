@@ -1,10 +1,10 @@
-import React, { Suspense } from 'react';
-import { FolderClient } from './folder-client';
-import { getLoggedInUser } from '@/features/auth/queries';
+import { protect } from '@/features/auth/queries';
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
+import { FolderClient } from './folder-client';
 
 const FolderIdPage = async () => {
-  const { user } = await getLoggedInUser();
+  const user = await protect();
   if (!user) {
     redirect('/signup');
   }

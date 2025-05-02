@@ -1,6 +1,6 @@
 import { FlexBox } from '@/components/custom/flex-box';
 import { InstructionHeading } from '@/components/ui/instruction-heading';
-import { getLoggedInUser } from '@/features/auth/queries';
+import { getLoggedInUser, protect } from '@/features/auth/queries';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -8,7 +8,7 @@ import { OnboardForm } from '@/components/form/onboard-form';
 import { getProfile } from '@/features/workspaces/queries';
 
 const Onboard = async () => {
-  const { user } = await getLoggedInUser();
+  const user = await protect();
 
   if (!user) redirect('/signup');
   console.log(user);

@@ -1,10 +1,10 @@
-import React, { Suspense } from 'react';
-import { VersionHistoryClient } from './version-history-client';
-import { getLoggedInUser } from '@/features/auth/queries';
+import { protect } from '@/features/auth/queries';
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
+import { VersionHistoryClient } from './version-history-client';
 
 const VersionHistoryPage = async () => {
-  const { user } = await getLoggedInUser();
+  const user = await protect();
   if (!user) {
     redirect('/signup');
   }

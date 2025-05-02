@@ -1,5 +1,5 @@
 import { WrapperWithPadding } from '@/components/ui/wrapper-padding';
-import { getLoggedInUser } from '@/features/auth/queries';
+import { getLoggedInUser, protect } from '@/features/auth/queries';
 import { ProjectDisplay } from '@/features/projects/components/project-display';
 import { getProject } from '@/features/projects/queries';
 import { getProfile } from '@/features/workspaces/queries';
@@ -11,7 +11,8 @@ type Props = {
   };
 };
 const page = async ({ params }: Props) => {
-  const { user, profile } = await getLoggedInUser();
+  const user = await protect();
+  const { profile } = await getLoggedInUser();
 
   if (!user) redirect('/signup');
   const { project } = await getProject({ projectId: params.projectId });

@@ -1,12 +1,13 @@
 import { FlexBox } from '@/components/custom/flex-box';
-import { getLoggedInUser } from '@/features/auth/queries';
 import { SignInForm } from '@/components/form/sign-in-form';
 import { InstructionHeading } from '@/components/ui/instruction-heading';
+import { protect } from '@/features/auth/queries';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
 const SignIn = async () => {
-  const { user } = await getLoggedInUser();
+  const user = await protect();
+  console.log(user);
 
   if (user) redirect('/');
   return (

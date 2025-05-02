@@ -1,10 +1,10 @@
-import { getLoggedInUser } from '@/features/auth/queries';
-import { DocumentViewClient } from './client';
+import { protect } from '@/features/auth/queries';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
+import { DocumentViewClient } from './client';
 
 const DocumentIdPage = async () => {
-  const { user } = await getLoggedInUser();
+  const user = await protect();
   if (!user) {
     redirect('/signup');
   }
