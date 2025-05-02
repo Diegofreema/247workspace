@@ -25,4 +25,5 @@ export const profileSchema = z.object({
       message: 'Phone number should not be more than 11 characters',
     })
     .optional(),
+  role: z.string().optional(),
 });

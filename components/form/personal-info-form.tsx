@@ -48,6 +48,18 @@ export const PersonalInfoForm = ({
         required
       />
       <FormInput
+        label="Role"
+        placeholder="Select a role"
+        register={register}
+        errors={errors}
+        name="role"
+        disabled={isSubmitting}
+        select
+        variant="select"
+        data={data}
+        required
+      />
+      <FormInput
         label="Phone number"
         placeholder="08161667890"
         register={register}
@@ -69,3 +81,17 @@ export const PersonalInfoForm = ({
     </Stack>
   );
 };
+
+const data = [
+  { label: 'CTO', value: 'CTO' },
+  { label: 'Project manager', value: 'Project manager' },
+  { label: 'Senior Developer', value: 'Senior Developer' },
+  { label: 'Frontend Developer', value: 'Frontend Developer' },
+  { label: 'Backend Developer', value: 'Backend Developer' },
+  { label: 'Fullstack Developer', value: 'Fullstack Developer' },
+  { label: 'Junior Developer', value: 'Junior Developer' },
+  { label: 'Intern', value: 'Intern' },
+  { label: 'UI/UX Designer', value: 'UI/UX Designer' },
+  { label: 'Customer Support', value: 'Customer support' },
+  { label: 'Others', value: 'others' },
+];
