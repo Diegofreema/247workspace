@@ -13,7 +13,6 @@ export const AllProjects = ({ projects }: Props) => {
       columns={{ base: 1, md: 2, lg: 4 }}
       gap={{ base: 3, md: 5, lg: 10 }}
       className="flex-1"
-      flex={1}
       minH={'80vh'}
     >
       <For each={projects} fallback={<EmptyUi text="No project yet" />}>

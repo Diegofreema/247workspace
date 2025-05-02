@@ -2,6 +2,8 @@ import {
   DATABASE_ID,
   DOCUMENT_ID,
   IMAGES_BUCKET_ID,
+  PROJECT_DOCUMENT_FOLDER_ID,
+  PROJECT_ID,
   VIEW_URL,
   WORKSPACE_DOCUMENT_FOLDER_ID,
   WORKSPACE_DOCUMENT_ID,
@@ -10,7 +12,9 @@ import {
 import { getMember } from '@/features/members/utils';
 import { sessionMiddleware } from '@/lib/session-middleware';
 import {
+  Project,
   ProjectDocumentType,
+  ProjectFolderType,
   WorkspaceDocumentType,
   WorkspaceFolderType,
 } from '@/types';
@@ -22,6 +26,7 @@ import { z } from 'zod';
 import {
   createDocumentSchema,
   createFolderSchema,
+  createProjectFolderSchema,
   createWorkspaceDocumentSchema,
   editFolderSchema,
 } from '../schema';
@@ -56,7 +61,43 @@ const app = new Hono()
           WORKSPACE_DOCUMENT_FOLDER_ID,
           query
         );
+
       return c.json({ data: workspaceFolder });
+    }
+  )
+  .get(
+    '/get-project-folder',
+    sessionMiddleware,
+    zValidator(
+      'query',
+      z.object({
+        searchQuery: z.string().nullish(),
+        more: z.string(),
+        projectId: z.string(),
+      })
+    ),
+    async (c) => {
+      const databases = c.get('databases');
+      const { more, searchQuery, projectId } = c.req.valid('query');
+      const limit = 25;
+      const offset = limit + Number(more);
+      const query = [
+        Query.equal('projectId', projectId),
+        Query.orderDesc('$createdAt'),
+        Query.limit(offset),
+      ];
+
+      if (searchQuery) {
+        query.push(Query.search('folderName', searchQuery));
+      }
+
+      const projectFolders = await databases.listDocuments<ProjectFolderType>(
+        DATABASE_ID,
+        PROJECT_DOCUMENT_FOLDER_ID,
+        query
+      );
+
+      return c.json({ data: projectFolders });
     }
   )
   .post(
@@ -129,6 +170,83 @@ const app = new Hono()
   )
   .post(
     '/create-workspace-document',
+    sessionMiddleware,
+    zValidator('form', createWorkspaceDocumentSchema),
+    async (c) => {
+      const databases = c.get('databases');
+      const user = c.get('user');
+      const storage = c.get('storage');
+      const { name, documentUrl, workspaceId, uploadedBy, folderId } =
+        c.req.valid('form');
+
+      let link: string | undefined;
+      let id: string | undefined;
+      if (documentUrl instanceof File) {
+        const file = await storage.createFile(
+          IMAGES_BUCKET_ID,
+          ID.unique(),
+          documentUrl
+        );
+        id = file.$id;
+        link = `${VIEW_URL}/${IMAGES_BUCKET_ID}/files/${file.$id}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT}&mode=admin`;
+      }
+
+      const member = await getMember({
+        databases,
+        userId: user.$id,
+        workspaceId,
+      });
+
+      if (!member) {
+        return c.json(
+          {
+            error: 'Unauthorized',
+          },
+          401
+        );
+      }
+
+      const documentExist =
+        await databases.listDocuments<WorkspaceDocumentType>(
+          DATABASE_ID,
+          WORKSPACE_DOCUMENT_ID,
+          [Query.equal('name', name), Query.equal('workspaceId', workspaceId)]
+        );
+
+      if (documentExist.documents.length > 0) {
+        return c.json(
+          {
+            error:
+              'Document with name already exists, please choose a different name',
+          },
+          400
+        );
+      }
+
+      const document = await databases.createDocument<WorkspaceDocumentType>(
+        DATABASE_ID,
+        WORKSPACE_DOCUMENT_ID,
+        ID.unique(),
+        {
+          name,
+          workspaceId,
+          folderId,
+          uploadedBy,
+          documentUrl: link,
+          fileId: id,
+          isCurrent: true,
+          version: 1,
+          versionId: id + generateRandomString(10),
+        }
+      );
+
+      return c.json({
+        data: document,
+      });
+    }
+  )
+  .post(
+    '/create-project-document',
     sessionMiddleware,
     zValidator('form', createWorkspaceDocumentSchema),
     async (c) => {
@@ -325,6 +443,62 @@ const app = new Hono()
         {
           folderName: name,
           workspaceId,
+        }
+      );
+
+      return c.json({
+        data: folder,
+      });
+    }
+  )
+  .post(
+    '/create-project-folder',
+    sessionMiddleware,
+    zValidator('json', createProjectFolderSchema),
+    async (c) => {
+      const databases = c.get('databases');
+      const { name, projectId } = c.req.valid('json');
+
+      const project = await databases.getDocument<Project>(
+        DATABASE_ID,
+        PROJECT_ID,
+        projectId
+      );
+      const member = await getMember({
+        databases,
+        userId: c.get('user').$id,
+        workspaceId: project.workspaceId,
+      });
+      if (!member) {
+        return c.json(
+          {
+            error: 'Unauthorized',
+          },
+          401
+        );
+      }
+      const folderExists = await databases.listDocuments(
+        DATABASE_ID,
+        PROJECT_DOCUMENT_FOLDER_ID,
+        [Query.equal('folderName', name), Query.equal('projectId', projectId)]
+      );
+      if (folderExists.documents.length > 0) {
+        return c.json(
+          {
+            error:
+              'Folder with name already exists, please choose a different name',
+          },
+          400
+        );
+      }
+
+      const folder = await databases.createDocument(
+        DATABASE_ID,
+        PROJECT_DOCUMENT_FOLDER_ID,
+        ID.unique(),
+        {
+          folderName: name,
+          projectId,
         }
       );
 

@@ -5,6 +5,7 @@ import { Folders } from './folders';
 import { FolderActions } from './folder-actions';
 import { CustomText } from '@/components/custom/title';
 import { colors } from '@/constants';
+import { useFolderModalController } from '../hooks/use-folder-modal-controller';
 
 type Props = {
   folders: WorkspaceFolderType[];

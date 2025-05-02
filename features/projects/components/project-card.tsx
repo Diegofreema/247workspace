@@ -61,7 +61,7 @@ export const ProjectCard = ({ project }: Props) => {
   const assignees = project.tasks.map((task) => task.assignee);
 
   return (
-    <Card className="min-h-min bg-white border-0">
+    <Card className="max-h-fit bg-white border-0">
       <CardHeader className="mb-5">
         <FlexBox
           justifyContent={'space-between'}

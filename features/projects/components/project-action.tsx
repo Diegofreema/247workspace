@@ -53,7 +53,7 @@ export const ProjectAction = ({ children, projectId }: Props) => {
     createTask();
   };
   const onOpenDocuments = () => {
-    router.push(`/workspaces/${workspaceId}/projects/${projectId}/documents`);
+    router.push(`/workspaces/${workspaceId}/projects/${projectId}/folders`);
   };
   return (
     <>
@@ -94,7 +94,7 @@ export const ProjectAction = ({ children, projectId }: Props) => {
               className="font-medium p-[10px]"
             >
               <File className="size-4 mr-2 stroke-2" />
-              View documents
+              View folders
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={onCreate}

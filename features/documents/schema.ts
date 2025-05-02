@@ -36,5 +36,14 @@ export const createFolderSchema = z.object({
     .max(50, { message: 'Folder name must be less than 50 characters' }),
   workspaceId: z.string(),
 });
+export const createProjectFolderSchema = z.object({
+  name: z
+    .string()
+    .min(1, {
+      message: 'Folder name is required',
+    })
+    .max(50, { message: 'Folder name must be less than 50 characters' }),
+  projectId: z.string(),
+});
 
 export const editFolderSchema = createFolderSchema.omit({ workspaceId: true });

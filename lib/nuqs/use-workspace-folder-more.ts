@@ -8,3 +8,12 @@ export const useOffsetWorkspaceFolder = () => {
 
   return { more, setMore };
 };
+
+export const useOffsetProjectFolder = () => {
+  const [more, setMore] = useQueryState(
+    'project-folder-more',
+    parseAsInteger.withDefault(0)
+  );
+
+  return { more, setMore };
+};
