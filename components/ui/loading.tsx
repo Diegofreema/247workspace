@@ -4,7 +4,7 @@ import { Logo } from './logo';
 
 export const Loading = () => {
   return (
-    <FlexBox minH={'100dvh'} flexDirection={'column'} bg="white" width={'100%'}>
+    <FlexBox minH={'100vh'} flexDirection={'column'} bg="white" width={'100%'}>
       <FlexBox
         width="100%"
         flex={1}

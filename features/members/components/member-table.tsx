@@ -87,7 +87,7 @@ export const MemberTable = ({ members, userId }: Props) => {
                   handleDeleteMember={handleDeleteMember}
                   disabled={disabled}
                   memberId={item?.$id}
-                  isChiefAdminId={chiefAdmin.userId}
+                  isChiefAdminId={chiefAdmin?.userId}
                   userId={userId}
                   memberRole={item?.memberRole}
                   showAction={showAction}
