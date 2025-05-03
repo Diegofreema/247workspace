@@ -11,7 +11,7 @@ type Props = {
   handleDeleteMember: (memberId: string) => void;
   disabled: boolean;
   memberId: string;
-  isChiefAdminId: string;
+
   userId: string;
   memberRole: MemberRole;
   showAction: boolean;
@@ -24,13 +24,14 @@ export const MemberMenu = ({
   disabled,
   handleDeleteMember,
   memberId,
-  isChiefAdminId,
+
   userId,
   memberRole,
   showAction,
   isLoading,
 }: Props) => {
   const isAdmin = memberRole === MemberRole.ADMIN;
+
   return (
     <Menu.Root>
       <Menu.Trigger asChild>
@@ -94,7 +95,7 @@ export const MemberMenu = ({
               disabled={disabled}
               onClick={() => handleDeleteMember(memberId)}
             >
-              {showAction ? `Remove ${name}` : 'Leave workspace'}
+              {showAction && !isAdmin ? `Remove ${name}` : 'Leave workspace'}
             </Menu.Item>
           </Menu.Content>
         </Menu.Positioner>

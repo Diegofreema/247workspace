@@ -20,19 +20,32 @@ export const MemberTable = ({ members, userId }: Props) => {
   const handleUpdateMemberRole = async (memberId: string, role: MemberRole) => {
     await updateMemberRole({ json: { role }, param: { memberId } }, {});
   };
+  console.log({ members });
 
   const handleDeleteMember = async (memberId: string) => {
     await deleteMember({ param: { memberId } });
   };
   const disabled = isPendingDeleteMember || isPendingMemberRole;
-  const chiefAdmin = members.find(
+  const chiefAdmins = members.filter(
     (item) => item?.memberRole === 'CHIEF_ADMIN'
-  )!;
+  );
+  const sortedMembers = members.sort((a, b) => {
+    const roleOrder = {
+      CHIEF_ADMIN: 1,
+      ADMIN: 2,
+      MEMBER: 3,
+    };
+
+    return roleOrder[a.memberRole] - roleOrder[b.memberRole];
+  });
+
   const admin = members.filter((item) => item?.memberRole === 'ADMIN');
-  const isChiefAdminId = chiefAdmin?.userId === userId;
-  const isAdmin = admin?.find((item) => item?.userId === userId);
-  const showAction = isChiefAdminId || !!isAdmin;
+  const isChiefAdmin = chiefAdmins.some((item) => item?.userId === userId);
+  const isAdmin = admin?.some((item) => item?.userId === userId);
+
+  const showAction = isChiefAdmin || isAdmin;
   const isLoading = isPendingDeleteMember || isPendingMemberRole;
+
   return (
     <Table.Root
       size="sm"
@@ -60,7 +73,7 @@ export const MemberTable = ({ members, userId }: Props) => {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {members?.map((item) => (
+        {sortedMembers?.map((item) => (
           <Table.Row key={item.$id}>
             <Table.Cell
               textAlign={'start'}
@@ -79,22 +92,24 @@ export const MemberTable = ({ members, userId }: Props) => {
             <Table.Cell textAlign="start">
               {item?.memberRole?.replace('_', ' ')}
             </Table.Cell>
-            {item.memberRole !== MemberRole.CHIEF_ADMIN && (
-              <Table.Cell textAlign="end" className="group">
-                <MemberMenu
-                  name={item?.name?.split(' ')[0]}
-                  handleUpdateMemberRole={handleUpdateMemberRole}
-                  handleDeleteMember={handleDeleteMember}
-                  disabled={disabled}
-                  memberId={item?.$id}
-                  isChiefAdminId={chiefAdmin?.userId}
-                  userId={userId}
-                  memberRole={item?.memberRole}
-                  showAction={showAction}
-                  isLoading={isLoading}
-                />
-              </Table.Cell>
-            )}
+            {(isChiefAdmin ||
+              isAdmin || // Show all menus if admin
+              (!isChiefAdmin && !isAdmin && item.userId === userId)) && // Show only self menu if regular member
+              item.memberRole !== MemberRole.CHIEF_ADMIN && (
+                <Table.Cell textAlign="end" className="group">
+                  <MemberMenu
+                    name={item?.name?.split(' ')[0]}
+                    handleUpdateMemberRole={handleUpdateMemberRole}
+                    handleDeleteMember={handleDeleteMember}
+                    disabled={disabled}
+                    memberId={item?.$id}
+                    userId={userId}
+                    memberRole={item?.memberRole}
+                    showAction={showAction}
+                    isLoading={isLoading}
+                  />
+                </Table.Cell>
+              )}
           </Table.Row>
         ))}
       </Table.Body>

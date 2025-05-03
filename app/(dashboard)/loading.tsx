@@ -1,8 +1,12 @@
 'use client';
-import { Loading } from '@/components/ui/loading';
+import { LoaderCircle } from 'lucide-react';
 
 const loading = () => {
-  return <Loading />;
+  return (
+    <div className="min-h-screen flex flex-col justify-center items-center bg-white">
+      <LoaderCircle className="animate-spin text-purple" />
+    </div>
+  );
 };
 
 export default loading;
