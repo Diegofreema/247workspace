@@ -143,6 +143,7 @@ export const OnboardForm = ({ initialValue }: Props) => {
 };
 
 const data = [
+  { label: 'CEO', value: 'CEO' },
   { label: 'CTO', value: 'CTO' },
   { label: 'Project manager', value: 'Project manager' },
   { label: 'Senior Developer', value: 'Senior Developer' },
