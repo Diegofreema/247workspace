@@ -95,7 +95,7 @@ export const WorkspaceSwitcher = () => {
             <Select.Control fontWeight={'bold'}>
               <Select.Trigger
                 border="1px solid #ccc"
-                p={1}
+                px={1}
                 color={colors.iconGrey}
               >
                 <SelectValue />
