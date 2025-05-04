@@ -59,3 +59,11 @@ export const calculateProfileCompletion = (profile: Profile): number => {
   // Convert to percentage (0-100)
   return Math.round(totalScore * 100);
 };
+
+export const trimText = (text: string, maxLength: number) => {
+  if (text.length <= maxLength) {
+    return text;
+  } else {
+    return text.substring(0, maxLength) + '...';
+  }
+};

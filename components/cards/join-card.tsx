@@ -1,13 +1,15 @@
 'use client';
+import { APP_URL } from '@/config';
 import { colors } from '@/constants';
-import { useCurrentUser } from '@/features/auth/api/use-current-user';
+import { useProtect } from '@/features/auth/api/use-current-user';
 import { useJoinWorkspace } from '@/features/workspaces/api/use-join-workspace';
+import { useRedirectUrl } from '@/hooks/use-redirect';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { Card } from '@chakra-ui/react';
 import { useTransitionRouter } from 'next-view-transitions';
+import { useEffect } from 'react';
 import { Button } from '../custom/custom-button';
 import { Loading } from '../ui/loading';
-import { APP_URL } from '@/config';
 import { toaster } from '../ui/toaster';
 
 type Props = {
@@ -16,7 +18,9 @@ type Props = {
 };
 
 export const JoinCard = ({ inviteCode, name }: Props) => {
-  const { data, isError, isPending: isPendingUser } = useCurrentUser();
+  const { data, isError, isPending: isPendingUser } = useProtect();
+  const { clearUrl, url, getUrl } = useRedirectUrl();
+  console.log({ inviteCode });
 
   const { mutateAsync, isPending } = useJoinWorkspace();
   const workspaceId = useWorkspaceId();
@@ -27,25 +31,21 @@ export const JoinCard = ({ inviteCode, name }: Props) => {
       { param: { workspaceId }, json: { code: inviteCode } },
       {
         onSuccess: () => {
-          localStorage.removeItem('redirectUrl');
+          if (url) {
+            clearUrl();
+          }
         },
       }
     );
   };
-
-  if (isError) {
-    throw new Error('Something went wrong');
-  }
-  if (isPendingUser) {
-    return <Loading />;
-  }
-
-  if (!data.user) {
-    if (typeof window !== 'undefined') {
+  useEffect(() => {
+    if (isPendingUser || isError) return;
+    if (!data) {
       localStorage.setItem(
         'redirectUrl',
         `${APP_URL}/workspace/${workspaceId}/join/${inviteCode}`
       );
+
       toaster.create({
         title: 'Please sign in to join a workspace',
         type: 'info',
@@ -53,7 +53,14 @@ export const JoinCard = ({ inviteCode, name }: Props) => {
       });
       router.replace('/signup');
     }
+  }, [data, isError, router, workspaceId, getUrl, isPendingUser, inviteCode]);
+  if (isError) {
+    throw new Error('Something went wrong');
   }
+  if (isPendingUser) {
+    return <Loading />;
+  }
+
   return (
     <div className="flex flex-col h-full justify-center">
       <Card.Root bg={colors.white} boxShadow={'lg'}>

@@ -1,5 +1,5 @@
 import { signUpWithGithub, signUpWithGoogle } from '@/lib/oauth';
-import { Button, Image, Stack } from '@chakra-ui/react';
+import { Stack } from '@chakra-ui/react';
 import { SubmitButton } from './submit-button';
 
 export const SocialLogin = () => {

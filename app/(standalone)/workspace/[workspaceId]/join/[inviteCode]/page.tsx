@@ -14,10 +14,7 @@ const JoinPage = async ({ params }: Props) => {
   return (
     <div className="w-full lg:max-w-xl flex flex-col gap-y-4">
       <Suspense fallback={null}>
-        <JoinCard
-          name={initialValues?.name}
-          inviteCode={initialValues?.inviteCode}
-        />
+        <JoinCard name={initialValues?.name} inviteCode={params?.inviteCode} />
       </Suspense>
     </div>
   );

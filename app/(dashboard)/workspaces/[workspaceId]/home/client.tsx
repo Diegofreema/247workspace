@@ -16,6 +16,7 @@ import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { useCreateProjectModalController } from '@/lib/nuqs/use-create-project';
 import { useCreateTaskModalController } from '@/lib/nuqs/use-create-task';
 import { Profile, Project, TaskWithProjectAndAssignee } from '@/types';
+import { trimText } from '@/utils/helper';
 import { formatDistanceToNow } from 'date-fns';
 import { CalendarCheckIcon, PlusIcon, Settings } from 'lucide-react';
 import { Link } from 'next-view-transitions';
@@ -229,7 +230,7 @@ export const MemberList = ({ members, total }: MemberProps) => {
                   <div className="flex flex-col items-center overflow-hidden">
                     <p className="font-medium line-clamp-1">{member.name}</p>
                     <p className="text-sm text-muted-foreground line-clamp-1">
-                      {member.email}
+                      {trimText(member.email, 20)}
                     </p>
                   </div>
                 </CardContent>

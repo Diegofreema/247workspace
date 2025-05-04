@@ -8,10 +8,10 @@ import { Button } from '../custom/custom-button';
 import { FormInput } from './form-input';
 
 import { colors } from '@/constants';
+import { useOnboard } from '@/features/auth/api/use-login';
 import { onboardSchema } from '@/utils/validators';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useOnboard } from '@/features/auth/api/use-login';
 import { toaster } from '../ui/toaster';
 
 type Props = {
@@ -26,6 +26,9 @@ export const OnboardForm = ({ initialValue }: Props) => {
   const { mutateAsync } = useOnboard();
   const router = useRouter();
   const queryClient = useQueryClient();
+
+  const redirectUrl = localStorage.getItem('redirectUrl') as string | null;
+  console.log(redirectUrl);
 
   const {
     handleSubmit,
@@ -53,13 +56,10 @@ export const OnboardForm = ({ initialValue }: Props) => {
             type: 'success',
           });
           reset();
-          if (typeof window !== undefined) {
-            const redirectUrl = localStorage.getItem('redirectUrl');
-            if (redirectUrl) {
-              router.push(redirectUrl);
-            } else {
-              router.push('/workspace/create-workspace');
-            }
+          if (redirectUrl) {
+            router.push(redirectUrl);
+          } else {
+            router.push('/workspace/create-workspace');
           }
 
           router.refresh();
