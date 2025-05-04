@@ -242,11 +242,13 @@ export const MemberList = ({ members, total }: MemberProps) => {
             No member found
           </li>
         </ul>
-        <Link href={teamPageUrl} className="w-full mt-5 flex justify-center ">
-          <Button variant={'ghost'} className="hover:bg-purple">
-            View all
-          </Button>
-        </Link>
+        {total > 6 && (
+          <Link href={teamPageUrl} className="w-full mt-5 flex justify-center ">
+            <Button variant={'ghost'} className="hover:bg-purple">
+              View all
+            </Button>
+          </Link>
+        )}
       </div>
     </div>
   );
