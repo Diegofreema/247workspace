@@ -199,12 +199,13 @@ export const ProjectList = ({ projects, total }: ProjectProps) => {
 };
 export const MemberList = ({ members, total }: MemberProps) => {
   const workspaceId = useWorkspaceId();
+  const teamPageUrl = `/workspaces/${workspaceId}/team`;
   return (
     <div className="flex flex-col gap-y-4 col-span-1 flex-1">
       <div className="bg-white text-black rounded-lg p-4 flex-1">
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">Members ({total})</p>
-          <Tooltip content="Create a new project">
+          <Tooltip content="Settings">
             <Button
               variant={'ghost'}
               size={'icon'}
@@ -241,6 +242,11 @@ export const MemberList = ({ members, total }: MemberProps) => {
             No member found
           </li>
         </ul>
+        <Link href={teamPageUrl} className="w-full mt-5 flex justify-center ">
+          <Button variant={'ghost'} className="hover:bg-purple">
+            View all
+          </Button>
+        </Link>
       </div>
     </div>
   );
