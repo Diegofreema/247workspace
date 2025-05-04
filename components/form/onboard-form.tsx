@@ -27,9 +27,6 @@ export const OnboardForm = ({ initialValue }: Props) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const redirectUrl = localStorage.getItem('redirectUrl') as string | null;
-  console.log(redirectUrl);
-
   const {
     handleSubmit,
     formState: { isSubmitting, errors },
@@ -56,10 +53,13 @@ export const OnboardForm = ({ initialValue }: Props) => {
             type: 'success',
           });
           reset();
-          if (redirectUrl) {
-            router.push(redirectUrl);
-          } else {
-            router.push('/workspace/create-workspace');
+          if (typeof window !== 'undefined') {
+            const redirectUrl = localStorage.getItem('redirectUrl');
+            if (redirectUrl) {
+              router.push(redirectUrl);
+            } else {
+              router.push('/workspace/create-workspace');
+            }
           }
 
           router.refresh();

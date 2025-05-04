@@ -3,7 +3,6 @@ import { APP_URL } from '@/config';
 import { colors } from '@/constants';
 import { useProtect } from '@/features/auth/api/use-current-user';
 import { useJoinWorkspace } from '@/features/workspaces/api/use-join-workspace';
-import { useRedirectUrl } from '@/hooks/use-redirect';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { Card } from '@chakra-ui/react';
 import { useTransitionRouter } from 'next-view-transitions';
@@ -19,8 +18,7 @@ type Props = {
 
 export const JoinCard = ({ inviteCode, name }: Props) => {
   const { data, isError, isPending: isPendingUser } = useProtect();
-  const { clearUrl, url, getUrl } = useRedirectUrl();
-  console.log({ inviteCode });
+  // const [storedValue, , removeUrl] = useLocalStorage('redirectUrl', null);
 
   const { mutateAsync, isPending } = useJoinWorkspace();
   const workspaceId = useWorkspaceId();
@@ -31,8 +29,8 @@ export const JoinCard = ({ inviteCode, name }: Props) => {
       { param: { workspaceId }, json: { code: inviteCode } },
       {
         onSuccess: () => {
-          if (url) {
-            clearUrl();
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('redirectUrl');
           }
         },
       }
@@ -41,10 +39,12 @@ export const JoinCard = ({ inviteCode, name }: Props) => {
   useEffect(() => {
     if (isPendingUser || isError) return;
     if (!data) {
-      localStorage.setItem(
-        'redirectUrl',
-        `${APP_URL}/workspace/${workspaceId}/join/${inviteCode}`
-      );
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(
+          'redirectUrl',
+          `${APP_URL}/workspace/${workspaceId}/join/${inviteCode}`
+        );
+      }
 
       toaster.create({
         title: 'Please sign in to join a workspace',
@@ -53,7 +53,7 @@ export const JoinCard = ({ inviteCode, name }: Props) => {
       });
       router.replace('/signup');
     }
-  }, [data, isError, router, workspaceId, getUrl, isPendingUser, inviteCode]);
+  }, [data, isError, router, workspaceId, isPendingUser, inviteCode]);
   if (isError) {
     throw new Error('Something went wrong');
   }

@@ -12,8 +12,7 @@ type Props = {
 
 export const SubmitButton = ({ text, url }: Props) => {
   const { pending } = useFormStatus();
-  const redirectUrl = localStorage.getItem('redirectUrl');
-  console.log(redirectUrl);
+
   return (
     <Button
       variant={'outline'}
