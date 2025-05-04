@@ -219,7 +219,7 @@ export const MemberList = ({ members, total }: MemberProps) => {
         </div>
         <Separator className="my-4" />
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {members.slice(0, 4).map((member) => (
+          {members.slice(0, 6).map((member) => (
             <li key={member.$id}>
               <Card className="shadow-none rounded-lg group transition bg-white text-black hover:bg-purple hover:text-white overflow-hidden">
                 <CardContent className="p-3 flex flex-col items-center gap-x-2.5">
