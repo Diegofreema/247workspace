@@ -35,7 +35,7 @@ export const CreateTaskFormWrapper = () => {
         {array.map((_, i) => {
           const isLastItem = i === array.length - 1;
           return (
-            <ReusableSkeleton key={i} height={isLastItem ? '60px' : '30px'} />
+            <ReusableSkeleton key={i} height={isLastItem ? '80px' : '30px'} />
           );
         })}
       </Stack>

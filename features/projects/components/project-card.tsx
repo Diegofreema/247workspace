@@ -59,6 +59,9 @@ export const ProjectCard = ({ project }: Props) => {
     (item) => item.value === Math.max(...tasks.map((item) => item.value))
   );
   const assignees = project.tasks.map((task) => task.assignee);
+  const uniqueAssignees = Array.from(
+    new Map(assignees.map((assignee) => [assignee?.userId, assignee])).values()
+  );
 
   return (
     <Card className="max-h-fit bg-white border-0">
@@ -99,9 +102,9 @@ export const ProjectCard = ({ project }: Props) => {
         </Stack>
       </CardContent>
       <CardFooter>
-        {assignees.length > 0 && (
+        {uniqueAssignees.length > 0 && (
           <AvatarGroup gap="0" spaceX="-3" size="lg">
-            {assignees.map((assignee, index) => (
+            {uniqueAssignees.map((assignee, index) => (
               <ProfileAvatar
                 key={index}
                 name={assignee?.name!}

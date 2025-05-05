@@ -154,7 +154,7 @@ export const ProjectKanban = ({ tasks: data, onChange, memberRole }: Props) => {
 
       onChange(updatedPayload);
     },
-    [onChange]
+    [onChange, memberRole]
   );
   return (
     <DragDropContext onDragEnd={onDragEnd}>

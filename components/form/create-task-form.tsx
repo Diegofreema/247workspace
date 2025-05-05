@@ -57,6 +57,12 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
     resolver: zodResolver(createTaskSchema),
   });
   const { name, description } = watch();
+  const onClose = () => {
+    reset();
+    onRemoveProjectId();
+    onRemoveStatus();
+    close();
+  };
   const onSubmit = async (data: z.infer<typeof createTaskSchema>) => {
     await mutateAsync(
       { json: { ...data, workspaceId } },
@@ -136,17 +142,19 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
           variant={'select'}
           data={statusData}
         />
-        <FormInput
-          register={register}
-          name="projectId"
-          label="Project"
-          errors={errors}
-          placeholder="Select Project"
-          required
-          disabled={isSubmitting}
-          variant={'select'}
-          data={projectItem}
-        />
+        {!projectId && (
+          <FormInput
+            register={register}
+            name="projectId"
+            label="Project"
+            errors={errors}
+            placeholder="Select Project"
+            required
+            disabled={isSubmitting}
+            variant={'select'}
+            data={projectItem}
+          />
+        )}
         <FormInput
           register={register}
           name="priority"
@@ -180,7 +188,7 @@ export const CreateTaskForm = ({ memberOptions, projectOptions }: Props) => {
             width={'fit-content'}
             disabled={isSubmitting}
             color={colors.black}
-            onClick={close}
+            onClick={onClose}
           >
             Cancel
           </Button>
