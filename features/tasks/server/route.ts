@@ -318,6 +318,7 @@ const app = new Hono()
       const databases = c.get('databases');
       const user = c.get('user');
       const { tasks } = c.req.valid('json');
+      // console.log(tasks.map((task) => task.position));
 
       const taskToUpdate = await databases.listDocuments<TaskType>(
         DATABASE_ID,

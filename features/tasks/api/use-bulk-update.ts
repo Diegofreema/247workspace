@@ -4,6 +4,7 @@ import { InferRequestType, InferResponseType } from 'hono';
 import { toaster } from '@/components/ui/toaster';
 import { client } from '@/lib/rpc';
 import { useRouter } from 'next/navigation';
+import { ApiResponse } from '@/types';
 
 type ResponseType = InferResponseType<
   (typeof client.api.tasks)['bulk-update']['$post'],
@@ -20,7 +21,8 @@ export const useUpdateBulkTask = () => {
     mutationFn: async ({ json }) => {
       const res = await client.api.tasks['bulk-update'].$post({ json });
       if (!res.ok) {
-        throw new Error('Failed to update tasks');
+        const errorResponse = (await res.json()) as ApiResponse;
+        throw new Error(errorResponse.error || 'Failed to update tasks');
       }
       return await res.json();
     },

@@ -1,14 +1,22 @@
+import { cn } from '@/lib/utils';
 import { Heading, HeadingProps, Text } from '@chakra-ui/react';
 import React from 'react';
 
-type Props = HeadingProps & {};
+type Props = HeadingProps & {
+  className?: string;
+};
 
-export const Title = ({ fontSize = '28px', as = 'h1', ...props }: Props) => {
+export const Title = ({
+  fontSize = '28px',
+  as = 'h1',
+  className,
+  ...props
+}: Props) => {
   return (
     <Heading
       as={as}
       fontSize={fontSize}
-      className="font-public_sans font-bold"
+      className={cn('font-public_sans font-bold', className)}
       fontWeight="bold"
       {...props}
     >
@@ -16,10 +24,10 @@ export const Title = ({ fontSize = '28px', as = 'h1', ...props }: Props) => {
     </Heading>
   );
 };
-export const CustomText = ({ ...props }: Props) => {
+export const CustomText = ({ className, ...props }: Props) => {
   return (
     <Text
-      className="font-sans"
+      className={cn('font-sans', className)}
       fontSize={{ base: '14px', md: '16px' }}
       {...props}
     >
