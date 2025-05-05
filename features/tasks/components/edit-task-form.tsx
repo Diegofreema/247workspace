@@ -53,12 +53,10 @@ export const EditTaskWrapper = ({ taskId }: Props) => {
   if (isLoading) {
     return (
       <Stack gap={7}>
-        {array.map((_, i) => (
-          <ReusableSkeleton
-            key={i}
-            height={i === array.at(-1) ? '30px' : '10px'}
-          />
-        ))}
+        {array.map((_, i) => {
+          const isLast = i === array.length - 1;
+          return <ReusableSkeleton key={i} height={isLast ? '30px' : '80px'} />;
+        })}
       </Stack>
     );
   }
@@ -75,8 +73,10 @@ export const EditTaskWrapper = ({ taskId }: Props) => {
     imageUrl: member?.avatarUrl,
   }));
   const memberRole = members?.documents.find(
-    (member) => member.$id === data.user?.$id
+    (member) => member.userId === data.user?.$id
   )?.memberRole as MemberRole;
+  console.log(memberRole);
+
   return (
     <EditTaskForm
       projectOptions={projectOptions}
