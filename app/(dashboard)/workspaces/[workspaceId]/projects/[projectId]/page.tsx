@@ -2,7 +2,6 @@ import { WrapperWithPadding } from '@/components/ui/wrapper-padding';
 import { getLoggedInUser, protect } from '@/features/auth/queries';
 import { ProjectDisplay } from '@/features/projects/components/project-display';
 import { getProject } from '@/features/projects/queries';
-import { getProfile } from '@/features/workspaces/queries';
 import { redirect } from 'next/navigation';
 
 type Props = {

@@ -75,6 +75,7 @@ export const ProjectKanban = ({ tasks: data, onChange, memberRole }: Props) => {
     (result: DropResult) => {
       if (!result.destination) return;
       const { source, destination } = result;
+      console.log(memberRole);
 
       if (
         memberRole !== MemberRole.CHIEF_ADMIN &&

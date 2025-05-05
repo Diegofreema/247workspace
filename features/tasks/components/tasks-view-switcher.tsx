@@ -36,8 +36,10 @@ export const TaskViewSwitcher = ({ hideProjectFilter, memberId }: Props) => {
   }
 
   const memberRole = members?.documents.find(
-    (member) => member.$id === memberId
+    (member) => member.userId === memberId
   )?.memberRole;
+
+  console.log(memberRole, members?.documents);
 
   return (
     <Stack gap={2}>

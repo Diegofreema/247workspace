@@ -32,7 +32,7 @@ export const TaskTabs = ({
   memberRole,
 }: Props) => {
   const { tab: value, setTab: setValue } = useSwitchTabs();
-  const workspaceId = useWorkspaceId();
+
   const { open } = useCreateTaskModalController();
 
   const { mutateAsync, isPending: isPendingTasks } = useUpdateBulkTask();
