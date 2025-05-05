@@ -4,7 +4,6 @@ import { useGetMembers } from '@/features/members/api/use-get-members';
 import { useGetProjects } from '@/features/projects/api/use-get-projects';
 import { useWorkspaceId } from '@/hooks/useWorkspaceId';
 import { Stack } from '@chakra-ui/react';
-import React from 'react';
 
 const array = Array(7).fill(0);
 export const CreateTaskFormWrapper = () => {
@@ -33,12 +32,12 @@ export const CreateTaskFormWrapper = () => {
   if (isLoading) {
     return (
       <Stack gap={4}>
-        {array.map((_, i) => (
-          <ReusableSkeleton
-            key={i}
-            height={i === array.at(-1) ? '30px' : '10px'}
-          />
-        ))}
+        {array.map((_, i) => {
+          const isLastItem = i === array.length - 1;
+          return (
+            <ReusableSkeleton key={i} height={isLastItem ? '60px' : '30px'} />
+          );
+        })}
       </Stack>
     );
   }

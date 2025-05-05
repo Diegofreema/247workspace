@@ -162,6 +162,20 @@ const app = new Hono()
       const storage = c.get('storage');
       const { name, image, workspaceId } = c.req.valid('form');
 
+      const projectWithNameExists = await databases.listDocuments<Project>(
+        DATABASE_ID,
+        PROJECT_ID,
+        [Query.equal('name', name), Query.equal('workspaceId', workspaceId)]
+      );
+      if (projectWithNameExists.total > 0) {
+        return c.json(
+          {
+            error: 'Project with this name already exists',
+          },
+          400
+        );
+      }
+
       let uploadUrl: string | undefined;
       if (image instanceof File) {
         const file = await storage.createFile(

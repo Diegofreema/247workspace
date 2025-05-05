@@ -4,6 +4,7 @@ import { InferRequestType, InferResponseType } from 'hono';
 import { toaster } from '@/components/ui/toaster';
 import { client } from '@/lib/rpc';
 import { useTransitionRouter } from 'next-view-transitions';
+import { ApiResponse } from '@/types';
 
 type ResponseType = InferResponseType<
   (typeof client.api.projects)['$post'],
@@ -18,7 +19,8 @@ export const useCreateProject = (isProjectPage?: boolean) => {
     mutationFn: async ({ form }) => {
       const res = await client.api.projects.$post({ form });
       if (!res.ok) {
-        throw new Error('Failed to create project');
+        const errorResponse = (await res.json()) as ApiResponse;
+        throw new Error(errorResponse.error || 'Failed to create project');
       }
       return await res.json();
     },
@@ -39,10 +41,11 @@ export const useCreateProject = (isProjectPage?: boolean) => {
         type: 'success',
       });
     },
-    onError: () => {
+    onError: (error) => {
+      const errorMessage = error.message || 'Failed to create project';
       toaster.create({
         title: 'Something went wrong',
-        description: 'Please try again',
+        description: errorMessage,
         type: 'error',
       });
     },

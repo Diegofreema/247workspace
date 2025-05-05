@@ -8,7 +8,7 @@ export const createTaskSchema = z.object({
     .max(50, { message: 'Task name must be between 1 and 50 characters' }),
   description: z
     .string()
-    .max(255, { message: 'Description should not be more than 255 characters' })
+    .max(300, { message: 'Description should not be more than 255 characters' })
     .optional(),
   projectId: z.string().min(1, 'Required'),
   workspaceId: z.string().min(1, 'Required'),
@@ -21,9 +21,7 @@ export const createTaskSchema = z.object({
     required_error: 'Priority is required',
     message: 'Priority is required',
   }),
-  dueDate: z.coerce
-    .date()
-    .min(new Date(), { message: 'Date must be at least a day from now' }),
+  dueDate: z.coerce.date(),
 });
 export const editTaskSchema = z.object({
   name: z
